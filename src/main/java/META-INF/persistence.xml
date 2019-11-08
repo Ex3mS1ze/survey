@@ -7,6 +7,13 @@
              version="2.1">
     <persistence-unit name="item-manager-pu" transaction-type="RESOURCE_LOCAL">
         <mapping-file>META-INF/orm.xml</mapping-file>
+        <class>entities.User</class>
+        <class>entities.Doctor</class>
+        <class>entities.Patient</class>
+        <class>entities.Diagnosis</class>
+        <class>entities.Question</class>
+        <class>entities.Answer</class>
+        <class>entities.Questionnaire</class>
         <properties>
             <property name="toplink.jdbc.url" value="jdbc:postgresql://localhost:5432/survey"/>
             <property name="toplink.jdbc.driver" value="org.postgresql.Driver"/>
