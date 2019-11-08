@@ -1,4 +1,4 @@
-package entities;
+package com.main.entity;
 
 import javax.persistence.*;
 import java.util.List;
@@ -8,6 +8,7 @@ import java.util.Objects;
 @Table(name = "doctors", schema = "public", catalog = "survey")
 public class Doctor {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
     @Basic
@@ -25,6 +26,9 @@ public class Doctor {
                     @JoinColumn(name = "doctor_id", referencedColumnName = "id")}
     )
     private List<Patient> patients;
+
+    public Doctor() {
+    }
 
     public Long getId() {
         return id;
@@ -56,5 +60,20 @@ public class Doctor {
 
     public void setUser(User usersByUserId) {
         this.user = usersByUserId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (!(o instanceof Doctor))
+            return false;
+        Doctor doctor = (Doctor) o;
+        return Objects.equals(id, doctor.id) && Objects.equals(description, doctor.description) && Objects.equals(user, doctor.user);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, description, user);
     }
 }

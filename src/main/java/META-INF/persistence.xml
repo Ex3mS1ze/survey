@@ -1,28 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" version="2.0">
 
-<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
-             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
-             http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
-             version="2.1">
-    <persistence-unit name="item-manager-pu" transaction-type="RESOURCE_LOCAL">
-        <mapping-file>META-INF/orm.xml</mapping-file>
-        <class>entities.User</class>
-        <class>entities.Doctor</class>
-        <class>entities.Patient</class>
-        <class>entities.Diagnosis</class>
-        <class>entities.Question</class>
-        <class>entities.Answer</class>
-        <class>entities.Questionnaire</class>
+    <persistence-unit name="NewPersistenceUnit">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <properties>
-            <property name="toplink.jdbc.url" value="jdbc:postgresql://localhost:5432/survey"/>
-            <property name="toplink.jdbc.driver" value="org.postgresql.Driver"/>
+            <!--<property name="hibernate.connection.url" value=""/>-->
+            <!--<property name="hibernate.connection.driver_class" value=""/>-->
+            <!--<property name="hibernate.connection.username" value=""/>-->
+            <!--<property name="hibernate.connection.password" value=""/>-->
+            <!--<property name="hibernate.archive.autodetection" value="class"/>-->
+            <!--<property name="hibernate.show_sql" value="true"/>-->
+            <!--<property name="hibernate.format_sql" value="true"/>-->
+            <!--<property name="hbm2ddl.auto" value="update"/>-->
             <property name="hibernate.connection.url" value="jdbc:postgresql://localhost:5432/survey"/>
             <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>
-            <property name="openjpa.ConnectionURL" value="jdbc:postgresql://localhost:5432/survey"/>
-            <property name="openjpa.ConnectionDriverName" value="org.postgresql.Driver"/>
-            <property name="eclipselink.jdbc.url" value="jdbc:postgresql://localhost:5432/survey"/>
-            <property name="eclipselink.jdbc.driver" value="org.postgresql.Driver"/>
         </properties>
     </persistence-unit>
 </persistence>

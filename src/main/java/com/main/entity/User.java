@@ -1,4 +1,4 @@
-package entities;
+package com.main.entity;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -10,6 +10,7 @@ import java.util.Set;
 @Table(name = "users", schema = "public", catalog = "survey")
 public class User {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
     @Basic
@@ -33,12 +34,14 @@ public class User {
     @Basic
     @Column(name = "gender", nullable = false, length = -1)
     private String gender;
-    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"))
-    @Enumerated
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
     @OneToMany(mappedBy = "user")
     private List<Questionnaire> questionnaires;
+
+    public User() {
+    }
 
     public Long getId() {
         return id;
@@ -114,6 +117,21 @@ public class User {
 
     public List<Questionnaire> getQuestionnaires() {
         return questionnaires;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (!(o instanceof User))
+            return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(username, user.username) && Objects.equals(registrationDate, user.registrationDate) && Objects.equals(gender, user.gender) && Objects.equals(roles, user.roles);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, email, password, username, registrationDate, gender, roles);
     }
 
     public void setQuestionnaires(List<Questionnaire> questionnairesById) {

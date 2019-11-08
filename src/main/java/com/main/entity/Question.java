@@ -1,6 +1,6 @@
-package entities;
+package com.main.entity;
 
-import utilities.StringDbToListConverter;
+import com.main.utilities.StringDbToListConverter;
 
 import javax.persistence.*;
 import java.util.List;
@@ -10,13 +10,14 @@ import java.util.Objects;
 @Table(name = "questions", schema = "public", catalog = "survey")
 public class Question {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
     @Basic
     @Column(name = "text", nullable = false, length = -1)
     private String text;
     @Convert(converter = StringDbToListConverter.class)
-    @Column(name = "options", nullable = true, length = -1)
+    @Column(name = "options", nullable = true)
     private List<String> options;
     @Basic
     @Column(name = "description", nullable = true, length = -1)
@@ -25,13 +26,16 @@ public class Question {
     @Column(name = "input_type", nullable = false)
     private String inputType;
     @Basic
-    @Column(name = "answer_type", nullable = false)
+    @Column(name = "answer_type")
     private String answerType;
     @OneToOne
     @JoinColumn(name = "depends_on_the_question_id", referencedColumnName = "id")
     private Question dependentQuestion;
     @OneToMany(mappedBy = "question")
     private List<Answer> answersById;
+
+    public Question() {
+    }
 
     public Long getId() {
         return id;
@@ -49,11 +53,11 @@ public class Question {
         this.text = text;
     }
 
-    public String getOptions() {
+    public List<String> getOptions() {
         return options;
     }
 
-    public void setOptions(String options) {
+    public void setOptions(List<String> options) {
         this.options = options;
     }
 
@@ -95,5 +99,20 @@ public class Question {
 
     public void setAnswersById(List<Answer> answersById) {
         this.answersById = answersById;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (!(o instanceof Question))
+            return false;
+        Question question = (Question) o;
+        return Objects.equals(id, question.id) && Objects.equals(text, question.text) && Objects.equals(inputType, question.inputType);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, text, inputType);
     }
 }

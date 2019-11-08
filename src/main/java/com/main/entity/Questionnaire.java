@@ -1,4 +1,4 @@
-package entities;
+package com.main.entity;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -9,6 +9,7 @@ import java.util.Objects;
 @Table(name = "questionnaires", schema = "public", catalog = "survey")
 public class Questionnaire {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
     @Basic
@@ -25,6 +26,9 @@ public class Questionnaire {
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private User user;
+
+    public Questionnaire() {
+    }
 
     public Long getId() {
         return id;
@@ -81,11 +85,11 @@ public class Questionnaire {
         if (!(o instanceof Questionnaire))
             return false;
         Questionnaire that = (Questionnaire) o;
-        return Objects.equals(id, that.id) && Objects.equals(date, that.date) && Objects.equals(processed, that.processed) && Objects.equals(answers, that.answers) && Objects.equals(diagnosis, that.diagnosis);
+        return Objects.equals(id, that.id) && Objects.equals(date, that.date) && Objects.equals(processed, that.processed) && Objects.equals(diagnosis, that.diagnosis);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, date, processed, answers, diagnosis);
+        return Objects.hash(id, date, processed, diagnosis);
     }
 }

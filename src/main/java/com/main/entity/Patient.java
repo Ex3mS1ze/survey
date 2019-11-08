@@ -1,4 +1,4 @@
-package entities;
+package com.main.entity;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -7,6 +7,7 @@ import java.util.Objects;
 @Table(name = "patients", schema = "public", catalog = "survey")
 public class Patient {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
     @ManyToOne
@@ -24,6 +25,9 @@ public class Patient {
                     @JoinColumn(name = "doctor_id", referencedColumnName = "id")}
     )
     private Doctor doctor;
+
+    public Patient() {
+    }
 
     public Long getId() {
         return id;
@@ -51,6 +55,21 @@ public class Patient {
 
     public Diagnosis getDiagnosis() {
         return diagnosis;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (!(o instanceof Patient))
+            return false;
+        Patient patient = (Patient) o;
+        return Objects.equals(id, patient.id) && Objects.equals(user, patient.user);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, user);
     }
 
     public void setDiagnosis(Diagnosis diagnosesByDiagnosisId) {
