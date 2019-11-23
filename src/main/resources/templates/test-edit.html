@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/common :: head (pageTitle='Редактирование тестов')"></head>
+<body>
+<div th:replace="fragments/common :: header"></div>
+<main class="jumbotron d-flex align-items-center bg-white m-0">
+  <div class="container">
+    <div class="row">
+      <form class="mx-auto bg-light p-4 rounded was-validated" name="myForm" id="mineForm" method="post"
+            th:field="${questionnaire}" th:action="@{/test}"
+            enctype="multipart/form-data">
+
+        <th:block th:each="question, itemStat : ${questions}">
+          <input type="hidden" th:value="${question.id}"
+                 th:attr="name='answers[' + ${itemStat.index} + '].question.id'">
+
+          <label th:for="${question.id}" th:text="${itemStat.count} + ' ' + ${question.text} "></label>
+
+          <div th:switch="${question.inputType}" th:field="${questionnaire.answers[__${itemStat.index}__].text}"
+               class="form-check">
+            <input th:case="'text'" type="text" th:field="${questionnaire.answers[__${itemStat.index}__].text}"
+                   class="form-control"/>
+            <input th:case="'email'" type="email" th:field="${questionnaire.answers[__${itemStat.index}__].text}"
+                   class="form-control">
+
+            <input th:case="'date'" type="date" th:field="${questionnaire.answers[__${itemStat.index}__].text}"
+                   class="form-control"
+                   th:min="${question.options[0]}" th:max="${question.options[1]}">
+
+            <input th:case="'tel'" type="tel" name="phone"
+                   th:field="${questionnaire.answers[__${itemStat.index}__].text}"
+                   class="form-control"
+                   pattern="\+7[0-9]{10}" placeholder="+79991234567">
+
+            <input th:case="'number'" type="number" th:field="${questionnaire.answers[__${itemStat.index}__].text}"
+                   class="form-control"
+                   th:min="${question.options[0]}" th:max="${question.options[1]}">
+
+            <ul th:case="'checkbox'">
+              <li th:each="option : ${question.options}">
+                <input type="checkbox" th:value="${option}" class="form-check-input" th:checked="${questionnaire.answers[__${itemStat.index}__]}"
+                       th:field="${questionnaire.answers[__${itemStat.index}__].text}"/>
+                <label class="form-check-label" th:for="${question.id}" th:text="${option}">
+                </label>
+              </li>
+            </ul>
+            <ul th:case="'radio'">
+              <li th:each="option: ${question.options}">
+                <input type="radio" th:value="${option}" th:id="${question.id}" name="text"
+                       th:field="${questionnaire.answers[__${itemStat.index}__].text}" class="form-check-input"/>
+                <label class="form-check-label"
+                       th:for="${question.id}"
+                       th:text="${option}">
+                </label>
+              </li>
+            </ul>
+          </div>
+        </th:block>
+        <div class="form-group m-2 d-flex justify-content-around">
+          <button type="submit" name="save" th:action="@{/test}" class="btn btn-secondary">Сохранить</button>
+          <button type="submit" name="operate" class="btn btn-primary" title="Необходимо заполнить все поля">
+            Обработать
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</main>
+
+<footer th:replace="fragments/common :: footer"></footer>
+<th:block th:replace="fragments/common :: bottomScripts"></th:block>
+</body>
+</html>

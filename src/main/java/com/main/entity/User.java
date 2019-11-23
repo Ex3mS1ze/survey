@@ -1,38 +1,49 @@
 package com.main.entity;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table(name = "users", schema = "public", catalog = "survey")
-public class User {
+@Table(name = "users", schema = "public")
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-    @Basic
-    @Column(name = "email", nullable = false, length = -1)
+    @Column(name = "email", nullable = false)
+    @NotEmpty(message = "Введите email")
     private String email;
-    @Basic
-    @Column(name = "password", nullable = false, length = -1)
+    @Column(name = "password", nullable = false)
+    @Size(min = 2, message = "Минимальная длина пароля 2")
     private String password;
-    @Basic
-    @Column(name = "username", nullable = false, length = -1)
-    private String username;
-    @Basic
+    @Transient
+    private String passwordConfirm;
+    @Column(name = "first_name", nullable = false)
+    @NotEmpty(message = "Введите имя")
+    private String firstName;
+    @Column(name = "second_name", nullable = false)
+    @NotEmpty(message = "Введите фамилию")
+    private String secondName;
     @Column(name = "activated", nullable = false)
     private Boolean activated;
-    @Basic
-    @Column(name = "phone_number", nullable = true, length = -1)
+    @Column(name = "phone_number", nullable = true)
+    @Size(min = 8, message = "Минимальная длина номера 8")
     private String phoneNumber;
-    @Basic
     @Column(name = "registration_date", nullable = false)
     private LocalDateTime registrationDate;
-    @Basic
-    @Column(name = "gender", nullable = false, length = -1)
+    @Column(name = "gender", nullable = false)
+    @NotEmpty(message = "Выберите пол")
     private String gender;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
@@ -67,12 +78,32 @@ public class User {
         this.password = password;
     }
 
-    public String getUsername() {
-        return username;
+    public String getPasswordConfirm() {
+        return passwordConfirm;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setPasswordConfirm(String passwordConfirm) {
+        this.passwordConfirm = passwordConfirm;
+    }
+
+    public String getUsername() {
+        return getEmail();
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getSecondName() {
+        return secondName;
+    }
+
+    public void setSecondName(String secondName) {
+        this.secondName = secondName;
     }
 
     public Boolean getActivated() {
@@ -119,6 +150,42 @@ public class User {
         return questionnaires;
     }
 
+    public void setQuestionnaires(List<Questionnaire> questionnairesById) {
+        this.questionnaires = questionnairesById;
+    }
+
+    public boolean checkMandatoryFields() {
+        if (this.firstName == null || this.firstName.isEmpty() || this.secondName == null || this.secondName.isEmpty() || this.email == null || this.email.isEmpty() || this.password == null || this.password.isEmpty() || this.registrationDate == null || this.gender == null || this.gender.isEmpty() || this.phoneNumber == null || this.phoneNumber.isEmpty() || this.roles == null || this.roles.isEmpty()) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return getRoles();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -126,15 +193,13 @@ public class User {
         if (!(o instanceof User))
             return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(username, user.username) && Objects.equals(registrationDate, user.registrationDate) && Objects.equals(gender, user.gender) && Objects.equals(roles, user.roles);
+        return Objects.equals(id, user.id) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(firstName, user.firstName) && Objects.equals(secondName, user.secondName) && Objects.equals(registrationDate, user.registrationDate) && Objects.equals(gender, user.gender) && Objects.equals(roles, user.roles);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, email, password, username, registrationDate, gender, roles);
+        return Objects.hash(id, email, password, firstName, secondName, registrationDate, gender, roles);
     }
 
-    public void setQuestionnaires(List<Questionnaire> questionnairesById) {
-        this.questionnaires = questionnairesById;
-    }
+
 }

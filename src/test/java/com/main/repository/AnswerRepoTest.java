@@ -1,8 +1,10 @@
-package com.main.repositoty;
+package com.main.repository;
 
 import com.main.entity.Answer;
 import com.main.entity.Question;
 import com.main.entity.Questionnaire;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,6 +17,7 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(SpringRunner.class)
 //@Transactional
 public class AnswerRepoTest {
+    private static final Logger LOGGER = LogManager.getLogger(AnswerRepoTest.class.getName());
     @Autowired
     private AnswerRepo answerRepo;
     @Autowired
@@ -39,8 +42,9 @@ public class AnswerRepoTest {
 
     @Test
     public void addQuestion() {
+        LOGGER.info("TEST");
         Question question = new Question();
-        question.setId(4L);
+        question.setId(3L);
         question.setText("Vopros");
         question.setInputType("text");
         Question savedQuestion = questionRepo.save(question);

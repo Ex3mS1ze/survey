@@ -1,22 +1,22 @@
 package com.main.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-@Table(name = "answers", schema = "public", catalog = "survey")
-public class Answer {
+@Table(name = "answers", schema = "public")
+public class Answer implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-    @Basic
-    @Column(name = "text", nullable = true, length = -1)
+    @Column(name = "text", nullable = true)
     private String text;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "question_id", referencedColumnName = "id", nullable = false)
     private Question question;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "questionnaire_id", referencedColumnName = "id", nullable = false)
     private Questionnaire questionnaire;
 
@@ -53,6 +53,11 @@ public class Answer {
 
     public void setQuestionnaire(Questionnaire questionnairesByQuestionnaireId) {
         this.questionnaire = questionnairesByQuestionnaireId;
+    }
+
+    @Override
+    public String toString() {
+        return "Answer{" + "id=" + id + ", text='" + text + '\'' + ", question=" + question + ", questionnaire=" + questionnaire + '}';
     }
 
     @Override

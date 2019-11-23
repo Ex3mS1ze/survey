@@ -5,14 +5,14 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "diagnoses", schema = "public", catalog = "survey")
+@Table(name = "diagnoses", schema = "public")
 public class Diagnosis {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
     @Basic
-    @Column(name = "text", nullable = false, length = -1)
+    @Column(name = "text", nullable = false)
     private String text;
     @OneToMany(mappedBy = "diagnosis")
     private List<Patient> patients;

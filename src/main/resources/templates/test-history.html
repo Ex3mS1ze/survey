@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/common :: head (pageTitle='История тестов')"></head>
+<body>
+<div th:replace="fragments/common :: header"></div>
+<main class="jumbotron d-flex align-items-center bg-white m-0">
+  <div class="container">
+    <div class="row">
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Дата</th>
+          <th scope="col">Статус</th>
+          <th scope="col">Диагноз</th>
+          <th scope="col">Действия</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="questionnaire, itemStat : ${questionnaires}">
+          <th scope="row" th:text="${itemStat.count}">Номер</th>
+          <td th:text="${#temporals.format(questionnaire.date, 'dd MMMM yyyy HH:mm')}">Дата</td>
+          <td th:text="${questionnaire.processed} eq false? 'Не обработан': 'Обработан'">Статус</td>
+          <td th:text="${questionnaire.diagnosis} eq null? 'Не установлен': ${questionnaire.diagnosis.getText()}">
+            Диагноз
+          </td>
+          <td th:if="${questionnaire.processed} eq true" class="text-center">
+            <a th:href="@{/test/history/edit(questionnaireId = ${questionnaire.id},action='view')}" href="№"
+               class="view mr-2" type="post"><i class="far fa-eye"></i></a>
+            <a th:href="@{/test/history/edit(questionnaireId = ${questionnaire.id},action='delete')}" href="№"><i class="delete far fa-trash-alt"></i></a>
+          </td>
+          <td th:if="${questionnaire.processed} ne true" class="text-center">
+            <a th:href="@{/test/history/edit(questionnaireId = ${questionnaire.id},action='view')}" href="№" class="view mr-2"><i class="far fa-eye"></i></a>
+            <a th:href="@{/test/history/edit(questionnaireId = ${questionnaire.id},action='edit')}" href="№"><i class="edit far fa-edit"></i></a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+<footer th:replace="fragments/common :: footer"></footer>
+<th:block th:replace="fragments/common :: bottomScripts"></th:block>
+</body>
+</html>

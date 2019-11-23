@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
+<head th:replace="fragments/common :: head (pageTitle='Вход в систему')"></head>
+<body>
+<div th:replace="fragments/common :: header"></div>
+
+<main class="jumbotron d-flex align-items-center bg-white vh-100 m-0">
+  <div class="container">
+    <div class="row">
+      <form class="mx-auto bg-light border-primary rounded p-4" th:action="@{/login}" method="post">
+        <h1>С возвращением!</h1>
+        <div class="form-group">
+          <label for="inputEmail">Логин</label>
+          <input type="" class="form-control" id="inputEmail"
+                 placeholder="Введите email" name="username" required>
+          <div class="invalid-feedback d-block"></div>
+        </div>
+        <div class="form-group">
+          <label for="inputPassword">Пароль</label>
+          <input type="password" class="form-control" id="inputPassword" placeholder="Введите пароль"
+                 name="password" required>
+          <div class="invalid-feedback d-block"></div>
+        </div>
+        <div class="d-flex flex-column">
+          <button type="submit" class="btn btn-primary my-1">Войти</button>
+          <div class="my-1">
+            <a th:href="@{/registration}" class="btn btn-secondary btn-block">Зарегистрироваться</a>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</main>
+
+<footer th:replace="fragments/common :: footer"></footer>
+<th:block th:replace="fragments/common :: bottomScripts"></th:block>
+
+</body>
+</html>

@@ -1,0 +1,36 @@
+package com.main.controller;
+
+import com.main.entity.User;
+import com.main.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import javax.validation.Valid;
+
+@Controller
+public class RegistrationController {
+    @Autowired
+    private UserService userService;
+
+    @GetMapping("/registration")
+    public String getRegistrationPage(Model model) {
+        model.addAttribute("userForm", new User());
+        return "registration";
+    }
+
+    @PostMapping("/registration")
+    public String handleRegistrationForm(@ModelAttribute("userForm") @Valid User userForm, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            return "registration";
+        }
+
+        userService.saveNewUser(userForm);
+        return "/login";
+    }
+}

@@ -2,11 +2,12 @@ package com.main.entity;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "questionnaires", schema = "public", catalog = "survey")
+@Table(name = "questionnaires", schema = "public")
 public class Questionnaire {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,7 +19,7 @@ public class Questionnaire {
     @Basic
     @Column(name = "processed", nullable = false)
     private Boolean processed;
-    @OneToMany(mappedBy = "questionnaire")
+    @OneToMany(mappedBy = "questionnaire", cascade = CascadeType.ALL)
     private List<Answer> answers;
     @ManyToOne
     @JoinColumn(name = "diagnosis_id", referencedColumnName = "id")
@@ -26,6 +27,10 @@ public class Questionnaire {
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private User user;
+
+    {
+        this.answers = new ArrayList<>();
+    }
 
     public Questionnaire() {
     }
@@ -92,4 +97,9 @@ public class Questionnaire {
     public int hashCode() {
         return Objects.hash(id, date, processed, diagnosis);
     }
+
+    /*@Override
+    public String toString() {
+        return "Questionnaire{" + "id=" + id + ", date=" + date + ", processed=" + processed + ", answers=" + answers + ", diagnosis=" + diagnosis + ", user=" + user + '}';
+    }*/
 }

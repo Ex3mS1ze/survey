@@ -7,25 +7,21 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "questions", schema = "public", catalog = "survey")
+@Table(name = "questions", schema = "public")
 public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-    @Basic
-    @Column(name = "text", nullable = false, length = -1)
+    @Column(name = "text", nullable = false)
     private String text;
     @Convert(converter = StringDbToListConverter.class)
     @Column(name = "options", nullable = true)
     private List<String> options;
-    @Basic
-    @Column(name = "description", nullable = true, length = -1)
+    @Column(name = "description", nullable = true)
     private String description;
-    @Basic
     @Column(name = "input_type", nullable = false)
     private String inputType;
-    @Basic
     @Column(name = "answer_type")
     private String answerType;
     @OneToOne

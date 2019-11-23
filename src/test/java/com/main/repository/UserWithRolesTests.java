@@ -1,4 +1,4 @@
-package com.main.repositoty;
+package com.main.repository;
 
 import com.main.entity.Role;
 import com.main.entity.User;
@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -35,7 +35,8 @@ public class UserWithRolesTests {
         user.setId(3L);
         user.setActivated(true);
         user.setEmail("dru@gmail.com");
-        user.setUsername("name");
+        user.setFirstName("name");
+        user.setSecondName("name");
         user.setGender("male");
         user.setPassword("pass");
         user.setPhoneNumber("89994501020");
@@ -60,4 +61,15 @@ public class UserWithRolesTests {
         assertEquals(2, savedUser.getRoles().size());
     }
 
+    @Test
+    public void findUser() {
+        UserRepo user = this.userRepo;
+        user.findByEmail("ad");
+        assertNotNull(this.user);
+    }
+
+    @Test
+    public void checkMandatoryFieldTest() {
+        assertTrue(user.checkMandatoryFields());
+    }
 }

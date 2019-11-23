@@ -5,14 +5,14 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "doctors", schema = "public", catalog = "survey")
+@Table(name = "doctors", schema = "public")
 public class Doctor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
     @Basic
-    @Column(name = "description", nullable = true, length = -1)
+    @Column(name = "description", nullable = true)
     private String description;
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)

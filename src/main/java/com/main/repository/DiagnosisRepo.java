@@ -1,4 +1,4 @@
-package com.main.repositoty;
+package com.main.repository;
 
 import com.main.entity.Diagnosis;
 import org.springframework.data.jpa.repository.JpaRepository;
