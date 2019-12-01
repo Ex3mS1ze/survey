@@ -1,11 +1,33 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="fragments/common :: head (pageTitle='Главная страница')"></head>
 <body>
 <div th:replace="fragments/common :: header"></div>
-<h1>Главная</h1>
+<main>
+  <div class="container">
+    <div class="row justify-content-center mt-2">
+      <div class="col">
+        <img  src="/static/images/doctors-short.jpg" alt="">
+      </div>
+      <div class="col">
+        <h1>Новосибирский медицинский центр</h1>
+        <span>
+                Выявление бессимптомных форм рака или предрака некоторых локализаций позволяет либо успешно
+                вылечить рак, либо предотвратить его вовсе. Однако большинство людей и близко не представляют какие
+                методы диагностики и с какой периодичностью им необходимо применять. При этом правильный набор и
+                алгоритм диагностических обследований зависит от многих факторов: пола, возраста, особенностей
+                наследственности, истории жизни и прочих. Невозможно создать единые правила обследования, которые
+                подходят всему населению. Они значительно различаются для разных групп риска.
+        </span>
+      </div>
+    </div>
+  </div>
+</main>
+
 <footer th:replace="fragments/common :: footer"></footer>
 <th:block th:replace="fragments/common :: bottomScripts"></th:block>
+
 
 </body>
 </html>

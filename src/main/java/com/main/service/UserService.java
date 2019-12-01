@@ -1,31 +1,42 @@
 package com.main.service;
 
+import com.main.entity.ActivationCode;
+import com.main.entity.Role;
 import com.main.entity.User;
+import com.main.repository.ActivationCodeRepo;
 import com.main.repository.RoleRepo;
 import com.main.repository.UserRepo;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
-
-import static org.springframework.security.core.context.SecurityContextHolder.getContext;
+import java.util.*;
 
 @Service
-public class UserService implements UserDetailsService {
+public class UserService implements UserDetailsService, ApplicationListener<AuthenticationSuccessEvent> {
     private static final Logger LOGGER = LogManager.getLogger(UserService.class.getName());
 
     @Autowired
     private UserRepo userRepo;
     @Autowired
     private RoleRepo roleRepo;
+    @Autowired
+    private ActivationCodeRepo activationCodeRepo;
+    @Autowired
+    private EmailSender emailSender;
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -39,19 +50,49 @@ public class UserService implements UserDetailsService {
         return userFromRepo;
     }
 
-    public void saveNewUser(User user) {
-        //TODO change to email confirmation
-        user.setActivated(true);
-        user.setRoles(roleRepo.findByRolename("ROLE_USER"));
-        user.setRegistrationDate(LocalDateTime.now());
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        if (user.checkMandatoryFields() && !userRepo.existsUserByEmail(user.getEmail())){
-            userRepo.save(user);
-            return;
-        }
-        LOGGER.warn("SaveNewUser rejected. User with same email {} exist or not all fields fulfilled", user.getEmail());
+    @Override
+    public void onApplicationEvent(AuthenticationSuccessEvent authenticationSuccessEvent) {
+        User user = (User) authenticationSuccessEvent.getAuthentication().getPrincipal();
+        User userFromDb = userRepo.findByEmail(user.getEmail());
+        userFromDb.setLastVisitDate(LocalDateTime.now());
+        userRepo.save(userFromDb);
+
+        LOGGER.info("User {} logged in.", user.getEmail());
     }
 
+    /**
+     * Save new User.
+     *
+     * <p>Before save check if <tt>User</tt> with same mail not exist and all mandatory fields fulfilled.</p>
+     *
+     * @param user
+     * @return <tt>true</tt> - if new <tt>User</tt> saved. <tt>false</tt> - if wasn't.
+     */
+    public boolean saveNewUser(User user, String userRole) {
+        user.setRoles(new HashSet<Role>(){{
+            add(roleRepo.findByRolename("ROLE_USER"));
+        }});
+        if (userRole.equals("patient")) {
+            user.getRoles().add(roleRepo.findByRolename("ROLE_PATIENT"));
+        }
+
+        user.setRegistrationDate(LocalDateTime.now());
+        user.setActivated(false);
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        if (user.checkMandatoryFields() && !userRepo.existsUserByEmail(user.getEmail())) {
+            userRepo.save(user);
+            return true;
+        }
+
+        LOGGER.warn("SaveNewUser rejected. User with same email {} exist or not all fields fulfilled", user.getEmail());
+        return false;
+    }
+
+    /**
+     * Edit <tt>User</tt> data (firstName, secondName, phoneNumber) and save changes in DB.
+     *
+     * @param user
+     */
     public void editUserData(User user) {
         User userFromSecurityContext = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         user.setId(userFromSecurityContext.getId());
@@ -65,7 +106,117 @@ public class UserService implements UserDetailsService {
         }
 
         LOGGER.warn("EditUser rejected. User with id {} doesn't exist or not all fields fulfilled", user.getId());
+    }
 
+    public List<User> getAllUsers() {
+        return userRepo.findAll();
+    }
+
+    public User getUserById(Long id) {
+        return userRepo.findById(id).orElse(new User());
+    }
+
+    /**
+     * <p>Check if activationCode for user already exist. If exist execution is interrupted.</p>
+     * <p>If not exits - create new <tt>ActivationCode</tt> for existed <tt>User</tt>.</p>
+     * <p>Save <b>activationCode</b> in DB.</p>
+     * <p>Forced sets <b>activated</b> variable for User to false. Save changes in DB.</p>
+     * <p>Send message with <b>activationCode</b> to User <b>mail</b>.</p>
+     *
+     * @param user
+     * @return <tt>true</tt> - if new code created and sended. <tt>false</tt> - if not.
+     */
+    public boolean createAndSendActivationCode(User user) {
+        Optional<ActivationCode> activationCodeFromDB = activationCodeRepo.findByUser(user);
+        if (activationCodeFromDB.isPresent()) {
+            return false;
+        }
+        ActivationCode activationCode = new ActivationCode(user);
+        activationCodeRepo.save(activationCode);
+
+        user.setActivated(false);
+        userRepo.save(user);
+
+        String message = String.format("Здравствуйте, %s! \n + Для активации аккаунта перейдите по ссылке: " + "http://localhost:8080/activate/%s", user.getFirstName(), activationCode.getCode());
+        emailSender.send(user.getEmail(), "Активация аккаунта", message);
+
+        LOGGER.info("Created activation code for User:{}, current activation status: {}", user.getEmail(), user.getActivated());
+        return true;
+    }
+
+    public boolean activateUser(String code) {
+        Optional<ActivationCode> activationCodeFromDb = activationCodeRepo.findByCode(code);
+        if (!activationCodeFromDb.isPresent()) {
+            LOGGER.warn("Activation code:{} for wasn't found", code);
+            return false;
+        }
+
+        User user = activationCodeFromDb.get().getUser();
+        user.setActivated(true);
+        userRepo.save(user);
+        activationCodeRepo.delete(activationCodeFromDb.get());
+        LOGGER.info("User:{} activated. Record: id={} from activation_code table deleted.", user.getEmail(), activationCodeFromDb.get().getId());
+        return true;
+    }
+
+    /**
+     * Restore password by change it to autogenerated one. Then send email with new password.
+     *
+     * <p>Check if user with <b>email</b> exist. If not execution is interrupted.</p>
+     * <p>Set activation status to <tt>true</tt> and delete activationCode if exist.</p>
+     * <p>Generate new password and set it to User. Then send email with new password.</p>
+     * @param email
+     * @return <tt>true</tt> - if user with <b>email</b> exist and password restored. <tt>false</tt> - if user with <b>email</b> doesn't exist.
+     */
+    public boolean restorePassword(String email) {
+        if (!userRepo.existsUserByEmail(email)) {
+            LOGGER.info("Reset password failed, email:{} not found in DB.", email);
+            return false;
+        }
+
+        User userFromDb = userRepo.findByEmail(email);
+        if (activationCodeRepo.findByUser(userFromDb).isPresent()) {
+            activationCodeRepo.deleteByUser(userFromDb);
+            userFromDb.setActivated(true);
+        }
+
+        String password = RandomStringUtils.randomAlphanumeric(8);
+        userFromDb.setPassword(bCryptPasswordEncoder.encode(password));
+        userRepo.save(userFromDb);
+
+        String message = String.format("Здравствуйте, %s! \n + Ваш новый пароль: " + "%s", userFromDb.getFirstName(), password);
+        emailSender.send(userFromDb.getEmail(), "Восстановление пароля", message);
+
+        LOGGER.info("Password for User:{} restored.", userFromDb.getEmail());
+        return true;
+    }
+
+    public void updatePrincipal() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User oldUser = (User) auth.getPrincipal();
+        User userFromDB = userRepo.findByEmail(oldUser.getEmail());
+        Authentication newAuth = new UsernamePasswordAuthenticationToken(userFromDB, userFromDB.getPassword(), userFromDB.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(newAuth);
+    }
+
+    public boolean changePassword(String oldPass, String newPass) {
+        String encodeOldPass = bCryptPasswordEncoder.encode(oldPass);
+        String encodeNewPass = bCryptPasswordEncoder.encode(newPass);
+        User userFromSecurityContext = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User userFromDb = userRepo.findByEmail(userFromSecurityContext.getEmail());
+
+        if (!userFromDb.getPassword().equals(encodeOldPass)) {
+            LOGGER.warn("Password from DB not equal password from principal for User:{}", userFromDb.getEmail());
+            return false;
+        }
+
+        userFromDb.setPassword(encodeNewPass);
+        LOGGER.info("User:{} successfully change password.", userFromDb.getEmail());
+        return true;
+    }
+
+    public Set<Role> getAllRoles() {
+        return new HashSet<>(roleRepo.findAll());
     }
 
 }

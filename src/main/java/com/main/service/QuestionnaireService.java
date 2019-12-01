@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -46,10 +47,22 @@ public class QuestionnaireService {
         LOGGER.info("New questionnaire created{}", questionnaireSaved.toString());
     }
 
+    public void saveExistedQuestionnaire(Questionnaire questionnaire, Long id) {
+        Optional<Questionnaire> questionnaireFromDb = questionnaireRepo.findById(id);
+        //TODO add exception wtih handler
+        questionnaire.getAnswers().forEach(answer -> answer.setQuestionnaire(questionnaireFromDb.get()));
+        questionnaireFromDb.get().setAnswers(questionnaire.getAnswers());
+        questionnaireRepo.save(questionnaireFromDb.get());
+    }
+
     public List<Questionnaire> getAllUsersQuestionnaires(User... user) {
         User userFromSecurityContext = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<Questionnaire> questionnaires = questionnaireRepo.findAllByUserOrderByDate(userFromSecurityContext);
         return questionnaires;
+    }
+
+    public List<Questionnaire> getAllQuestionnaires() {
+        return questionnaireRepo.findAll();
     }
 
     public void deleteQuestionnaireById(Long id) {
@@ -66,4 +79,6 @@ public class QuestionnaireService {
         Collections.sort(existedQuestionnaire.getAnswers(), (a1, a2) -> a1.getQuestion().getId().compareTo(a2.getQuestion().getId()));
         return questionnaire.orElseGet(Questionnaire::new);
     }
+
+
 }

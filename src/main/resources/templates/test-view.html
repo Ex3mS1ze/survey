@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/common :: head (pageTitle='Просмотр результатов теста')"></head>
+<body>
+<div th:replace="fragments/common :: header"></div>
+<main class="jumbotron d-flex align-items-center bg-white m-0">
+  <div class="container">
+    <div class="row">
+      <fieldset class="mx-auto w-75" disabled>
+        <form class=" bg-light p-4 rounded" name="myForm" id="mineForm" method="post">
+
+          <th:block th:each="question, itemStat : ${questions}">
+
+            <label th:for="${question.id}" th:text="${itemStat.count} + ' ' + ${question.description} "></label>
+
+            <div th:switch="${question.inputType}" class="form-check">
+              <input th:case="'text'" type="text" th:field="${questionnaire.answers[__${itemStat.index}__].text}"
+                     class="form-control"/>
+              <input th:case="'email'" type="email" th:field="${questionnaire.answers[__${itemStat.index}__].text}"
+                     class="form-control">
+
+              <input th:case="'date'" type="date" th:field="${questionnaire.answers[__${itemStat.index}__].text}"
+                     class="form-control">
+
+              <input th:case="'tel'" type="tel" name="phone"
+                     th:field="${questionnaire.answers[__${itemStat.index}__].text}"
+                     class="form-control">
+
+              <input th:case="'number'" type="number" th:field="${questionnaire.answers[__${itemStat.index}__].text}"
+                     class="form-control">
+
+              <ul th:case="'checkbox'" class="list-unstyled">
+                <li th:each="option, optionStat : ${question.options}">
+                  <input type="checkbox" th:value="${option}" class="form-check-input"
+                         th:field="${questionnaire.answers[__${itemStat.index}__].textList[__${optionStat.index}__]}"/>
+                  <label class="form-check-label" th:for="${question.id}" th:text="${option}">
+                  </label>
+                </li>
+              </ul>
+              <ul th:case="'radio'" class="list-unstyled">
+                <li th:each="option: ${question.options}">
+                  <input type="radio" th:value="${option}" th:id="${question.id}" name="text"
+                         th:field="${questionnaire.answers[__${itemStat.index}__].text}" class="form-check-input"/>
+                  <label class="form-check-label" th:for="${question.id}" th:text="${option}">
+                  </label>
+                </li>
+              </ul>
+            </div>
+          </th:block>
+        </form>
+      </fieldset>
+    </div>
+  </div>
+</main>
+
+<footer th:replace="fragments/common :: footer"></footer>
+<th:block th:replace="fragments/common :: bottomScripts"></th:block>
+</body>
+</html>

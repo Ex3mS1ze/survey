@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/common :: head (pageTitle='Страница администратора')"></head>
+<body>
+<div th:replace="fragments/common :: header"></div>
+<main class="jumbotron d-flex align-items-center bg-white m-0">
+  <div class="container">
+    <div class="row">
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">ID</th>
+          <th scope="col">Дата</th>
+          <th scope="col">Имя</th>
+          <th scope="col">Email</th>
+          <th scope="col">Роли</th>
+          <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user, itemStat : ${users}">
+          <th scope="row" th:text="${itemStat.count}">Номер</th>
+          <td th:text="${user.id}">ID</td>
+          <td th:text="${#temporals.format(user.registrationDate, 'dd.MM.yyyy')}">Регистрация</td>
+          <td th:text="${user.fullName}">Статус</td>
+          <td th:text="${user.email}">Почта</td>
+          <td th:text="${user.roles}">Роли</td>
+          <td class="text-center">
+            <a href="№" title="Редактировать" th:href="@{/admin/edit_user(userId=${user.id})}" ><i
+                class="edit far fa-edit mr-2"></i></a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+<footer th:replace="fragments/common :: footer"></footer>
+<th:block th:replace="fragments/common :: bottomScripts"></th:block>
+</body>
+</html>

@@ -8,6 +8,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -29,6 +30,8 @@ public class User implements UserDetails {
     private String password;
     @Transient
     private String passwordConfirm;
+    @Transient
+    private String oldPassword;
     @Column(name = "first_name", nullable = false)
     @NotEmpty(message = "Введите имя")
     private String firstName;
@@ -50,6 +53,10 @@ public class User implements UserDetails {
     private Set<Role> roles;
     @OneToMany(mappedBy = "user")
     private List<Questionnaire> questionnaires;
+//    @Column(name = "activation_code")
+//    private String activationCode;
+    @Column(name = "last_visit_date", nullable = false)
+    private LocalDateTime lastVisitDate;
 
     public User() {
     }
@@ -80,6 +87,22 @@ public class User implements UserDetails {
 
     public String getPasswordConfirm() {
         return passwordConfirm;
+    }
+
+    public String getOldPassword() {
+        return oldPassword;
+    }
+
+    public void setOldPassword(String oldPassword) {
+        this.oldPassword = oldPassword;
+    }
+
+    public LocalDateTime getLastVisitDate() {
+        return lastVisitDate;
+    }
+
+    public void setLastVisitDate(LocalDateTime lastVisitDate) {
+        this.lastVisitDate = lastVisitDate;
     }
 
     public void setPasswordConfirm(String passwordConfirm) {
@@ -154,11 +177,27 @@ public class User implements UserDetails {
         this.questionnaires = questionnairesById;
     }
 
+//    public String getActivationCode() {
+//        return activationCode;
+//    }
+//
+//    public void setActivationCode(String activationCode) {
+//        this.activationCode = activationCode;
+//    }
+
     public boolean checkMandatoryFields() {
         if (this.firstName == null || this.firstName.isEmpty() || this.secondName == null || this.secondName.isEmpty() || this.email == null || this.email.isEmpty() || this.password == null || this.password.isEmpty() || this.registrationDate == null || this.gender == null || this.gender.isEmpty() || this.phoneNumber == null || this.phoneNumber.isEmpty() || this.roles == null || this.roles.isEmpty()) {
             return false;
         }
         return true;
+    }
+
+    public String getFullName() {
+        return this.firstName + ' ' + this.secondName;
+    }
+
+    private Field[] getALlFields() {
+        return this.getClass().getFields();
     }
 
     @Override

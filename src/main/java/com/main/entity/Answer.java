@@ -1,18 +1,24 @@
 package com.main.entity;
 
+import com.main.utilities.StringDbToListConverter;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "answers", schema = "public")
-public class Answer implements Serializable {
+public class Answer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
     @Column(name = "text", nullable = true)
     private String text;
+    @Column(name = "text_list", nullable = true)
+    @Convert(converter = StringDbToListConverter.class)
+    private List<String> textList;
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "question_id", referencedColumnName = "id", nullable = false)
     private Question question;
@@ -37,6 +43,14 @@ public class Answer implements Serializable {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public List<String> getTextList() {
+        return textList;
+    }
+
+    public void setTextList(List<String> textList) {
+        this.textList = textList;
     }
 
     public Question getQuestion() {

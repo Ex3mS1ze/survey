@@ -37,36 +37,52 @@ public class TestController {
     }
 
     @PostMapping("/test")
-    public String saveAnswers(@ModelAttribute("questionnaire") Questionnaire questionnaire) {
-        questionnaireService.saveNewQuestionnaire(questionnaire);
+    public String saveAnswers(@RequestParam("isNew") Boolean isNew, @RequestParam(value = "questionnaireId", required = false) Long questionnaireId, @ModelAttribute("questionnaire") Questionnaire questionnaire) {
+
+        if (isNew) {
+            questionnaireService.saveNewQuestionnaire(questionnaire);
+        } else {
+            questionnaireService.saveExistedQuestionnaire(questionnaire, questionnaireId);
+        }
+
         return "redirect:/test/history";
     }
 
     @GetMapping("/test/history")
     public String getTestHistory(Model model) {
-        List<Questionnaire> questionnaires = questionnaireService.getAllUsersQuestionnaires();
+//        List<Questionnaire> questionnaires = questionnaireService.getAllUsersQuestionnaires();
+        List<Questionnaire> questionnaires = questionnaireService.getAllQuestionnaires();
+
         model.addAttribute("questionnaires", questionnaires);
         return "test-history";
     }
 
+    //TODO Change to POST
     @GetMapping("/test/history/edit")
-    public String editQuestionnaire(@RequestParam("questionnaireId") Long questionnaireId,
-                                    @RequestParam("action") String action, Model model) {
+    public String editQuestionnaire(@RequestParam("questionnaireId") Long questionnaireId, @RequestParam("action") String action, Model model) {
         switch (action) {
             case "delete":
                 questionnaireService.deleteQuestionnaireById(questionnaireId);
                 return "redirect:/test/history";
-            case "view":
+            case "edit": {
                 Questionnaire questionnaire = questionnaireService.findQuestionnaireById(questionnaireId);
                 List<Question> questions = questionnaireService.getAllQuestions();
-                model.addAttribute("questionnaire",questionnaire);
-                model.addAttribute("questions",questions);
+                model.addAttribute("questionnaire", questionnaire);
+                model.addAttribute("questions", questions);
                 return "test-edit";
-            case "edit":
-                break;
+            }
             default:
                 return "redirect:/test/history";
         }
-        return "redirect:/test/history";
     }
+
+    @GetMapping("/test/history/view")
+    public String viewQuestionnaire(@RequestParam("questionnaireId") Long questionnaireId, Model model) {
+        Questionnaire questionnaire = questionnaireService.findQuestionnaireById(questionnaireId);
+        List<Question> questions = questionnaireService.getAllQuestions();
+        model.addAttribute("questionnaire", questionnaire);
+        model.addAttribute("questions", questions);
+        return "test-view";
+    }
+
 }

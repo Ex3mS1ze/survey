@@ -7,17 +7,17 @@
 <main class="jumbotron d-flex align-items-center bg-white vh-100 m-0">
   <div class="container">
     <div class="row">
-      <form class="mx-auto bg-light p-4 rounded" method="post" th:action="@{/registration}"
+      <form class="col col-lg-6 mx-auto bg-light p-4 rounded shadow" method="post" th:action="@{/registration}"
             th:object="${userForm}">
         <h1>Регистрация</h1>
-        <div class="form-group m-0">
+        <div class="form-group m-0 mb-2">
           <label for="inputEmail">Логин</label>
           <input type="email" class="form-control" id="inputEmail" placeholder="Введите email"
                  required th:field="*{email}">
           <p class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</p>
           <!--<div class="d-block" id="ajaxGetUserServletResponse">${nameErr}</div>-->
         </div>
-        <div class="form-group m-0">
+        <div class="form-group mx-0 p-2 border rounded">
           <label for="inputEmail">Личные данные</label>
           <input type="text" class="form-control mb-2" placeholder="Введите имя" required th:field="*{firstName}">
           <p class="text-danger" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">firstName
@@ -30,34 +30,50 @@
             phoneNumber Error</p>
 
           <div class="form-check form-check-inline">
-            <input type="radio" class="form-check-input" id="gender1" name="gender" value="М" th:field="*{gender}">
+            <input type="radio" class="form-check-input" id="gender1" name="gender" value="М" required
+                   th:field="*{gender}">
             <label class="form-check-label" for="gender1"> М </label>
           </div>
           <div class="form-check form-check-inline">
             <input type="radio" class="form-check-input" id="gender2" name="gender" value="Ж" th:field="*{gender}">
             <label class="form-check-label" for="gender2"> Ж </label>
           </div>
-
         </div>
-        <div class="form-group">
+        <div class="form-group mx-0 p-2 border rounded">
           <label for="inputPassword1">Пароль</label>
           <input type="password" class="form-control" id="inputPassword1" required placeholder="Введите пароль"
                  th:field="*{password}">
-         <p class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Name Error</p>
+          <p class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Name Error</p>
           <small>Минимальная длина пароля 7 символов</small>
-          <br>
-          <input type="password" class="form-control" id="inputPassword2" required placeholder="Повторите пароль"
+          <input type="password" class="form-control mt-2" id="inputPassword2" required placeholder="Повторите пароль"
                  th:field="*{passwordConfirm}">
         </div>
+
+        <div class="form-group mx-0 mb-2">
+          <label for="inputRole">Ваша роль</label>
+          <select class="form-control" id="inputRole" name="role" required>
+            <option value="patient">Пациент</option>
+            <option value="doctor">Врач</option>
+            <option value="analytic">Аналитик</option>
+          </select>
+        </div>
+
         <div class="form-group form-check">
           <input type="checkbox" class="form-check-input" required id="exampleCheck1">
           <label class="form-check-label" for="exampleCheck1">Я прочитал(a) <a
               href="https://policies.google.com/privacy?hl=ru" target="_blank">правила</a></label>
         </div>
-        <button type="submit" class="btn btn-primary btn-block" onclick="checkRegistrationForm(event);">
+        <div>
+          <p class="text-danger mb-0" th:text="${captchaError}">CaptchaError</p>
+        </div>
+        <div class="mb-2" id="html_element"></div>
+        <button type="submit" class="btn btn-primary btn-block">
           Зарегистрироваться
         </button>
       </form>
+      <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
+              async defer>
+      </script>
     </div>
 
   </div>

@@ -21,7 +21,7 @@ public class ProfileController {
     UserService userService;
 
     @GetMapping("/profile")
-    public String getLoginPage(Authentication authentication, RedirectAttributes redirectAttrs, Model model) {
+    public String getProfilePage(Authentication authentication, RedirectAttributes redirectAttrs, Model model) {
         User user = (User) authentication.getPrincipal();
         model.addAttribute("userForm", user);
         return "profile";
@@ -30,9 +30,19 @@ public class ProfileController {
     @PostMapping("/editPersonalData")
     public String editPersonalData(@ModelAttribute("userForm") User userForm, BindingResult bindingResult, Model model) {
         userService.editUserData(userForm);
+        //TODO valid
         if (bindingResult.hasErrors()) {
             return "profile";
         }
+        userService.updatePrincipal();
         return "redirect:/profile";
+    }
+
+    @PostMapping("/changePassword")
+    public String changePassword(@ModelAttribute("userForm") User userForm, BindingResult bindingResult, Model model) {
+        //TODO valid
+        userService.changePassword(userForm.getOldPassword(), userForm.getPassword());
+        userService.updatePrincipal();
+        return "login";
     }
 }

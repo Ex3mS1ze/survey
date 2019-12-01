@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Set;
 
 public interface RoleRepo extends JpaRepository<Role, Long> {
-    Set<Role> findByRolename(String rolename);
+    Role findByRolename(String rolename);
 }

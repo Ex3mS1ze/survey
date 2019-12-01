@@ -8,58 +8,53 @@
   <div class="container">
     <div class="row">
       <form class="mx-auto bg-light p-4 rounded was-validated" name="myForm" id="mineForm" method="post"
-            th:field="${questionnaire}" th:action="@{/test}"
-            enctype="multipart/form-data">
+            th:field="${questionnaire}" th:action="@{/test(isNew=false, questionnaireId=${questionnaire.id})}">
 
         <th:block th:each="question, itemStat : ${questions}">
           <input type="hidden" th:value="${question.id}"
                  th:attr="name='answers[' + ${itemStat.index} + '].question.id'">
+          <input type="hidden" th:value="${questionnaire.answers[__${itemStat.index}__].id}"
+                 th:attr="name='answers[' + ${itemStat.index} + '].id'">
 
           <label th:for="${question.id}" th:text="${itemStat.count} + ' ' + ${question.text} "></label>
 
-          <div th:switch="${question.inputType}" th:field="${questionnaire.answers[__${itemStat.index}__].text}"
-               class="form-check">
-            <input th:case="'text'" type="text" th:field="${questionnaire.answers[__${itemStat.index}__].text}"
-                   class="form-control"/>
-            <input th:case="'email'" type="email" th:field="${questionnaire.answers[__${itemStat.index}__].text}"
-                   class="form-control">
+          <div class="form-check" th:switch="${question.inputType}">
+            <input class="form-control" type="text" th:case="'text'"
+                   th:field="${questionnaire.answers[__${itemStat.index}__].text}"/>
+            <input class="form-control" type="email" th:case="'email'"
+                   th:field="${questionnaire.answers[__${itemStat.index}__].text}">
 
-            <input th:case="'date'" type="date" th:field="${questionnaire.answers[__${itemStat.index}__].text}"
-                   class="form-control"
-                   th:min="${question.options[0]}" th:max="${question.options[1]}">
+            <input class="form-control" type="date" th:case="'date'"
+                   th:field="${questionnaire.answers[__${itemStat.index}__].text}" th:min="${question.options[0]}"
+                   th:max="${question.options[1]}">
 
-            <input th:case="'tel'" type="tel" name="phone"
+            <input class="form-control" type="tel" name="phone" pattern="\+7[0-9]{10}" placeholder="+79991234567"
+                   th:case="'tel'" th:field="${questionnaire.answers[__${itemStat.index}__].text}">
+
+            <input class="form-control" type="number" th:case="'number'"
                    th:field="${questionnaire.answers[__${itemStat.index}__].text}"
-                   class="form-control"
-                   pattern="\+7[0-9]{10}" placeholder="+79991234567">
-
-            <input th:case="'number'" type="number" th:field="${questionnaire.answers[__${itemStat.index}__].text}"
-                   class="form-control"
                    th:min="${question.options[0]}" th:max="${question.options[1]}">
 
             <ul th:case="'checkbox'">
-              <li th:each="option : ${question.options}">
-                <input type="checkbox" th:value="${option}" class="form-check-input" th:checked="${questionnaire.answers[__${itemStat.index}__]}"
-                       th:field="${questionnaire.answers[__${itemStat.index}__].text}"/>
+              <li th:each="option, optionStat : ${question.options}">
+                <input type="checkbox" th:value="${option}" class="form-check-input"
+                       th:field="${questionnaire.answers[__${itemStat.index}__].textList[__${optionStat.index}__]}"/>
                 <label class="form-check-label" th:for="${question.id}" th:text="${option}">
                 </label>
               </li>
             </ul>
             <ul th:case="'radio'">
               <li th:each="option: ${question.options}">
-                <input type="radio" th:value="${option}" th:id="${question.id}" name="text"
-                       th:field="${questionnaire.answers[__${itemStat.index}__].text}" class="form-check-input"/>
-                <label class="form-check-label"
-                       th:for="${question.id}"
-                       th:text="${option}">
-                </label>
+                <input class="form-check-input" type="radio" name="text" th:value="${option}" th:id="${question.id}"
+                       th:field="${questionnaire.answers[__${itemStat.index}__].text}"/>
+                <label class="form-check-label" th:for="${question.id}" th:text="${option}"> </label>
               </li>
             </ul>
           </div>
         </th:block>
         <div class="form-group m-2 d-flex justify-content-around">
-          <button type="submit" name="save" th:action="@{/test}" class="btn btn-secondary">Сохранить</button>
-          <button type="submit" name="operate" class="btn btn-primary" title="Необходимо заполнить все поля">
+          <button class="btn btn-secondary" type="submit" name="save" th:action="@{/test}">Сохранить</button>
+          <button class="btn btn-primary" type="submit" title="Необходимо заполнить все поля" name="operate">
             Обработать
           </button>
         </div>

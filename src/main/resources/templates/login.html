@@ -9,22 +9,25 @@
 <main class="jumbotron d-flex align-items-center bg-white vh-100 m-0">
   <div class="container">
     <div class="row">
-      <form class="mx-auto bg-light border-primary rounded p-4" th:action="@{/login}" method="post">
+      <form class="col-8 col-lg-5 mx-auto bg-light border-primary rounded p-4 shadow" th:action="@{/login}" method="post">
         <h1>С возвращением!</h1>
+        <div th:text="${activationStatus}"></div>
         <div class="form-group">
-          <label for="inputEmail">Логин</label>
-          <input type="" class="form-control" id="inputEmail"
+          <label for="username">Логин</label>
+          <input type="" class="form-control" id="username"
                  placeholder="Введите email" name="username" required>
-          <div class="invalid-feedback d-block"></div>
         </div>
         <div class="form-group">
-          <label for="inputPassword">Пароль</label>
-          <input type="password" class="form-control" id="inputPassword" placeholder="Введите пароль"
+          <label for="password">Пароль</label>
+          <input type="password" class="form-control" id="password" placeholder="Введите пароль"
                  name="password" required>
-          <div class="invalid-feedback d-block"></div>
+          <div class="invalid-feedback d-block" th:text="${loginDataError}"></div>
+          <div class="my-1">
+            <a href="#" class="text-decoration-none" th:href="@{/restore_password}">Забыли пароль?</a>
+          </div>
         </div>
         <div class="d-flex flex-column">
-          <button type="submit" class="btn btn-primary my-1">Войти</button>
+          <button id="loginConfirm" type="submit" class="btn btn-primary my-1">Войти</button>
           <div class="my-1">
             <a th:href="@{/registration}" class="btn btn-secondary btn-block">Зарегистрироваться</a>
           </div>

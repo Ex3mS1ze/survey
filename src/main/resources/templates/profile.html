@@ -37,7 +37,7 @@
         <div class="form-group">
           <label for="oldPassword">Введите старый пароль</label>
           <input type="password" class="form-control" id="oldPassword" required
-                 placeholder="Старый пароль" th:field="*{password}">
+                 placeholder="Старый пароль" th:field="*{oldPassword}">
           <p class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Name Error</p>
           <label for="inputPassword1">Введите старый пароль</label>
           <input type="password" class="form-control" id="inputPassword1" required

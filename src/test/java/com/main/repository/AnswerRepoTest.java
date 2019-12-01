@@ -42,7 +42,6 @@ public class AnswerRepoTest {
 
     @Test
     public void addQuestion() {
-        LOGGER.info("TEST");
         Question question = new Question();
         question.setId(3L);
         question.setText("Vopros");
