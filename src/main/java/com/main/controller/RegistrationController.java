@@ -8,9 +8,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -28,9 +31,6 @@ public class RegistrationController {
     @Autowired
     private RestTemplate restTemplate;
 
-    @Autowired
-    private EmailSender emailSender;
-
     @Value("${recaptcha.secret}")
     private String secret;
 
@@ -41,10 +41,7 @@ public class RegistrationController {
     }
 
     @PostMapping("/registration")
-    public String handleRegistrationForm(@ModelAttribute("userForm") @Valid User userForm,
-                                         BindingResult bindingResult,
-                                         @RequestParam("role") String userRole,
-                                         @RequestParam("g-recaptcha-response") String captchaResponse, Model model) {
+    public String handleRegistrationForm(@ModelAttribute("userForm") @Valid User userForm, BindingResult bindingResult, @RequestParam("role") String userRole, @RequestParam("g-recaptcha-response") String captchaResponse, Model model) {
 
         String url = String.format(CAPTCHA_URL, secret, captchaResponse);
         CaptchaResponseDto response = restTemplate.postForObject(url, Collections.emptyList(), CaptchaResponseDto.class);
@@ -65,8 +62,8 @@ public class RegistrationController {
 
         User newUser = (User) userService.loadUserByUsername(userForm.getEmail());
         userService.createAndSendActivationCode(newUser);
-
-        return "login";
+        model.addAttribute("emailToActivate", newUser.getEmail());
+        return "tip-activate";
     }
 
     @GetMapping("/activate/{code}")
@@ -92,4 +89,11 @@ public class RegistrationController {
         userService.restorePassword(userFrom.getEmail());
         return "index";
     }
+
+    @GetMapping("/search_used_mail")
+    public ResponseEntity<?> isEmailUsed(@RequestParam(value = "enteredEmail")  String email) {
+        boolean emailUsed = userService.isEmailUsed(email);
+        return ResponseEntity.ok(emailUsed);
+    }
+
 }

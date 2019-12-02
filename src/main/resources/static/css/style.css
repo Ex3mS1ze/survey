@@ -9,3 +9,29 @@ body {
 header {
     padding-bottom: 56px;
 }
+
+table.dataTable th:nth-child(1) {
+    width: auto;
+    max-width: 150px;
+}
+
+table.dataTable td:nth-child(1){
+    width: auto;
+    max-width: 150px;
+}
+
+tfoot input {
+    width: 100%;
+    max-width: 100px;
+    box-sizing: border-box;
+}
+
+.numbers {
+    font-size: 20px;
+    font-weight: 700;
+    color: #21827e;
+}
+
+.numbers li span {
+    font-size: 60px;
+}

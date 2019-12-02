@@ -1,40 +1,58 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="fragments/common :: head (pageTitle='Страница администратора')"></head>
+<head th:replace="fragments/common :: head (~{::title}, ~{::link}, ~{::script})">
+  <title>Страница администратора</title>
+  <!--DataTables-->
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
+  <script type="text/javascript" charset="utf8"
+          src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
+  <link rel="stylesheet" href="">
+</head>
 <body>
 <div th:replace="fragments/common :: header"></div>
 <main class="jumbotron d-flex align-items-center bg-white m-0">
   <div class="container">
     <div class="row">
-      <table class="table table-striped">
+
+      <table class="table table-striped shadow" id="adminTable">
         <thead>
         <tr>
-          <th scope="col">#</th>
-          <th scope="col">ID</th>
-          <th scope="col">Дата</th>
-          <th scope="col">Имя</th>
-          <th scope="col">Email</th>
-          <th scope="col">Роли</th>
-          <th scope="col"></th>
+          <th class="text-center">ID</th>
+          <th class="text-center">Дата</th>
+          <th class="text-center">Имя</th>
+          <th class="text-center">Email</th>
+          <th class="text-center">Роли</th>
+          <th class="text-center">Редактировать</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="user, itemStat : ${users}">
-          <th scope="row" th:text="${itemStat.count}">Номер</th>
-          <td th:text="${user.id}">ID</td>
-          <td th:text="${#temporals.format(user.registrationDate, 'dd.MM.yyyy')}">Регистрация</td>
-          <td th:text="${user.fullName}">Статус</td>
-          <td th:text="${user.email}">Почта</td>
-          <td th:text="${user.roles}">Роли</td>
+          <td class="text-center" th:text="${user.id}">ID</td>
+          <td class="text-center" th:text="${#temporals.format(user.registrationDate, 'dd.MM.yyyy')}">Регистрация</td>
+          <td class="text-center" th:text="${user.fullName}">Статус</td>
+          <td class="text-center" th:text="${user.email}">Почта</td>
+          <td class="text-center" th:text="${user.roles}">Роли</td>
           <td class="text-center">
             <a href="№" title="Редактировать" th:href="@{/admin/edit_user(userId=${user.id})}" ><i
                 class="edit far fa-edit mr-2"></i></a>
           </td>
         </tr>
         </tbody>
+        <tfoot>
+        <tr>
+          <th class="text-center">ID</th>
+          <th class="text-center">Дата</th>
+          <th class="text-center">Имя</th>
+          <th class="text-center">Email</th>
+          <th class="text-center">Роли</th>
+          <th class="text-center">Редактировать</th>
+        </tr>
+        </tfoot>
       </table>
     </div>
+
   </div>
 </main>
 <footer th:replace="fragments/common :: footer"></footer>

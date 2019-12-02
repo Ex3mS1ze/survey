@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="fragments/common :: head (pageTitle='Страница администратора')"></head>
+<head th:replace="fragments/common :: head (~{::title}, ~{}, ~{})">
+  <title>Редактирование профиля пользователя</title>
+</head>
 <body>
 <div th:replace="fragments/common :: header"></div>
 <main class="jumbotron d-flex align-items-center bg-white m-0">

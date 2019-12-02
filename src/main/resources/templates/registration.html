@@ -1,7 +1,16 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
-<head th:replace="fragments/common :: head (pageTitle='Регистрация')"></head>
+<head th:replace="fragments/common :: head (~{::title}, ~{}, ~{::script})">
+  <title>Регистрация</title>
+  <script type="text/javascript">
+      var onloadCallback = function () {
+          grecaptcha.render('html_element', {
+              'sitekey': '6LdKS64UAAAAABzT2UL56M5xeVcRTtSL4LRJGvyQ'
+          });
+      };
+  </script>
+</head>
 <body>
 <div th:replace="fragments/common :: header"></div>
 <main class="jumbotron d-flex align-items-center bg-white vh-100 m-0">
@@ -15,7 +24,7 @@
           <input type="email" class="form-control" id="inputEmail" placeholder="Введите email"
                  required th:field="*{email}">
           <p class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</p>
-          <!--<div class="d-block" id="ajaxGetUserServletResponse">${nameErr}</div>-->
+          <p class="text-danger" id="emailError"></p>
         </div>
         <div class="form-group mx-0 p-2 border rounded">
           <label for="inputEmail">Личные данные</label>
@@ -71,9 +80,7 @@
           Зарегистрироваться
         </button>
       </form>
-      <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
-              async defer>
-      </script>
+      <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
     </div>
 
   </div>

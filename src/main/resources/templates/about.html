@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/common :: head (~{::title}, ~{}, ~{})">
+  <title>О нас</title>
+</head>
+<body>
+<div th:replace="fragments/common :: header"></div>
+<main class="container mx-auto">
+  <div class="container">
+    <div class="media row" id="about">
+      <img class="m-2 p-0 col-5" src="/static/images/11years.jpg" alt="pic">
+      <div class="media-body col-7">
+        <h5 class="mt-0">О медицинском центре</h5>
+        <p>«ЕвроМед клиника» – современный многопрофильный медицинский центр, один из крупнейших в
+          Новосибирске. «ЕвроМед клиника» сегодня включает в себя семь отделений – опытные специалисты
+          предоставляют весь комплекс услуг, выполняя свою работу на уровне высокого профессионализма.
+        </p>
+        <p>
+          Ключевая задача «ЕвроМед клиники» – оказывать комплексную квалифицированную медицинскую помощь
+          каждому. При этом любые назначения врачей клиники всегда учитывают специфику состояния пациента.
+          Эффективность работы центра складывается из нескольких составляющих: во-первых, благодаря
+          укомплектованному штату высококлассных специалистов, во-вторых, передовой диагностической базе,
+          в-третьих, соблюдению исключительно высоких стандартов диагностики и лечения, в-четвертых,
+          абсолютной информированности и внимательности персонала. «ЕвроМед клиника» занимает особенное
+          положение среди других медицинских центров.
+        </p>
+      </div>
+    </div>
+    <div class="numbers mt-3">
+      <ul class="text-center p-0 d-flex justify-content-between">
+        <li class="d-block"><span>302 000+</span> <br> пациентов</li>
+        <li class="d-block"><span>5 000+</span> <br> операций в год</li>
+        <li class="d-block"><span>15 000</span> <br> обследований <br> ежемесячно</li>
+      </ul>
+    </div>
+    <div class="row">
+      <div class="address col">
+        <h5>Наши контакты</h5>
+        <p>
+          Адрес:
+          <a href="http://2gis.ru/novosibirsk/firm/141265769639418/center/82.93950319290163,55.04411829289854/zoom/16?utm_medium=widget-source&utm_campaign=firmsonmap&utm_source=bigMap">
+            г.Новосибирск,
+            Гоголя, 42
+          </a> <br>
+          Телефон:
+          <a href="tel:+73832090303">+7 (383) 209-03-03 </a>
+          <br>
+          Время работы пн-пт:
+          <time>08:00</time>-<time>21:00</time>
+        </p>
+
+      </div>
+      <div class="map p-0 my-3 col" style="width: 640px;">
+        <a class="dg-widget-link"
+           href="http://2gis.ru/novosibirsk/firm/141265769639418/center/82.93950319290163,55.04411829289854/zoom/16?utm_medium=widget-source&utm_campaign=firmsonmap&utm_source=bigMap">Посмотреть
+          на карте Новосибирска</a>
+        <div class="dg-widget-link"><a
+            href="http://2gis.ru/novosibirsk/firm/141265769639418/photos/141265769639418/center/82.93950319290163,55.04411829289854/zoom/17?utm_medium=widget-source&utm_campaign=firmsonmap&utm_source=photos">Фотографии
+          компании</a></div>
+        <div class="dg-widget-link"><a
+            href="http://2gis.ru/novosibirsk/center/82.940879,55.043891/zoom/16/routeTab/rsType/bus/to/82.940879,55.043891╎ЕвроМед клиника, многопрофильный медицинский центр?utm_medium=widget-source&utm_campaign=firmsonmap&utm_source=route">Найти
+          проезд до ЕвроМед клиника, многопрофильный медицинский центр</a></div>
+        <script charset="utf-8" src="https://widgets.2gis.com/js/DGWidgetLoader.js"></script>
+        <script charset="utf-8">new DGWidgetLoader({
+            "width": 640,
+            "height": 600,
+            "borderColor": "#a3a3a3",
+            "pos": {"lat": 55.04411829289854, "lon": 82.93950319290163, "zoom": 16},
+            "opt": {"city": "novosibirsk"},
+            "org": [{"id": "141265769639418"}]
+        });</script>
+        <noscript style="color:#c00;font-size:16px;font-weight:bold;">Виджет карты использует JavaScript.
+          Включите его в настройках вашего браузера.
+        </noscript>
+      </div>
+    </div>
+  </div>
+</main>
+<footer th:replace="fragments/common :: footer"></footer>
+<th:block th:replace="fragments/common :: bottomScripts"></th:block>
+</body>
+</html>

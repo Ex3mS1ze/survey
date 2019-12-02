@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
+<head th:replace="fragments/common :: head (~{::title}, ~{}, ~{})">
+  <title>Подтверждение почты</title>
+</head>
+<body>
+<div th:replace="fragments/common :: header"></div>
+
+<main class="jumbotron d-flex align-items-center bg-white vh-100 m-0">
+  <div class="container">
+    <div class="row">
+      <div class="col-8 col-lg-5 mx-auto bg-light border-primary rounded p-4 shadow">
+        <span>На вашу почту <b th:text="${emailToActivate}"></b>  было отправлено письмо со ссылкой для актвации.</span>
+      </div>
+    </div>
+  </div>
+
+
+</main>
+
+<footer th:replace="fragments/common :: footer"></footer>
+<th:block th:replace="fragments/common :: bottomScripts"></th:block>
+
+</body>
+</html>

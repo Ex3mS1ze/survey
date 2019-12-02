@@ -24,7 +24,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                     .antMatchers("/registration").not().fullyAuthenticated()
                     .antMatchers("/admin","/admin/**").hasRole("ADMIN")
-                    .antMatchers("/", "/restore_password").permitAll()
+                    .antMatchers("/", "/restore_password", "/about").permitAll()
                     .antMatchers("/profile", "/test", "/test/**").hasRole("USER")
                 .and()
                     .formLogin()
@@ -34,7 +34,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                     .logout()
                     .permitAll()
-                    .logoutSuccessUrl("/");
+                    .logoutSuccessUrl("/")
+                .and()
+                    .exceptionHandling().accessDeniedPage("/accessdenied");
     }
 
 

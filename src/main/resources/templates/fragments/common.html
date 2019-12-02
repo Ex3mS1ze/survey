@@ -2,95 +2,133 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:fragment="head(pageTitle)">
-    <title th:text="${pageTitle}">Стандартная страницая</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="/static/css/style.css">
-    <script src="/static/js/jquery-3.4.1.js"></script>
-    <script src="/static/js/script.js"></script>
-    <!--FontAwesome icons-->
-    <script src="https://kit.fontawesome.com/c1b20974d6.js" crossorigin="anonymous"></script>
-    <!--Bootstrap-->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <script type="text/javascript">
-        var onloadCallback = function() {
-            grecaptcha.render('html_element', {
-                'sitekey' : '6LdKS64UAAAAABzT2UL56M5xeVcRTtSL4LRJGvyQ'
-            });
-        };
-    </script>
+<head th:fragment="head(title, links, scripts)">
+  <title th:replace="${title}">Стандартная страницая</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="/static/css/style.css">
+  <script src="/static/js/jquery-3.4.1.js"></script>
+  <script src="/static/js/script.js"></script>
+  <!--FontAwesome icons-->
+  <script src="https://kit.fontawesome.com/c1b20974d6.js" crossorigin="anonymous"></script>
+  <!--Bootstrap-->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+  <th:block th:replace="${links}"></th:block>
+  <th:block th:replace="${scripts}"></th:block>
 </head>
 <body>
 
 <header th:fragment="header">
-    <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01"
-                aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-            <a class="navbar-brand" href="#" th:href="@{/}">
-                <img src="/static/images/logo.png" width="16" alt="logo">
-                Название
-            </a>
-            <ul sec:authorize="!isAuthenticated()" class="navbar-nav mr-auto mt-2 mt-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" href="#" th:href="@{/}">Домой</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" th:href="@{/registration}">Регистрация</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" th:href="@{/login}">Войти</a>
-                </li>
-            </ul>
-            <ul sec:authorize="isAuthenticated()" class="navbar-nav mr-auto mt-2 mt-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" href="#" th:href="@{/}">Домой</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" th:href="@{/test}">Новое тестирование</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" th:href="@{/test/history}">История тестов</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" th:href="@{/profile}">Профиль</a>
-                </li>
-                <li class="nav-item">
-                    <form th:action="@{/logout}" method="post">
-                        <button class="btn btn-primary" type="submit">Выйти</button>
-                    </form>
-                </li>
-                <li class="nav-item m-2">
-                    <span class="text-light" sec:authentication="name"></span>
-                </li>
-            </ul>
-            <!--<form class="form-inline my-2 my-lg-0">-->
-            <!--<input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">-->
-            <!--<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>-->
-            <!--</form>-->
-        </div>
-    </nav>
+  <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01"
+            aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+      <a class="navbar-brand" href="#" th:href="@{/}">
+        <img src="/static/images/logo.png" width="16" alt="logo">
+        Название
+      </a>
+      <ul sec:authorize="!isAuthenticated()" class="navbar-nav ml-auto mt-2 mt-lg-0">
+        <li class="nav-item">
+          <a class="nav-link text-white" href="#" th:href="@{/}">Домой</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="#" th:href="@{/registration}">Регистрация</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="#" th:href="@{/login}">Войти</a>
+        </li>
+      </ul>
+      <ul sec:authorize="isAuthenticated()" class="navbar-nav ml-auto mt-2 mt-lg-0">
+        <li class="nav-item">
+          <a class="nav-link text-white" href="#" th:href="@{/}">Домой</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="#" th:href="@{/test}">Новое тестирование</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="#" th:href="@{/test/history}">История тестов</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="#" th:href="@{/profile}">Профиль</a>
+        </li>
+        <li class="nav-item"><li class="nav-item" sec:authorize="hasRole('ADMIN')">
+        <a class="nav-link text-white" href="#" th:href="@{/admin/users}">Администрирование</a>
+      </li>
+        <li class="nav-item">
+          <form th:action="@{/logout}" method="post">
+            <button class="btn btn-primary" type="submit">Выйти</button>
+          </form>
+        </li>
+        <li class="nav-item m-2">
+          <span class="text-white" sec:authentication="name"></span>
+        </li>
+      </ul>
+      <!--<form class="form-inline my-2 my-lg-0">-->
+      <!--<input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">-->
+      <!--<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>-->
+      <!--</form>-->
+    </div>
+  </nav>
 </header>
 
-<footer class="mt-auto" th:fragment="footer">
-    <div class="footer bg-dark">
-        <div class="container">
-            <a class="navbar-brand text-light text-center" href="#" th:href="@{/}">Название</a>
+<footer class="mt-auto text-white" th:fragment="footer">
+  <div class="footer bg-dark">
+    <div class="container">
+      <div class="container d-flex justify-content-center pt-3">
+        <div class="row">
+          <a class="text-white" href="/">
+            <img th:src="@{/static/images/logo.png}" class="" alt="logo" height="30px" width="30px">
+          </a>
+          <span>
+                Новосибирский медицинский центр
+                <br> <a class="text-white" href="tel:+73832090303">+7 (383) 209-03-03 </a>
+                <br> 8 800 888 00 00
+                <br> <a class="text-white"
+              href="http://2gis.ru/novosibirsk/firm/141265769639418/center/82.93950319290163,55.04411829289854/zoom/16?utm_medium=widget-source&utm_campaign=firmsonmap&utm_source=bigMap">
+                            г.Новосибирск,
+                            Гоголя, 42
+                        </a>
+            </span>
         </div>
+        <ul>
+          <b>Клиника</b>
+          <li>
+            <a class="text-white" href="/#">Главная</a>
+          </li>
+          <li>
+            <a class="text-white" href="/#" th:href="@{/registration}">Регистрация</a>
+          </li>
+          <li>
+            <a class="text-white" href="/#" th:href="@{/login}">Вход</a>
+          </li>
+        </ul>
+        <ul>
+          <b>Дополнительно</b>
+          <li>
+            <a class="text-white" href="/#" th:href="@{/test}">Пройти тест</a>
+          </li>
+          <li>
+            <a class="text-white" href="/#" th:href="@{/about}">О нас</a>
+        </ul>
+      </div>
+      <div class="credits d-flex justify-content-center">
+        © 2019 Some rights
+      </div>
     </div>
+  </div>
 </footer>
 
 <th:block th:fragment="bottomScripts">
-    <!-- Popper.js, then Bootstrap JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-            crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-            crossorigin="anonymous"></script>
+  <!-- Popper.js, then Bootstrap JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+          integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+          crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+          integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+          crossorigin="anonymous"></script>
 </th:block>
 
 </body>

@@ -219,4 +219,7 @@ public class UserService implements UserDetailsService, ApplicationListener<Auth
         return new HashSet<>(roleRepo.findAll());
     }
 
+    public boolean isEmailUsed(String email) {
+        return userRepo.existsUserByEmail(email);
+    }
 }
