@@ -45,17 +45,20 @@
         <li class="nav-item">
           <a class="nav-link text-white" href="#" th:href="@{/}">Домой</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" sec:authorize="hasRole('PATIENT')">
           <a class="nav-link text-white" href="#" th:href="@{/test}">Новое тестирование</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" sec:authorize="hasAnyRole('PATIENT')">
           <a class="nav-link text-white" href="#" th:href="@{/test/history}">История тестов</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link text-white" href="#" th:href="@{/profile}">Профиль</a>
+        <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+          <a class="nav-link text-white" href="#" th:href="@{/admin/users}">Администрирование</a>
         </li>
-        <li class="nav-item"><li class="nav-item" sec:authorize="hasRole('ADMIN')">
-        <a class="nav-link text-white" href="#" th:href="@{/admin/users}">Администрирование</a>
+        <li class="nav-item" sec:authorize="hasRole('DOCTOR')">
+          <a class="nav-link text-white" href="#" th:href="@{/patients}">Пациенты</a>
+        </li>
+        <li class="nav-item">
+        <a class="nav-link text-white" href="#" th:href="@{/profile}">Профиль</a>
       </li>
         <li class="nav-item">
           <form th:action="@{/logout}" method="post">
@@ -87,7 +90,7 @@
                 <br> <a class="text-white" href="tel:+73832090303">+7 (383) 209-03-03 </a>
                 <br> 8 800 888 00 00
                 <br> <a class="text-white"
-              href="http://2gis.ru/novosibirsk/firm/141265769639418/center/82.93950319290163,55.04411829289854/zoom/16?utm_medium=widget-source&utm_campaign=firmsonmap&utm_source=bigMap">
+                        href="http://2gis.ru/novosibirsk/firm/141265769639418/center/82.93950319290163,55.04411829289854/zoom/16?utm_medium=widget-source&utm_campaign=firmsonmap&utm_source=bigMap">
                             г.Новосибирск,
                             Гоголя, 42
                         </a>

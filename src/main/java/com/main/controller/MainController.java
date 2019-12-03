@@ -19,13 +19,11 @@ public class MainController {
         if (error == null) {
             if (principal == null)
                 return "login";
-
             else
                 return "redirect:/";
         }
 
         model.addAttribute("loginDataError", "Неверное имя пользователя или пароль");
-
         return "login";
     }
 

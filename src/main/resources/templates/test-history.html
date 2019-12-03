@@ -2,20 +2,19 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="fragments/common :: head (~{::title}, ~{::link}, ~{::script})">
-  <title>История тестовя</title>
+  <title>История тестов</title>
   <!--DataTables-->
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
   <script type="text/javascript" charset="utf8"
           src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
   <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-  <link rel="stylesheet" href="">
 </head>
 <body>
 <div th:replace="fragments/common :: header"></div>
 <main class="jumbotron d-flex align-items-center bg-white m-0">
   <div class="container">
     <!--DATATABLES-->
-    <table class="table table-striped shadow" id="patientHistoryTable" sec:authorize="hasRole('PATIENT')" >
+    <table class="table table-striped shadow" id="patientHistoryTable" sec:authorize="hasRole('PATIENT')">
       <thead>
       <input type="checkbox">
       <tr>
@@ -29,21 +28,20 @@
       <tr th:each="questionnaire, itemStat : ${questionnaires}">
         <td class="text-center" th:text="${#temporals.format(questionnaire.date, 'dd MMMM yyyy HH:mm')}">Дата</td>
         <td class="text-center" th:text="${questionnaire.processed} eq false? 'Не обработан': 'Обработан'">Статус</td>
-        <td class="text-center"
-            th:text="${questionnaire.diagnosis} eq null? 'Не установлен': ${questionnaire.diagnosis.getText()}">
+        <td class="text-center" th:text="${questionnaire.diagnosis} eq null? 'Не установлен': ${questionnaire.diagnosis.getText()}"></td>
         <td class="text-center" th:if="${questionnaire.processed} eq true">
-          <a href="#" title="Посмотреть" th:href="@{/test/history/view(questionnaireId = ${questionnaire.id})}">
+          <a href="#" title="Посмотреть" th:href="@{/test/view(questionnaireId = ${questionnaire.id})}">
             <i class="far fa-eye mr-2"></i></a>
           <a href="#" title="Удалить"
-             th:href="@{/test/history/edit(questionnaireId = ${questionnaire.id},action='delete')}">
+             th:href="@{/test/edit(questionnaireId = ${questionnaire.id},action='delete')}">
             <i class="delete far fa-trash-alt"></i></a>
         </td>
         <td th:if="${questionnaire.processed} ne true" class="text-center">
           <a href="#" title="Редактировать"
-             th:href="@{/test/history/edit(questionnaireId = ${questionnaire.id},action='edit')}">
+             th:href="@{/test/edit(questionnaireId = ${questionnaire.id},action='edit')}">
             <i class="edit far fa-edit mr-2"></i></a>
           <a href="#" title="Удалить"
-             th:href="@{/test/history/edit(questionnaireId = ${questionnaire.id},action='delete')}">
+             th:href="@{/test/edit(questionnaireId = ${questionnaire.id},action='delete')}">
             <i class="delete far fa-trash-alt"></i></a>
         </td>
       </tr>
@@ -78,18 +76,18 @@
                 Диагноз
               </td>
               <td th:if="${questionnaire.processed} eq true" class="text-center">
-                <a href="#" title="Посмотреть" th:href="@{/test/history/view(questionnaireId = ${questionnaire.id})}">
+                <a href="#" title="Посмотреть" th:href="@{/test/view(questionnaireId = ${questionnaire.id})}">
                   <i class="far fa-eye mr-2"></i></a>
                 <a href="#" title="Удалить"
-                   th:href="@{/test/history/edit(questionnaireId = ${questionnaire.id},action='delete')}">
+                   th:href="@{/test/edit(questionnaireId = ${questionnaire.id},action='delete')}">
                   <i class="delete far fa-trash-alt"></i></a>
               </td>
               <td th:if="${questionnaire.processed} ne true" class="text-center">
                 <a href="#" title="Редактировать"
-                   th:href="@{/test/history/edit(questionnaireId = ${questionnaire.id},action='edit')}">
+                   th:href="@{/test/edit(questionnaireId = ${questionnaire.id},action='edit')}">
                   <i class="edit far fa-edit mr-2"></i></a>
                 <a href="#" title="Удалить"
-                   th:href="@{/test/history/edit(questionnaireId = ${questionnaire.id},action='delete')}">
+                   th:href="@{/test/edit(questionnaireId = ${questionnaire.id},action='delete')}">
                   <i class="delete far fa-trash-alt"></i></a>
               </td>
             </tr>
@@ -114,29 +112,31 @@
       <tr th:each="questionnaire, itemStat : ${questionnaires}">
         <td class="text-center" th:text="${#temporals.format(questionnaire.date, 'dd.MM.yy HH:mm')}">Дата</td>
         <td class="text-center" th:text="${questionnaire.getUser().getId()}">ID</td>
-        <td class="text-center" th:text="${questionnaire.getUser().getFirstName()} + ' ' +${questionnaire.getUser().getSecondName()}">
+        <td class="text-center"
+            th:text="${questionnaire.getUser().getFirstName()} + ' ' +${questionnaire.getUser().getSecondName()}">
           Имя
         </td>
         <td class="text-center" th:text="${questionnaire.getUser().getGender()}">Пол</td>
         <td class="text-center" th:text="${questionnaire.getAnswers().get(0).text}">Возраст</td>
 
         <td class="text-center" th:text="${questionnaire.processed} eq false? 'Не обработан': 'Обработан'">Статус</td>
-        <td class="text-center" th:text="${questionnaire.diagnosis} eq null? 'Не установлен': ${questionnaire.diagnosis.getText()}">
+        <td class="text-center"
+            th:text="${questionnaire.diagnosis} eq null? 'Не установлен': ${questionnaire.diagnosis.getText()}">
           Диагноз
         </td>
         <td class="text-center" th:if="${questionnaire.processed} eq true">
-          <a href="#" title="Посмотреть" th:href="@{/test/history/view(questionnaireId = ${questionnaire.id})}">
+          <a href="#" title="Посмотреть" th:href="@{/test/view(questionnaireId = ${questionnaire.id})}">
             <i class="far fa-eye mr-2"></i></a>
           <a href="#" title="Удалить"
-             th:href="@{/test/history/edit(questionnaireId = ${questionnaire.id},action='delete')}">
+             th:href="@{/test/edit(questionnaireId = ${questionnaire.id},action='delete')}">
             <i class="delete far fa-trash-alt"></i></a>
         </td>
         <td class="text-center" th:if="${questionnaire.processed} ne true">
           <a href="#" title="Редактировать"
-             th:href="@{/test/history/edit(questionnaireId = ${questionnaire.id},action='edit')}">
+             th:href="@{/test/edit(questionnaireId = ${questionnaire.id},action='edit')}">
             <i class="edit far fa-edit mr-2"></i></a>
           <a href="#" title="Удалить"
-             th:href="@{/test/history/edit(questionnaireId = ${questionnaire.id},action='delete')}">
+             th:href="@{/test/edit(questionnaireId = ${questionnaire.id},action='delete')}">
             <i class="delete far fa-trash-alt"></i></a>
         </td>
       </tr>
@@ -185,18 +185,18 @@
             Диагноз
           </td>
           <td th:if="${questionnaire.processed} eq true" class="text-center">
-            <a href="#" title="Посмотреть" th:href="@{/test/history/view(questionnaireId = ${questionnaire.id})}">
+            <a href="#" title="Посмотреть" th:href="@{/test/view(questionnaireId = ${questionnaire.id})}">
               <i class="far fa-eye mr-2"></i></a>
             <a href="#" title="Удалить"
-               th:href="@{/test/history/edit(questionnaireId = ${questionnaire.id},action='delete')}">
+               th:href="@{/test/edit(questionnaireId = ${questionnaire.id},action='delete')}">
               <i class="delete far fa-trash-alt"></i></a>
           </td>
           <td th:if="${questionnaire.processed} ne true" class="text-center">
             <a href="#" title="Редактировать"
-               th:href="@{/test/history/edit(questionnaireId = ${questionnaire.id},action='edit')}">
+               th:href="@{/test/edit(questionnaireId = ${questionnaire.id},action='edit')}">
               <i class="edit far fa-edit mr-2"></i></a>
             <a href="#" title="Удалить"
-               th:href="@{/test/history/edit(questionnaireId = ${questionnaire.id},action='delete')}">
+               th:href="@{/test/edit(questionnaireId = ${questionnaire.id},action='delete')}">
               <i class="delete far fa-trash-alt"></i></a>
           </td>
         </tr>

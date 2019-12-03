@@ -14,16 +14,16 @@ public class Doctor {
     @Basic
     @Column(name = "description", nullable = true)
     private String description;
-    @ManyToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private User user;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "doctors_patients",
             joinColumns = {
-                    @JoinColumn(name = "patient_id", referencedColumnName = "id")},
+                    @JoinColumn(name = "doctor_id", referencedColumnName = "id")},
             inverseJoinColumns = {
-                    @JoinColumn(name = "doctor_id", referencedColumnName = "id")}
+                    @JoinColumn(name = "patient_id", referencedColumnName = "id")}
     )
     private List<Patient> patients;
 

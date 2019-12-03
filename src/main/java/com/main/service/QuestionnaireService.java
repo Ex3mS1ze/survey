@@ -1,9 +1,11 @@
 package com.main.service;
 
+import com.main.entity.Diagnosis;
 import com.main.entity.Question;
 import com.main.entity.Questionnaire;
 import com.main.entity.User;
 import com.main.repository.AnswerRepo;
+import com.main.repository.DiagnosisRepo;
 import com.main.repository.QuestionRepo;
 import com.main.repository.QuestionnaireRepo;
 import org.apache.logging.log4j.LogManager;
@@ -18,6 +20,7 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class QuestionnaireService {
@@ -27,6 +30,8 @@ public class QuestionnaireService {
     private QuestionRepo questionRepo;
     @Autowired
     private QuestionnaireRepo questionnaireRepo;
+    @Autowired
+    private DiagnosisRepo diagnosisRepo;
     @Autowired
     private AnswerRepo answerRepo;
 
@@ -54,6 +59,14 @@ public class QuestionnaireService {
         questionnaireFromDb.get().setAnswers(questionnaire.getAnswers());
         questionnaireRepo.save(questionnaireFromDb.get());
     }
+    public void saveExistedProcessedQuestionnaire(Questionnaire questionnaire, Long id){
+        saveExistedQuestionnaire(questionnaire, id);
+        Optional<Questionnaire> questionnaireFromDb = questionnaireRepo.findById(id);
+        questionnaireFromDb.get().setProcessed(true);
+        questionnaireFromDb.get().setDiagnosis(questionnaire.getDiagnosis());
+        questionnaireRepo.save(questionnaireFromDb.get());
+
+    }
 
     public List<Questionnaire> getAllUsersQuestionnaires(User... user) {
         User userFromSecurityContext = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -80,5 +93,21 @@ public class QuestionnaireService {
         return questionnaire.orElseGet(Questionnaire::new);
     }
 
+    public boolean operateQuestionnaireAnswers(Questionnaire questionnaire, boolean isNew, Long questionnaireId) {
+        if (!Questionnaire.isFullFilled(questionnaire)) {
+            return false;
+        }
+
+        List<Long> allIds = diagnosisRepo.getAllIds();
+        Random random = new Random();
+        Diagnosis diagnosis = diagnosisRepo.findById(allIds.get(random.nextInt(allIds.size()-1))).get();
+        questionnaire.setDiagnosis(diagnosis);
+        questionnaire.setProcessed(true);
+        if (isNew) {
+            saveNewQuestionnaire(questionnaire);
+        }
+        saveExistedProcessedQuestionnaire(questionnaire, questionnaireId);
+        return true;
+    }
 
 }

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/common :: head (~{::title}, ~{}, ~{})">
+  <title>Профиль доктора</title>
+</head>
+<body>
+<div th:replace="fragments/common :: header"></div>
+<main class="jumbotron d-flex align-items-center bg-white vh-100 m-0">
+  <div class="container">
+    <div class="row">
+      <div class="col-8 mx-auto bg-light p-4 rounded shadow" th:object="${doctor}">
+        <div class="col-12 mb-5"><h1 class="text-center">Данные доктора</h1></div>
+        <div class="row">
+          <div class="col-4">
+            <p>Имя: <br><b th:text="*{user.firstName}"></b></p>
+            <p>Фамилия: <br><b th:text="*{user.secondName}"></b></p>
+            <p>Email: <br><b th:text="*{user.email}"></b></p>
+            <p>Телефон: <br><b th:text="*{user.phoneNumber}"></b></p>
+          </div>
+          <div class="col-8">
+            <b>О докторе:</b> <br>
+            <p class="text-justify" th:text="*{description} ne null? *{description} : ''"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<footer th:replace="fragments/common :: footer"></footer>
+<th:block th:replace="fragments/common :: bottomScripts"></th:block>
+</body>
+</html>

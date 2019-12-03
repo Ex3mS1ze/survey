@@ -1,11 +1,7 @@
 package com.main.service;
 
-import com.main.entity.ActivationCode;
-import com.main.entity.Role;
-import com.main.entity.User;
-import com.main.repository.ActivationCodeRepo;
-import com.main.repository.RoleRepo;
-import com.main.repository.UserRepo;
+import com.main.entity.*;
+import com.main.repository.*;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,6 +29,10 @@ public class UserService implements UserDetailsService, ApplicationListener<Auth
     private UserRepo userRepo;
     @Autowired
     private RoleRepo roleRepo;
+    @Autowired
+    private PatientRepo patientRepo;
+    @Autowired
+    private DoctorRepo doctorRepo;
     @Autowired
     private ActivationCodeRepo activationCodeRepo;
     @Autowired
@@ -69,18 +69,33 @@ public class UserService implements UserDetailsService, ApplicationListener<Auth
      * @return <tt>true</tt> - if new <tt>User</tt> saved. <tt>false</tt> - if wasn't.
      */
     public boolean saveNewUser(User user, String userRole) {
-        user.setRoles(new HashSet<Role>(){{
+        user.setRoles(new HashSet<Role>() {{
             add(roleRepo.findByRolename("ROLE_USER"));
         }});
-        if (userRole.equals("patient")) {
-            user.getRoles().add(roleRepo.findByRolename("ROLE_PATIENT"));
-        }
 
         user.setRegistrationDate(LocalDateTime.now());
         user.setActivated(false);
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         if (user.checkMandatoryFields() && !userRepo.existsUserByEmail(user.getEmail())) {
-            userRepo.save(user);
+            if (userRole.equals("patient")) {
+                user.getRoles().add(roleRepo.findByRolename("ROLE_PATIENT"));
+                user = userRepo.save(user);
+                Patient patient = new Patient();
+                patient.setUser(user);
+                patientRepo.save(patient);
+                LOGGER.info("New patient: {} added.", user.getEmail());
+            } else if(userRole.equals("doctor")){
+                user = userRepo.save(user);
+                Doctor doctor = new Doctor();
+                doctor.setUser(user);
+                doctorRepo.save(doctor);
+                LOGGER.info("New doctor: {} added.", user.getEmail());
+            }
+            else {
+                userRepo.save(user);
+                LOGGER.info("New user: {} added.", user.getEmail());
+            }
+
             return true;
         }
 
@@ -94,7 +109,7 @@ public class UserService implements UserDetailsService, ApplicationListener<Auth
      * @param user
      */
     public void editUserData(User user) {
-        User userFromSecurityContext = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User userFromSecurityContext = getUserFromPrincipal();
         user.setId(userFromSecurityContext.getId());
         Optional<User> userFromDb = userRepo.findById(user.getId());
         if (userFromDb.isPresent()) {
@@ -165,6 +180,7 @@ public class UserService implements UserDetailsService, ApplicationListener<Auth
      * <p>Check if user with <b>email</b> exist. If not execution is interrupted.</p>
      * <p>Set activation status to <tt>true</tt> and delete activationCode if exist.</p>
      * <p>Generate new password and set it to User. Then send email with new password.</p>
+     *
      * @param email
      * @return <tt>true</tt> - if user with <b>email</b> exist and password restored. <tt>false</tt> - if user with <b>email</b> doesn't exist.
      */
@@ -202,7 +218,7 @@ public class UserService implements UserDetailsService, ApplicationListener<Auth
     public boolean changePassword(String oldPass, String newPass) {
         String encodeOldPass = bCryptPasswordEncoder.encode(oldPass);
         String encodeNewPass = bCryptPasswordEncoder.encode(newPass);
-        User userFromSecurityContext = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User userFromSecurityContext = getUserFromPrincipal();
         User userFromDb = userRepo.findByEmail(userFromSecurityContext.getEmail());
 
         if (!userFromDb.getPassword().equals(encodeOldPass)) {
@@ -213,6 +229,10 @@ public class UserService implements UserDetailsService, ApplicationListener<Auth
         userFromDb.setPassword(encodeNewPass);
         LOGGER.info("User:{} successfully change password.", userFromDb.getEmail());
         return true;
+    }
+
+    public static User getUserFromPrincipal() {
+        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
     public Set<Role> getAllRoles() {

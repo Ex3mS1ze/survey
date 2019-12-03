@@ -6,10 +6,10 @@
 </head>
 <body>
 <div th:replace="fragments/common :: header"></div>
-<main class="jumbotron d-flex align-items-center bg-white vh-100 m-0">
+<main class="jumbotron d-flex align-items-center bg-white m-0">
   <div class="container">
     <div class="row">
-      <form class="col-8 mx-auto bg-light p-4 rounded" method="post" th:action="@{/editPersonalData}"
+      <form class="col-8 mx-auto bg-light p-4 rounded shadow" method="post" th:action="@{/editPersonalData}"
             th:object="${userForm}">
         <h1>Ваши данные</h1>
         <div class="form-group m-0">
@@ -24,10 +24,29 @@
           <p class="text-danger" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">firstName Error</p>
           <label>Ваша фамилия</label>
           <input type="text" class="form-control mb-2" placeholder="Введите фамилию" required th:field="*{secondName}">
-          <p class="text-danger" th:if="${#fields.hasErrors('secondName')}" th:errors="*{secondName}">secondName Error</p>
-          <label>Ваша телефон</label>
+          <p class="text-danger" th:if="${#fields.hasErrors('secondName')}" th:errors="*{secondName}">secondName
+            Error</p>
+          <label>Ваш телефон</label>
           <input type="tel" class="form-control mb-2" placeholder="Введите номер" required th:field="*{phoneNumber}">
-          <p class="text-danger" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}">phoneNumber Error</p>
+          <p class="text-danger" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}">phoneNumber
+            Error</p>
+          <th:block th:if="${doctor ne null}">
+            <label>Ваш врач</label>
+            <p><a href="#" th:href="@{/doctor/profile(doctorId=${doctor.id})}"
+                  th:text="${doctor.user.fullName}">Врач</a></p>
+          </th:block>
+          <label>Ваша роль</label>
+          <th:block th:each="role : ${userForm.roles}">
+            <p class="form-control mb-2"  th:if="${role.rolename.contains('PATIENT')}">Пациент</p>
+            <p class="form-control mb-2" th:if="${role.rolename.contains('DOCTOR')}">Доктор</p>
+            <p class="form-control mb-2" th:if="${role.rolename.contains('ADMIN')}">Администратор</p>
+            <p class="text-warning mb-2" th:if="${userForm.roles.size() eq 1}">
+              <b>Вероятно Вы зарегистрировались с ролью врача или аналитика, но не обратались к администратору для
+                активации аккаунта.<br>
+                Обратитесь к администратору для Вашего подтверждения статуса.
+              </b>
+            </p>
+          </th:block>
         </div>
         <button type="submit" class="btn btn-primary btn-block">Изменить данные</button>
       </form>

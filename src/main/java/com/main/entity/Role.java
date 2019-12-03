@@ -63,4 +63,14 @@ public class Role implements GrantedAuthority {
     public int hashCode() {
         return Objects.hash(id, rolename);
     }
+
+    public static boolean isRolesContainsByRolename(Set<Role> roles, String rolename) {
+        for (Role role : roles) {
+            if (role.getRolename().contains(rolename)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

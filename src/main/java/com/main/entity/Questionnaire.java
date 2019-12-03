@@ -1,6 +1,7 @@
 package com.main.entity;
 
 import javax.persistence.*;
+import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -102,4 +103,16 @@ public class Questionnaire {
     public String toString() {
         return "Questionnaire{" + "id=" + id + ", date=" + date + ", processed=" + processed + ", answers=" + answers + ", diagnosis=" + diagnosis + ", user=" + user + '}';
     }*/
+
+    public static boolean isFullFilled(Questionnaire questionnaire) {
+        List<Answer> answers = questionnaire.getAnswers();
+        for (Answer answer : answers) {
+            if ((answer.getText() == null || answer.getText().isEmpty()) && (answer.getTextList() == null || answer.getTextList().size() == 0)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
 }

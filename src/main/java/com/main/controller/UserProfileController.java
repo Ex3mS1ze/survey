@@ -1,6 +1,9 @@
 package com.main.controller;
 
+import com.main.entity.Patient;
+import com.main.entity.Role;
 import com.main.entity.User;
+import com.main.service.DoctorService;
 import com.main.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -16,13 +19,19 @@ import javax.validation.Valid;
 import java.security.Principal;
 
 @Controller
-public class ProfileController {
+public class UserProfileController {
     @Autowired
     UserService userService;
+    @Autowired
+    DoctorService doctorService;
 
     @GetMapping("/profile")
     public String getProfilePage(Authentication authentication, RedirectAttributes redirectAttrs, Model model) {
-        User user = (User) authentication.getPrincipal();
+        User user = UserService.getUserFromPrincipal();
+        if (Role.isRolesContainsByRolename(user.getRoles(), "PATIENT")) {
+            Patient patient = doctorService.getPatientByUser(user);
+            model.addAttribute("doctor", patient.getDoctor());
+        }
         model.addAttribute("userForm", user);
         return "profile";
     }

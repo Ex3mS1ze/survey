@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/common :: head (~{::title}, ~{::link}, ~{::script})">
+  <title>Профиль пациента</title>
+  <!--DataTables-->
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
+  <script type="text/javascript" charset="utf8"
+          src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
+</head>
+<body>
+<div th:replace="fragments/common :: header"></div>
+<main class="jumbotron d-flex align-items-center bg-white vh-100 m-0">
+  <div class="container">
+    <div class="row">
+      <div class="col-8 mx-auto bg-light p-4 rounded shadow" th:object="${patient}">
+        <div class="col-12 mb-5"><h1 class="text-center">Данные пациента</h1></div>
+        <div class="row">
+          <div class="col-4">
+            <p>Email: <br><b th:text="*{user.email}"></b></p>
+            <p>Имя: <br><b th:text="*{user.firstName}"></b></p>
+            <p>Фамилия: <br><b th:text="*{user.secondName}"></b></p>
+          </div>
+          <div class="col-4">
+            <p>Диагноз: <br><b th:text="*{diagnosis.text}"></b></p>
+            <p>Телефон: <br><b th:text="*{user.phoneNumber}"></b></p>
+            <p>Последний визит: <br>
+              <b th:text="${#temporals.format(patient.user.lastVisitDate, 'dd.MM.yy HH:mm')}"></b></p>
+          </div>
+          <div class="col-4">
+            <p>Прикрепленный врач: <br>
+              <a href="#" th:if="${patient.doctor != null}"
+                 th:href="@{/doctor/profile(doctorId=${patient.doctor.id})}"
+                 th:text="*{doctor.user.fullName}">
+              </a>
+            </p>
+            <a href="#" th:if="${patient.doctor == null}"
+               th:href="@{/doctor/attach_patient(patientId=*{id})}">Прикерпить
+              пациента</a>
+            <a href="#" th:if="${doctor.patients.contains(patient)}"
+               th:href="@{/doctor/detach_patient(patientId=*{id})}">Открепить
+              пациента</a>
+            <form method="post" th:if="${doctor.patients.contains(patient)}"  th:action="@{/change_patient_diagnosis}">
+              <input type="hidden" th:field="${patient.id}">
+              <label>Изменить диагноз</label>
+              <select class="custom-select" th:field="${patient.diagnosis}">
+                <th:block th:each="diagnosis : ${diagnoses}">
+                  <option th:value="${diagnosis.id}" th:text="${diagnosis.text}"></option>
+                </th:block>
+              </select>
+              <button type="submit" class="btn btn-primary btn-block">Изменить</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 mt-5">
+        <table class="table table-striped shadow" id="patientHistoryTable">
+          <thead>
+          <tr>
+            <th class="text-center">Дата</th>
+            <th class="text-center">Статус</th>
+            <th class="text-center">Диагноз</th>
+            <th class="text-center">Редактировать</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="questionnaire, itemStat : ${patient.user.questionnaires}">
+            <td class="text-center" th:text="${#temporals.format(questionnaire.date, 'dd MMMM yyyy HH:mm')}">Дата</td>
+            <td class="text-center" th:text="${questionnaire.processed} eq false? 'Не обработан': 'Обработан'">Статус
+            </td>
+            <td class="text-center"
+                th:text="${questionnaire.diagnosis} eq null? 'Не установлен': ${questionnaire.diagnosis.getText()}">
+            <td class="text-center" th:if="${questionnaire.processed} eq true">
+              <a href="#" title="Посмотреть"
+                 th:href="@{/test/view(questionnaireId = ${questionnaire.id}, patientId = ${patient.id})}">
+                <i class="far fa-eye mr-2"></i></a>
+              <a href="#" title="Удалить"
+                 th:href="@{/test/edit(questionnaireId = ${questionnaire.id}, patientId = ${patient.id},action='delete')}">
+                <i class="delete far fa-trash-alt"></i></a>
+            </td>
+            <td th:if="${questionnaire.processed} ne true" class="text-center">
+              <a href="#" title="Редактировать"
+                 th:href="@{/test/edit(questionnaireId = ${questionnaire.id}, patientId = ${patient.id}, action='edit')}">
+                <i class="edit far fa-edit mr-2"></i></a>
+              <a href="#" title="Удалить"
+                 th:href="@{/test/edit(questionnaireId = ${questionnaire.id}, patientId = ${patient.id}, action='delete')}">
+                <i class="delete far fa-trash-alt"></i></a>
+            </td>
+          </tr>
+          </tbody>
+          <tfoot>
+          <tr>
+            <th class="text-center">Дата</th>
+            <th class="text-center">Статус</th>
+            <th class="text-center">Диагноз</th>
+            <th class="text-center">Редактировать</th>
+          </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+<footer th:replace="fragments/common :: footer"></footer>
+<th:block th:replace="fragments/common :: bottomScripts"></th:block>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/common :: head (~{::title}, ~{::link}, ~{::script})">
+  <title>Пациенты</title>
+  <!--DataTables-->
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
+  <script type="text/javascript" charset="utf8"
+          src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
+</head>
+<body>
+<div th:replace="fragments/common :: header"></div>
+<main class="jumbotron d-flex align-items-center bg-white m-0">
+  <div class="container">
+    <!--DATATABLES-->
+    <table class="table table-striped shadow" id="patientsTable">
+      <thead>
+      <tr>
+        <th class="text-center">Последний визит</th>
+        <th class="text-center">Email</th>
+        <th class="text-center">Имя пациента</th>
+        <th class="text-center">Пол</th>
+        <th class="text-center">Диагноз</th>
+        <th class="text-center">Прик. доктор</th>
+        <th class="text-center">Профиль</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="patient, itemStat : ${patients}" th:object="${patient}">
+        <td class="text-center" th:text="${#temporals.format(patient.user.lastVisitDate, 'dd.MM.yy HH:mm')}">Дата</td>
+        <td class="text-center" th:text="*{user.email}">email</td>
+        <td class="text-center" th:text="*{user.fullName}"> Имя</td>
+        <td class="text-center" th:text="*{user.gender}">Пол</td>
+        <td class="text-center" th:text="*{diagnosis.text}">Диагноз</td>
+        <td class="text-center" th:text="*{doctor} ne null? *{doctor.user.email} : 'Нет'">Прикрепленный доктор</td>
+        <td class="text-center">
+          <a href="#" title="Профиль"
+             th:href="@{/patient/profile(patientId = *{id})}">
+            <i class="far fa-eye mr-2"></i></a></a>
+        </td>
+      </tr>
+      </tbody>
+      <tfoot>
+      <tr>
+        <th class="text-center">Последний визит</th>
+        <th class="text-center">Email</th>
+        <th class="text-center">Имя пациента</th>
+        <th class="text-center">Пол</th>
+        <th class="text-center">Диагноз</th>
+        <th class="text-center">Прик. доктор</th>
+        <th class="text-center">Профиль</th>
+
+      </tr>
+      </tfoot>
+    </table>
+
+  </div>
+</main>
+<footer th:replace="fragments/common :: footer"></footer>
+<th:block th:replace="fragments/common :: bottomScripts"></th:block>
+</body>
+</html>

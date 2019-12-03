@@ -61,7 +61,7 @@ public class RegistrationController {
         }
 
         User newUser = (User) userService.loadUserByUsername(userForm.getEmail());
-        userService.createAndSendActivationCode(newUser);
+//        userService.createAndSendActivationCode(newUser);
         model.addAttribute("emailToActivate", newUser.getEmail());
         return "tip-activate";
     }

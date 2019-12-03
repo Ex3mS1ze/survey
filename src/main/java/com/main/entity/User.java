@@ -53,8 +53,6 @@ public class User implements UserDetails {
     private Set<Role> roles;
     @OneToMany(mappedBy = "user")
     private List<Questionnaire> questionnaires;
-//    @Column(name = "activation_code")
-//    private String activationCode;
     @Column(name = "last_visit_date", nullable = false)
     private LocalDateTime lastVisitDate;
 
@@ -177,14 +175,6 @@ public class User implements UserDetails {
         this.questionnaires = questionnairesById;
     }
 
-//    public String getActivationCode() {
-//        return activationCode;
-//    }
-//
-//    public void setActivationCode(String activationCode) {
-//        this.activationCode = activationCode;
-//    }
-
     public boolean checkMandatoryFields() {
         if (this.firstName == null || this.firstName.isEmpty() || this.secondName == null || this.secondName.isEmpty() || this.email == null || this.email.isEmpty() || this.password == null || this.password.isEmpty() || this.registrationDate == null || this.gender == null || this.gender.isEmpty() || this.phoneNumber == null || this.phoneNumber.isEmpty() || this.roles == null || this.roles.isEmpty()) {
             return false;
@@ -222,7 +212,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return activated;
     }
 
     @Override

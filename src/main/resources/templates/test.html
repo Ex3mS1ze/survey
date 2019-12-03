@@ -55,8 +55,9 @@
           </div>
         </th:block>
         <div class="form-group m-2 d-flex justify-content-around">
-          <button class="btn btn-secondary" type="submit" name="save" th:action="@{/test}">Сохранить</button>
-          <button class="btn btn-primary" type="submit" title="Необходимо заполнить все поля" name="operate">
+          <button class="btn btn-secondary" type="submit">Сохранить</button>
+          <button class="btn btn-primary" type="submit" title="Необходимо заполнить все поля"
+                  th:formaction="@{/operate_test(isNew=true,)}">
             Обработать
           </button>
         </div>

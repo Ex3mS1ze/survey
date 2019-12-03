@@ -23,9 +23,15 @@ $(document).ready(function () {
         initPatientHistoryDataTable();
         initDoctorHistoryDataTable();
     }
-
+    //AdminDataTable
     if (window.location.href.includes("admin")) {
         initAdminDataTable();
+    }
+    //PatientsDataTable
+    if (window.location.href.includes("patient/profile")) {
+        initPatientHistoryDataTable();
+    }if (window.location.href.includes("patients")) {
+        initPatientDataTable();
     }
 
 });
@@ -173,3 +179,45 @@ function initAdminDataTable() {
         });
     });
 }
+
+function initPatientDataTable() {
+    // Setup - add a text input to each footer cell
+    $('#patientsTable tfoot th:lt(6)').each(function () {
+        let title = $(this).text();
+        $(this).html('<input type="text" placeholder=" Поиск' + '" />');
+    });
+
+    // DataTable
+    let table = $('#patientsTable').DataTable({
+        language: {
+            "search": "Поиск:",
+            "lengthMenu": "Показать _MENU_ записей",
+            "info": "Страница _PAGE_ из _PAGES_",
+            "infoFiltered": "(отфильтровано из _MAX_ записей)",
+            "infoEmpty": "Нет записей",
+            "zeroRecords": "Записей, соотвествующих поиску, не найдено",
+            "paginate": {
+                "first": "Первая",
+                "last": "Последняя",
+                "next": "Следующая",
+                "previous": "Предыдущая"
+            },
+        },
+        "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "Все"] ],
+        "autoWidth": true,
+    });
+
+    // Apply the search
+    table.columns().every(function () {
+        let that = this;
+
+        $('input', this.footer()).on('keyup change clear', function () {
+            if (that.search() !== this.value) {
+                that
+                    .search(this.value)
+                    .draw();
+            }
+        });
+    });
+}
+
