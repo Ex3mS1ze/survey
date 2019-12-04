@@ -44,7 +44,9 @@ public class QuestionnaireService {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         questionnaire.setUser(user);
         questionnaire.setDate(LocalDateTime.now());
-        questionnaire.setProcessed(false);
+        if (questionnaire.getProcessed() == null) {
+            questionnaire.setProcessed(false);
+        }
         Long nextId = questionnaireRepo.getNextId();
         questionnaire.setId(nextId);
         questionnaire.getAnswers().forEach(answer -> answer.setQuestionnaire(questionnaire));
@@ -106,8 +108,17 @@ public class QuestionnaireService {
         if (isNew) {
             saveNewQuestionnaire(questionnaire);
         }
-        saveExistedProcessedQuestionnaire(questionnaire, questionnaireId);
+        else {
+            saveExistedProcessedQuestionnaire(questionnaire, questionnaireId);
+        }
+
         return true;
+    }
+
+    public List<String> getAllQuestionCategories() {
+        List<String> questionCategories = questionRepo.getAllQuestionCategories();
+        questionCategories.replaceAll(c -> c.substring(0, c.lastIndexOf(',')));
+        return questionCategories;
     }
 
 }

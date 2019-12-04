@@ -43,29 +43,27 @@ public class DoctorService {
     }
 
     public void attachPatient(Patient patient) {
-        User user = UserService.getUserFromPrincipal();
-        Optional<Doctor> doctor = doctorRepo.findByUser(user);
-        if (!doctor.isPresent()){
-            LOGGER.warn("User:{} try to attach patient, but he isn't a doctor.", user.getEmail());
+        Doctor doctor = getDoctorFromCurrentPrincipal();
+        if (doctor == null){
+            LOGGER.warn("User try to attach patient, but he isn't a doctor.");
             return;
         }
 
-        doctor.get().getPatients().add(patient);
-        doctorRepo.save(doctor.get());
-        LOGGER.info("Patient: {} attached to doctor: {}.",patient.getUser().getEmail(), user.getEmail());
+        doctor.getPatients().add(patient);
+        doctorRepo.save(doctor);
+        LOGGER.info("Patient: {} attached to doctor: {}.",patient.getUser().getEmail(), doctor.getUser().getEmail());
     }
 
     public void detachPatient(Patient patient) {
-        User user = UserService.getUserFromPrincipal();
-        Optional<Doctor> doctor = doctorRepo.findByUser(user);
-        if (!doctor.isPresent()){
-            LOGGER.warn("User:{} try to attach patient, but he isn't a doctor.", user.getEmail());
+        Doctor doctor = getDoctorFromCurrentPrincipal();
+        if (doctor == null){
+            LOGGER.warn("User: try to attach patient, but he isn't a doctor.");
             return;
         }
 
-        doctor.get().getPatients().remove(patient);
-        doctorRepo.save(doctor.get());
-        LOGGER.info("Patient: {} detached from doctor: {}.",patient.getUser().getEmail(), user.getEmail());
+        doctor.getPatients().remove(patient);
+        doctorRepo.save(doctor);
+        LOGGER.info("Patient: {} detached from doctor: {}.",patient.getUser().getEmail(), doctor.getUser().getEmail());
     }
 
     public Doctor getDoctorById(Long doctorId) {

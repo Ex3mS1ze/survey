@@ -28,7 +28,8 @@
       </thead>
       <tbody>
       <tr th:each="patient, itemStat : ${patients}" th:object="${patient}">
-        <td class="text-center" th:text="${#temporals.format(patient.user.lastVisitDate, 'dd.MM.yy HH:mm')}">Дата</td>
+        <td class="text-center" th:data-order="${#temporals.format(patient.user.lastVisitDate)}"
+            th:text="${#temporals.format(patient.user.lastVisitDate, 'dd.MM.yy HH:mm')}">Дата</td>
         <td class="text-center" th:text="*{user.email}">email</td>
         <td class="text-center" th:text="*{user.fullName}"> Имя</td>
         <td class="text-center" th:text="*{user.gender}">Пол</td>

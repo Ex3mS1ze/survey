@@ -1,6 +1,7 @@
 package com.main.entity;
 
 import com.main.utilities.StringDbToListConverter;
+import org.hibernate.annotations.ColumnTransformer;
 
 import javax.persistence.*;
 import java.util.List;
@@ -29,6 +30,8 @@ public class Question {
     private Question dependentQuestion;
     @OneToMany(mappedBy = "question")
     private List<Answer> answersById;
+    @Column(name = "category")
+    private String category;
 
     public Question() {
     }
@@ -95,6 +98,14 @@ public class Question {
 
     public void setAnswersById(List<Answer> answersById) {
         this.answersById = answersById;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     @Override

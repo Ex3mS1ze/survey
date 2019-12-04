@@ -13,7 +13,6 @@ $(document).ready(function () {
     //Check email availability
     if (window.location.href.includes("registration")) {
         $('#inputEmail').blur(function () {
-            // if (!$('#inputEmail')[0].checkValidity()) return;
             checkIfEmailUserAjax();
         });
     }
@@ -30,10 +29,24 @@ $(document).ready(function () {
     //PatientsDataTable
     if (window.location.href.includes("patient/profile")) {
         initPatientHistoryDataTable();
-    }if (window.location.href.includes("patients")) {
+    }
+    if (window.location.href.includes("patients")) {
         initPatientDataTable();
     }
+    //TestValidation
+    if ($('#testForm') != null) {
+        checkBoxValidation();
+        $("input:checkbox").change();
 
+        $('#operateTestButton').click(function (e) {
+            // e.preventDefault()
+        });
+
+        $('#saveTestButton').click(function (e) {
+            deleteRequiredAttFromTestForm();
+            // e.preventDefault();
+        });
+    }
 });
 
 function checkIfEmailUserAjax() {
@@ -80,8 +93,8 @@ function initPatientHistoryDataTable() {
                 "previous": "Предыдущая"
             },
         },
-        "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "Все"] ],
-        "autoWidth": false,
+        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Все"]],
+        "autoWidth": false
     });
 
     // Apply the search
@@ -121,7 +134,7 @@ function initDoctorHistoryDataTable() {
                 "previous": "Предыдущая"
             },
         },
-        "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "Все"] ],
+        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Все"]],
         "autoWidth": true,
     });
 
@@ -162,7 +175,7 @@ function initAdminDataTable() {
                 "previous": "Предыдущая"
             },
         },
-        "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "Все"] ],
+        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Все"]],
         "autoWidth": true,
     });
 
@@ -203,7 +216,7 @@ function initPatientDataTable() {
                 "previous": "Предыдущая"
             },
         },
-        "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "Все"] ],
+        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Все"]],
         "autoWidth": true,
     });
 
@@ -221,3 +234,28 @@ function initPatientDataTable() {
     });
 }
 
+function checkBoxValidation() {
+    let allCheckboxes = $("input:checkbox");
+
+    allCheckboxes.on('change', function (e) {
+        let changedCheckboxName = this.name;
+        let changedCheckboxGroup = [];
+
+        allCheckboxes.each(function (i) {
+            if ($(allCheckboxes[i]).attr('name').split('.')[0] === changedCheckboxName.split('.')[0]) {
+                changedCheckboxGroup.push(allCheckboxes[i]);
+            }
+        });
+
+        if ($(changedCheckboxGroup).is(':checked')) {
+            $(changedCheckboxGroup).removeAttr('required');
+        } else {
+            $(changedCheckboxGroup).attr('required', 'required');
+        }
+    });
+}
+
+function deleteRequiredAttFromTestForm() {
+    let allInputs = $("input");
+    allInputs.removeAttr('required');
+}

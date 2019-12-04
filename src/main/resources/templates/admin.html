@@ -30,12 +30,13 @@
         <tbody>
         <tr th:each="user, itemStat : ${users}">
           <td class="text-center" th:text="${user.id}">ID</td>
-          <td class="text-center" th:text="${#temporals.format(user.registrationDate, 'dd.MM.yyyy')}">Регистрация</td>
+          <td class="text-center" th:data-order="${#temporals.format(user.registrationDate)}"
+              th:text="${#temporals.format(user.registrationDate, 'dd.MM.yyyy')}">Регистрация</td>
           <td class="text-center" th:text="${user.fullName}">Статус</td>
           <td class="text-center" th:text="${user.email}">Почта</td>
           <td class="text-center" th:text="${user.roles}">Роли</td>
           <td class="text-center">
-            <a href="№" title="Редактировать" th:href="@{/admin/edit_user(userId=${user.id})}" ><i
+            <a href="#" title="Редактировать" th:href="@{/admin/edit_user(userId=${user.id})}" ><i
                 class="edit far fa-edit mr-2"></i></a>
           </td>
         </tr>
