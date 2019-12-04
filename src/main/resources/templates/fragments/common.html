@@ -57,6 +57,9 @@
         <li class="nav-item" sec:authorize="hasRole('DOCTOR')">
           <a class="nav-link text-white" href="#" th:href="@{/patients}">Пациенты</a>
         </li>
+        <li class="nav-item" sec:authorize="hasRole('ANALYTIC')">
+          <a class="nav-link text-white" href="#" th:href="@{/statistic}">Статистика</a>
+        </li>
         <li class="nav-item">
         <a class="nav-link text-white" href="#" th:href="@{/profile}">Профиль</a>
       </li>

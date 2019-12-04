@@ -33,12 +33,12 @@
         <td class="text-center" th:text="*{user.email}">email</td>
         <td class="text-center" th:text="*{user.fullName}"> Имя</td>
         <td class="text-center" th:text="*{user.gender}">Пол</td>
-        <td class="text-center" th:text="*{diagnosis.text}">Диагноз</td>
+        <td class="text-center" th:text="*{diagnosis eq null}? 'Не установлен' : *{diagnosis.text}">Диагноз</td>
         <td class="text-center" th:text="*{doctor} ne null? *{doctor.user.email} : 'Нет'">Прикрепленный доктор</td>
         <td class="text-center">
           <a href="#" title="Профиль"
              th:href="@{/patient/profile(patientId = *{id})}">
-            <i class="far fa-eye mr-2"></i></a></a>
+            <i class="far fa-eye mr-2"></i></a>
         </td>
       </tr>
       </tbody>

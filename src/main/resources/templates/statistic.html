@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/common :: head (~{::title}, ~{}, ~{})">
+  <title>Статистика</title>
+</head>
+<body>
+<div th:replace="fragments/common :: header"></div>
+<main class="jumbotron d-flex align-items-center bg-white m-0">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 mt-5">
+        <h3>Статистика врачей</h3>
+        <table class="table table-striped shadow">
+          <thead>
+          <tr>
+            <th class="text-center">Врач</th>
+            <th class="text-center">Кол-во пациентов</th>
+            <th class="text-center">Установленных диагнозов</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="doctorDto, itemStat : ${doctors}" th:object="${doctorDto}">
+            <td class="text-center" th:text="*{doctor.user.fullName}">Имя</td>
+            <td class="text-center" th:text="*{patientCount}">Кол-во пациентов</td>
+            <td class="text-center" th:text="*{diagnoseEstablished}">Установленных диагнозов</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-12 mt-5">
+        <h3>Статистика пациентов</h3>
+        <table class="table table-striped shadow">
+          <thead>
+          <tr>
+            <th class="text-center">Пациент</th>
+            <th class="text-center">Дата регистрации</th>
+            <th class="text-center">Кол-во опросов</th>
+            <th class="text-center">Кол-во завершенных</th>
+            <th class="text-center">Диагноз</th>
+            <th class="text-center">Врач</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="patientDto, itemStat : ${patients}" th:object="${patientDto}">
+            <td class="text-center" th:text="*{patient.user.fullName}">Имя</td>
+            <td class="text-center" th:text="*{#temporals.format(patient.user.registrationDate, 'dd.MM.yyyy HH:mm')}">Дата</td>
+            <td class="text-center" th:text="*{totalQuestionnaires}">
+            <td class="text-center" th:text="*{processedQuestionnaire}">
+            <td class="text-center" th:text="*{patient.diagnosis ne null}? 'Установлен' : 'Не установлен'">
+            <td class="text-center" th:text="*{patient.doctor ne null}? *{patient.doctor.user.fullName} : 'Нет'">
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer th:replace="fragments/common :: footer"></footer>
+<th:block th:replace="fragments/common :: bottomScripts"></th:block>
+</body>
+</html>

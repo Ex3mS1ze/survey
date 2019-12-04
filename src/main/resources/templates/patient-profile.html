@@ -23,7 +23,8 @@
             <p>Фамилия: <br><b th:text="*{user.secondName}"></b></p>
           </div>
           <div class="col-4">
-            <p>Диагноз: <br><b th:text="*{diagnosis.text}"></b></p>
+            <p>Диагноз: <br><b th:text="*{diagnosis eq null}? 'Не установлен' : *{diagnosis.text}"></b></p>
+
             <p>Телефон: <br><b th:text="*{user.phoneNumber}"></b></p>
             <p>Последний визит: <br>
               <b th:text="${#temporals.format(patient.user.lastVisitDate, 'dd.MM.yy HH:mm')}"></b></p>

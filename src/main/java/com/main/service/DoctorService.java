@@ -83,4 +83,8 @@ public class DoctorService {
         patientFromDb.get().setDiagnosis(patient.getDiagnosis());
         patientRepo.save(patientFromDb.get());
     }
+
+    public List<Doctor> getAllDoctors() {
+        return doctorRepo.findAll();
+    }
 }
