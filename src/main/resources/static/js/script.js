@@ -34,7 +34,7 @@ $(document).ready(function () {
         initPatientDataTable();
     }
     //TestValidation
-    if ($('#testForm') != null) {
+    if ($('#testForm').length !== 0) {
         checkBoxValidation();
         $("input:checkbox").change();
 

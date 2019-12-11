@@ -13,7 +13,10 @@
   <!--Bootstrap-->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
+  <!-- Material Design Bootstrap -->
+  <!--<link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.11/css/mdb.min.css" rel="stylesheet">-->
+  <!-- MDB core JavaScript -->
+  <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.11/js/mdb.min.js"></script>-->
   <th:block th:replace="${links}"></th:block>
   <th:block th:replace="${scripts}"></th:block>
 </head>
@@ -61,8 +64,8 @@
           <a class="nav-link text-white" href="#" th:href="@{/statistic}">Статистика</a>
         </li>
         <li class="nav-item">
-        <a class="nav-link text-white" href="#" th:href="@{/profile}">Профиль</a>
-      </li>
+          <a class="nav-link text-white" href="#" th:href="@{/profile}">Профиль</a>
+        </li>
         <li class="nav-item">
           <form th:action="@{/logout}" method="post">
             <button class="btn btn-primary" type="submit">Выйти</button>
@@ -80,15 +83,13 @@
   </nav>
 </header>
 
-<footer class="mt-auto text-white" th:fragment="footer">
-  <div class="footer bg-dark">
-    <div class="container">
-      <div class="container d-flex justify-content-center pt-3">
-        <div class="row">
-          <a class="text-white" href="/">
+<footer class="footer mt-auto text-white bg-dark" th:fragment="footer">
+      <div class="container-fluid  text-center text-md-left pt-3 m-0">
+        <div class="row d-flex justify-content-center">
+          <div class="col-md-4 col-lg-auto mb-md-0 mb-3"><a class="text-white" href="/">
             <img th:src="@{/static/images/logo.png}" class="" alt="logo" height="30px" width="30px">
           </a>
-          <span>
+            <span>
                 Новосибирский медицинский центр
                 <br> <a class="text-white" href="tel:+73832090303">+7 (383) 209-03-03 </a>
                 <br> 8 800 888 00 00
@@ -98,33 +99,37 @@
                             Гоголя, 42
                         </a>
             </span>
+          </div>
+          <div class="col-md-3 col-lg-auto mb-md-0 mb-3">
+            <ul class="list-unstyled">
+              <b>Клиника</b>
+              <li>
+                <a class="text-white" href="/#">Главная</a>
+              </li>
+              <li>
+                <a class="text-white" href="/#" th:href="@{/registration}">Регистрация</a>
+              </li>
+              <li>
+                <a class="text-white" href="/#" th:href="@{/login}">Вход</a>
+              </li>
+            </ul>
+          </div>
+          <div class="col-md-3 col-lg-auto mb-md-0 mb-3">
+            <ul class="list-unstyled">
+              <b>Дополнительно</b>
+              <li>
+                <a class="text-white" href="/#" th:href="@{/test}">Пройти тест</a>
+              </li>
+              <li>
+                <a class="text-white" href="/#" th:href="@{/about}">О нас</a>
+            </ul>
+          </div>
         </div>
-        <ul>
-          <b>Клиника</b>
-          <li>
-            <a class="text-white" href="/#">Главная</a>
-          </li>
-          <li>
-            <a class="text-white" href="/#" th:href="@{/registration}">Регистрация</a>
-          </li>
-          <li>
-            <a class="text-white" href="/#" th:href="@{/login}">Вход</a>
-          </li>
-        </ul>
-        <ul>
-          <b>Дополнительно</b>
-          <li>
-            <a class="text-white" href="/#" th:href="@{/test}">Пройти тест</a>
-          </li>
-          <li>
-            <a class="text-white" href="/#" th:href="@{/about}">О нас</a>
-        </ul>
-      </div>
-      <div class="credits d-flex justify-content-center">
+        <div class="col-12 credits d-flex justify-content-center">
         © 2019 Some rights
       </div>
-    </div>
-  </div>
+      </div>
+
 </footer>
 
 <th:block th:fragment="bottomScripts">

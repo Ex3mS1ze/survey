@@ -20,7 +20,7 @@
         </RollingFile>
     </Appenders>
     <Loggers>
-        <Logger name="com.main" level="info">
+        <Logger name="com.survey" level="info">
             <AppenderRef ref="LogToConsole"/>
         </Logger>
         <Root level="info">
