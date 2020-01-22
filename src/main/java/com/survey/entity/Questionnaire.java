@@ -1,10 +1,16 @@
 package com.survey.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.*;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "questionnaires", schema = "public")
 public class Questionnaire implements Serializable {
@@ -36,70 +42,6 @@ public class Questionnaire implements Serializable {
 
     public Questionnaire() {
     }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public LocalDateTime getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDateTime date) {
-        this.date = date;
-    }
-
-    public Boolean getProcessed() {
-        return processed;
-    }
-
-    public void setProcessed(Boolean processed) {
-        this.processed = processed;
-    }
-
-    public List<Answer> getAnswers() {
-        return answers;
-    }
-
-    public void setAnswers(List<Answer> answersById) {
-        this.answers = answersById;
-    }
-
-    public Diagnosis getDiagnosis() {
-        return diagnosis;
-    }
-
-    public void setDiagnosis(Diagnosis diagnosesByDiagnosisId) {
-        this.diagnosis = diagnosesByDiagnosisId;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User usersByUserId) {
-        this.user = usersByUserId;
-    }
-
-    public QuestionnaireType getType() {
-        return type;
-    }
-
-    public void setType(QuestionnaireType type) {
-        this.type = type;
-    }
-
-    /*public List<Question> getQuestions() {
-        return questions;
-    }
-
-    public void setQuestions(List<Question> questions) {
-        this.questions = questions;
-    }*/
 
     public Set<String> getAllCategories() {
         Set<String> categories = new HashSet<>();
@@ -134,4 +76,8 @@ public class Questionnaire implements Serializable {
         return true;
     }
 
+    @Override
+    public String toString() {
+        return "Questionnaire{" + "id=" + id + ", date=" + date + ", processed=" + processed + '}';
+    }
 }

@@ -1,11 +1,16 @@
 package com.survey.entity;
 
 import com.survey.utilities.StringDbToListConverter;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "questions", schema = "public")
 public class Question {
@@ -37,86 +42,6 @@ public class Question {
     public Question() {
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public List<String> getOptions() {
-        return options;
-    }
-
-    public void setOptions(List<String> options) {
-        this.options = options;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Object getInputType() {
-        return inputType;
-    }
-
-    public void setInputType(String inputType) {
-        this.inputType = inputType;
-    }
-
-    public Object getAnswerType() {
-        return answerType;
-    }
-
-    public void setAnswerType(String answerType) {
-        this.answerType = answerType;
-    }
-
-    public Question getDependentQuestion() {
-        return dependentQuestion;
-    }
-
-    public void setDependentQuestion(Question questionsByDependsOnTheQuestionId) {
-        this.dependentQuestion = questionsByDependsOnTheQuestionId;
-    }
-
-    public List<Answer> getAnswersById() {
-        return answersById;
-    }
-
-    public void setAnswersById(List<Answer> answersById) {
-        this.answersById = answersById;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public Integer getOrder() {
-        return order;
-    }
-
-    public void setOrder(Integer order) {
-        this.order = order;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -130,5 +55,10 @@ public class Question {
     @Override
     public int hashCode() {
         return Objects.hash(id, text, inputType);
+    }
+
+    @Override
+    public String toString() {
+        return "Question{" + "id=" + id + ", text='" + text + '\'' + ", options=" + options + ", description='" + description + '\'' + ", inputType='" + inputType + '\'' + ", answerType='" + answerType + '\'' + ", dependentQuestion=" + dependentQuestion + ", category='" + category + '\'' + ", order=" + order + '}';
     }
 }

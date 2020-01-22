@@ -1,12 +1,17 @@
 package com.survey.entity;
 
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "roles", schema = "public")
 public class Role implements GrantedAuthority {
@@ -21,27 +26,6 @@ public class Role implements GrantedAuthority {
     private Set<User> users;
 
     public Role() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getRolename() {
-        return rolename;
-    }
-
-    public void setRolename(String rolename) {
-        this.rolename = rolename;
-    }
-
-    @Override
-    public String toString() {
-        return getRolename();
     }
 
     @Override
@@ -72,5 +56,10 @@ public class Role implements GrantedAuthority {
         }
 
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return "Role{" + "id=" + id + ", rolename='" + rolename + '\'' + '}';
     }
 }

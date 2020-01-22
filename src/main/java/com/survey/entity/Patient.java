@@ -1,8 +1,14 @@
 package com.survey.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import javax.persistence.*;
 import java.util.Objects;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "patients", schema = "public")
 public class Patient {
@@ -29,34 +35,6 @@ public class Patient {
     public Patient() {
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Doctor getDoctor() {
-        return doctor;
-    }
-
-    public void setDoctor(Doctor doctor) {
-        this.doctor = doctor;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User usersByUserId) {
-        this.user = usersByUserId;
-    }
-
-    public Diagnosis getDiagnosis() {
-        return diagnosis;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -72,7 +50,8 @@ public class Patient {
         return Objects.hash(id, user);
     }
 
-    public void setDiagnosis(Diagnosis diagnosesByDiagnosisId) {
-        this.diagnosis = diagnosesByDiagnosisId;
+    @Override
+    public String toString() {
+        return "Patient{" + "id=" + id + ", user=" + user + '}';
     }
 }

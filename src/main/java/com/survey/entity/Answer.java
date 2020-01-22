@@ -1,11 +1,16 @@
 package com.survey.entity;
 
 import com.survey.utilities.StringDbToListConverter;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "answers", schema = "public")
 public class Answer {
@@ -28,51 +33,6 @@ public class Answer {
     public Answer() {
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public List<String> getTextList() {
-        return textList;
-    }
-
-    public void setTextList(List<String> textList) {
-        this.textList = textList;
-    }
-
-    public Question getQuestion() {
-        return question;
-    }
-
-    public void setQuestion(Question questionsByQuestionId) {
-        this.question = questionsByQuestionId;
-    }
-
-    public Questionnaire getQuestionnaire() {
-        return questionnaire;
-    }
-
-    public void setQuestionnaire(Questionnaire questionnairesByQuestionnaireId) {
-        this.questionnaire = questionnairesByQuestionnaireId;
-    }
-
-    @Override
-    public String toString() {
-        return "Answer{" + "id=" + id + ", text='" + text + '\'' + ", question=" + question + ", questionnaire=" + questionnaire + '}';
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -86,5 +46,10 @@ public class Answer {
     @Override
     public int hashCode() {
         return Objects.hash(id, text);
+    }
+
+    @Override
+    public String toString() {
+        return "Answer{" + "id=" + id + ", text='" + text + '\'' + '}';
     }
 }
