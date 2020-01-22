@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
+@Table(name = "activation_code", schema = "public")
 public class ActivationCode {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

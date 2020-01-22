@@ -6,7 +6,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -184,6 +183,20 @@ public class User implements UserDetails {
         return this.firstName + ' ' + this.secondName;
     }
 
+    public boolean isAdmin() {
+        long role = roles.stream().map(Role::getRolename).filter(s -> s.equals("ROLE_ADMIN")).count();
+        return role > 0;
+    }
+
+    public boolean isDoctor() {
+        long role = roles.stream().map(Role::getRolename).filter(s -> s.equals("ROLE_DOCTOR")).count();
+        return role > 0;
+    }
+
+    public boolean isPatient() {
+        long role = roles.stream().map(Role::getRolename).filter(s -> s.equals("ROLE_PATIENT")).count();
+        return role > 0;
+    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getRoles();

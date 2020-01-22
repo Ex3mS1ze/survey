@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+>
 <head th:replace="fragments/common :: head (~{::title}, ~{::link}, ~{::script})">
   <title>Страница администратора</title>
   <!--DataTables-->
@@ -30,7 +30,7 @@
         <tbody>
         <tr th:each="user, itemStat : ${users}">
           <td class="text-center" th:text="${user.id}">ID</td>
-          <td class="text-center" th:data-order="${#temporals.format(user.registrationDate)}"
+          <td class="text-center" th:data-order="${#temporals.formatISO(user.registrationDate)}"
               th:text="${#temporals.format(user.registrationDate, 'dd.MM.yyyy')}">Регистрация</td>
           <td class="text-center" th:text="${user.fullName}">Статус</td>
           <td class="text-center" th:text="${user.email}">Почта</td>

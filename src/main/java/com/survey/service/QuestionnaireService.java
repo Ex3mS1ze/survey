@@ -1,24 +1,14 @@
 package com.survey.service;
 
-import com.survey.entity.Diagnosis;
-import com.survey.entity.Question;
-import com.survey.entity.Questionnaire;
-import com.survey.entity.User;
-import com.survey.repository.AnswerRepo;
-import com.survey.repository.DiagnosisRepo;
-import com.survey.repository.QuestionRepo;
-import com.survey.repository.QuestionnaireRepo;
+import com.survey.entity.*;
+import com.survey.repository.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 import static com.survey.service.UserService.getUserFromPrincipal;
 
@@ -29,9 +19,13 @@ public class QuestionnaireService {
     @Autowired
     private QuestionRepo questionRepo;
     @Autowired
+    private AnswerRepo answerRepo;
+    @Autowired
     private QuestionnaireRepo questionnaireRepo;
     @Autowired
     private DiagnosisRepo diagnosisRepo;
+    @Autowired
+    private QuestionnaireTypeRepo questionnaireTypeRepo;
 
     public List<Question> getAllQuestions() {
         return questionRepo.findAllByOrderById();
@@ -41,19 +35,24 @@ public class QuestionnaireService {
         User user = getUserFromPrincipal();
         questionnaire.setUser(user);
         questionnaire.setDate(LocalDateTime.now());
+
         if (questionnaire.getProcessed() == null) {
             questionnaire.setProcessed(false);
         }
-        Long nextId = questionnaireRepo.getNextId();
-        questionnaire.setId(nextId);
-        questionnaire.getAnswers().forEach(answer -> answer.setQuestionnaire(questionnaire));
-        Questionnaire questionnaireSaved = questionnaireRepo.save(questionnaire);
-        LOGGER.info("New questionnaire created{}", questionnaireSaved.toString());
+
+        List<Answer> answers = questionnaire.getAnswers();
+        questionnaire.setAnswers(null);
+        //Save empty questionnaire to get id and set questionnaire to each answer.
+        Questionnaire savedQuestionnaire = questionnaireRepo.save(questionnaire);
+        answers.forEach(answer -> answer.setQuestionnaire(savedQuestionnaire));
+        savedQuestionnaire.setAnswers(answers);
+        questionnaireRepo.save(savedQuestionnaire);
+        LOGGER.info("New questionnaire created{}", savedQuestionnaire.toString());
     }
 
     public void saveExistedQuestionnaire(Questionnaire questionnaire, Long id) {
         Optional<Questionnaire> questionnaireFromDb = questionnaireRepo.findById(id);
-        //TODO add exception wtih handler
+        //TODO add exception with handler
         questionnaire.getAnswers().forEach(answer -> answer.setQuestionnaire(questionnaireFromDb.get()));
         questionnaireFromDb.get().setAnswers(questionnaire.getAnswers());
         questionnaireRepo.save(questionnaireFromDb.get());
@@ -64,12 +63,18 @@ public class QuestionnaireService {
         questionnaireFromDb.get().setProcessed(true);
         questionnaireFromDb.get().setDiagnosis(questionnaire.getDiagnosis());
         questionnaireRepo.save(questionnaireFromDb.get());
-
     }
 
-    public List<Questionnaire> getAllUsersQuestionnaires(User... user) {
-        User userFromSecurityContext = getUserFromPrincipal();
-        List<Questionnaire> questionnaires = questionnaireRepo.findAllByUserOrderByDate(userFromSecurityContext);
+    public List<Questionnaire> getAllUsersQuestionnaires() {
+        User user = getUserFromPrincipal();
+        List<Questionnaire> questionnaires = new ArrayList<>();
+
+        if (user.isAdmin() || user.isDoctor()) {
+            questionnaires = getAllQuestionnaires();
+        } else if (user.isPatient()) {
+            questionnaires = questionnaireRepo.findAllByUserOrderByDate(user);
+        }
+
         return questionnaires;
     }
 
@@ -84,12 +89,15 @@ public class QuestionnaireService {
     public Questionnaire findQuestionnaireById(Long id) {
         Optional<Questionnaire> questionnaire = questionnaireRepo.findById(id);
         if (!questionnaire.isPresent()) {
-            return new Questionnaire();
+            throw new NoSuchElementException("No questionnaire with id=" + id);
         }
 
         Questionnaire existedQuestionnaire = questionnaire.get();
-        Collections.sort(existedQuestionnaire.getAnswers(), (a1, a2) -> a1.getQuestion().getId().compareTo(a2.getQuestion().getId()));
-        return questionnaire.orElseGet(Questionnaire::new);
+        existedQuestionnaire.getType().setQuestions(getOrderedQuestionsByTypeId(existedQuestionnaire.getType().getId()));
+        existedQuestionnaire.setAnswers(getOrderedAnswersByQuestionsAndQuestionnaireId(existedQuestionnaire.getType().getQuestions(), id));
+
+        //        Collections.sort(existedQuestionnaire.getAnswers(), (a1, a2) -> a1.getQuestion().getId().compareTo(a2.getQuestion().getId()));
+        return existedQuestionnaire;
     }
 
     public boolean operateQuestionnaireAnswers(Questionnaire questionnaire, boolean isNew, Long questionnaireId) {
@@ -118,4 +126,50 @@ public class QuestionnaireService {
         return questionCategories;
     }
 
+    public QuestionnaireType getQuestionnaireTypeByTypeName(String typeName) {
+        QuestionnaireType questionnaireType;
+        if (typeName == null || typeName.isEmpty() || !questionnaireTypeRepo.getAllTypesNames().contains(typeName.toLowerCase())) {
+            LOGGER.warn("Questionnaire type is empty, load gastroenterological test by default.");
+            questionnaireType = questionnaireTypeRepo.getByName("gastroenterological");
+        }
+        else {
+            questionnaireType = questionnaireTypeRepo.getByName(typeName);
+        }
+
+        List<Question> orderedQuestions = getOrderedQuestionsByTypeId(questionnaireType.getId());
+        questionnaireType.setQuestions(orderedQuestions);
+
+        return questionnaireType;
+    }
+
+    public List<Question> getOrderedQuestionsByTypeId(Long type_id) {
+        List<Long> orderedQuestionsIds = questionnaireTypeRepo.getOrderedQuestionsIds(type_id);
+        List<Question> orderedQuestions = new ArrayList<>();
+        for (Long orderedQuestionsId : orderedQuestionsIds) {
+            orderedQuestions.add(questionRepo.getById(orderedQuestionsId));
+        }
+
+        return orderedQuestions;
+    }
+
+    public List<Answer> getOrderedAnswersByQuestionsAndQuestionnaireId(List<Question> orderedQuestions, Long questionnaire_id) {
+        List<Answer> answers = new ArrayList<>();
+        for (Question question : orderedQuestions) {
+            answers.add(answerRepo.getByQuestionIdAndQuestionnaireId(question.getId(), questionnaire_id));
+        }
+
+        return answers;
+    }
+
+    public Questionnaire getNewQuestionnaireByTypeName(String typeName) {
+        QuestionnaireType questionnaireType = getQuestionnaireTypeByTypeName(typeName);
+        Questionnaire questionnaire = new Questionnaire();
+        questionnaire.setType(questionnaireType);
+
+        for (int i = questionnaireType.getQuestions().size(); i > 0; i--) {
+            questionnaire.getAnswers().add(new Answer());
+        }
+
+        return questionnaire;
+    }
 }

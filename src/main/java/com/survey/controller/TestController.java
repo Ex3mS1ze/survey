@@ -1,6 +1,5 @@
 package com.survey.controller;
 
-import com.survey.entity.Answer;
 import com.survey.entity.Question;
 import com.survey.entity.Questionnaire;
 import com.survey.service.QuestionnaireService;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 public class TestController {
@@ -22,21 +22,21 @@ public class TestController {
     private QuestionnaireService questionnaireService;
 
     @GetMapping("/test")
-    public String getTestPage(Model model) {
-        List<Question> questions = questionnaireService.getAllQuestions();
-        model.addAttribute("questions", questions);
-        Questionnaire questionnaire = new Questionnaire();
-        for (int i = questions.size(); i > 0; i--) {
-            questionnaire.getAnswers().add(new Answer());
-        }
+    public String getTestPage(Model model, @RequestParam(value = "typeName", required = false) String typeName) {
+        Questionnaire questionnaire = questionnaireService.getNewQuestionnaireByTypeName(typeName);
+        Set<String> categories = questionnaire.getAllCategories();
+
         model.addAttribute("questionnaire", questionnaire);
-        model.addAttribute("categories", questionnaireService.getAllQuestionCategories());
+        model.addAttribute("categories", categories);
+
         return "test";
     }
 
     @PostMapping("/test")
-    public String saveChanges(@RequestParam("isNew") Boolean isNew, @RequestParam(value = "patientId", required = false) Long patientId, @RequestParam(value = "questionnaireId", required = false) Long questionnaireId, @ModelAttribute("questionnaire") Questionnaire questionnaire) {
-
+    public String saveChanges(@RequestParam("isNew") Boolean isNew,
+                              @RequestParam(value = "patientId", required = false) Long patientId,
+                              @RequestParam(value = "questionnaireId", required = false) Long questionnaireId,
+                              @ModelAttribute("questionnaire") Questionnaire questionnaire) {
         if (isNew) {
             questionnaireService.saveNewQuestionnaire(questionnaire);
         } else {
@@ -51,8 +51,11 @@ public class TestController {
     }
 
     @PostMapping("/operate_test")
-    public String operateQuestionnaire(@RequestParam("isNew") Boolean isNew, @RequestParam(value = "questionnaireId", required = false) Long questionnaireId, @RequestParam(value = "patientId", required = false) Long patientId, @ModelAttribute("questionnaire") @Valid Questionnaire questionnaire, BindingResult bindingResult, Model model) {
-
+    public String operateQuestionnaire(@RequestParam("isNew") Boolean isNew,
+                                       @RequestParam(value = "questionnaireId", required = false) Long questionnaireId,
+                                       @RequestParam(value = "patientId", required = false) Long patientId,
+                                       @ModelAttribute("questionnaire") @Valid Questionnaire questionnaire,
+                                       BindingResult bindingResult, Model model) {
         boolean isOperated = questionnaireService.operateQuestionnaireAnswers(questionnaire, isNew, questionnaireId);
         if (bindingResult.hasErrors() || !isOperated) {
             List<Question> questions = questionnaireService.getAllQuestions();
@@ -81,13 +84,12 @@ public class TestController {
     @GetMapping("/test/history")
     public String getTestHistory(Model model) {
         List<Questionnaire> questionnaires = questionnaireService.getAllUsersQuestionnaires();
-        //        List<Questionnaire> questionnaires = questionnaireService.getAllQuestionnaires();
 
         model.addAttribute("questionnaires", questionnaires);
+
         return "test-history";
     }
 
-    //TODO Change to POST
     @GetMapping("/test/edit")
     public String editQuestionnaire(@RequestParam("questionnaireId") Long questionnaireId,
                                     @RequestParam(value = "patientId", required = false) Long patientId,
@@ -98,10 +100,11 @@ public class TestController {
                 return patientId != null ? "redirect:/patient/profile?patientId=" + patientId : "redirect:/test/history";
             case "edit": {
                 Questionnaire questionnaire = questionnaireService.findQuestionnaireById(questionnaireId);
-                List<Question> questions = questionnaireService.getAllQuestions();
-                model.addAttribute("categories", questionnaireService.getAllQuestionCategories());
+                Set<String> categories = questionnaire.getAllCategories();
+
+                model.addAttribute("categories", categories);
                 model.addAttribute("questionnaire", questionnaire);
-                model.addAttribute("questions", questions);
+
                 return "test-edit";
             }
             default:
@@ -112,10 +115,11 @@ public class TestController {
     @GetMapping("/test/view")
     public String viewQuestionnaire(@RequestParam("questionnaireId") Long questionnaireId, Model model) {
         Questionnaire questionnaire = questionnaireService.findQuestionnaireById(questionnaireId);
-        List<Question> questions = questionnaireService.getAllQuestions();
+
         model.addAttribute("questionnaire", questionnaire);
-        model.addAttribute("questions", questions);
-        model.addAttribute("categories", questionnaireService.getAllQuestionCategories());
+        model.addAttribute("questions", questionnaire.getType().getQuestions());
+        model.addAttribute("categories", questionnaire.getAllCategories());
+
         return "test-view";
     }
 

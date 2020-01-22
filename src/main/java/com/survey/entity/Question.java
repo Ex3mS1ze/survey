@@ -31,6 +31,8 @@ public class Question {
     private List<Answer> answersById;
     @Column(name = "category")
     private String category;
+    @Transient
+    private Integer order;
 
     public Question() {
     }
@@ -105,6 +107,14 @@ public class Question {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public Integer getOrder() {
+        return order;
+    }
+
+    public void setOrder(Integer order) {
+        this.order = order;
     }
 
     @Override

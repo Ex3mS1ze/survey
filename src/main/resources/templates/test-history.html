@@ -19,6 +19,7 @@
       <input type="checkbox">
       <tr>
         <th class="text-center">Дата</th>
+        <th class="text-center">Тип</th>
         <th class="text-center">Статус</th>
         <th class="text-center">Диагноз</th>
         <th class="text-center">Редактировать</th>
@@ -26,8 +27,10 @@
       </thead>
       <tbody>
       <tr th:each="questionnaire, itemStat : ${questionnaires}">
-        <td class="text-center" th:data-order="${#temporals.format(questionnaire.date)}"
-            th:text="${#temporals.format(questionnaire.date, 'dd.MM.yy HH:mm')}">Дата</td>
+        <td class="text-center" th:data-order="${#temporals.formatISO(questionnaire.date)}"
+            th:text="${#temporals.format(questionnaire.date, 'dd.MM.yy HH:mm')}">Дата
+        </td>
+        <td class="text-center" th:text="${questionnaire.type.description}">Тип</td>
         <td class="text-center" th:text="${questionnaire.processed} eq false? 'Не обработан': 'Обработан'">Статус</td>
         <td class="text-center" th:text="${questionnaire.diagnosis} eq null? 'Не установлен': ${questionnaire.diagnosis.text}"></td>
         <td class="text-center" th:if="${questionnaire.processed} eq true">
@@ -50,6 +53,7 @@
       <tfoot>
       <tr>
         <th class="text-center">Дата</th>
+        <th class="text-center">Тип</th>
         <th class="text-center">Статус</th>
         <th class="text-center">Диагноз</th>
         <th class="text-center">Редактировать</th>
@@ -64,7 +68,6 @@
         <th class="text-center">ID</th>
         <th class="text-center">Имя пациента</th>
         <th class="text-center">Пол</th>
-        <th class="text-center">Возраст</th>
         <th class="text-center">Статус</th>
         <th class="text-center">Диагноз</th>
         <th class="text-center">Действия</th>
@@ -80,8 +83,6 @@
           Имя
         </td>
         <td class="text-center" th:text="${questionnaire.getUser().getGender()}">Пол</td>
-        <td class="text-center" th:text="${questionnaire.getAnswers().get(0).text}">Возраст</td>
-
         <td class="text-center" th:text="${questionnaire.processed} eq false? 'Не обработан': 'Обработан'">Статус</td>
         <td class="text-center"
             th:text="${questionnaire.diagnosis} eq null? 'Не установлен': ${questionnaire.diagnosis.getText()}">
@@ -110,7 +111,6 @@
         <th class="text-center">ID</th>
         <th class="text-center">Имя пациента</th>
         <th class="text-center">Пол</th>
-        <th class="text-center">Возраст</th>
         <th class="text-center">Статус</th>
         <th class="text-center">Диагноз</th>
         <th class="text-center">Действия</th>

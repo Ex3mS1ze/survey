@@ -2,7 +2,6 @@ package com.survey.entity;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -12,7 +11,6 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
@@ -20,7 +18,7 @@ import static org.junit.Assert.assertTrue;
 @Transactional
 public class UserTest {
     private User user;
-    private Role roleUser;
+    private Role roleAdmin;
 
     @Before
     public void setUp() {
@@ -34,13 +32,13 @@ public class UserTest {
         user.setPassword("pass");
         user.setPhoneNumber("89994501020");
         user.setRegistrationDate(LocalDateTime.now());
-        roleUser = new Role();
-        roleUser.setId(1L);
-        roleUser.setRolename("ROLE_USER");
-        user.setRoles(new HashSet<>(Arrays.asList(roleUser)));
+        roleAdmin = new Role();
+        roleAdmin.setId(1L);
+        roleAdmin.setRolename("ROLE_USER");
+        user.setRoles(new HashSet<>(Arrays.asList(roleAdmin)));
     }
 
-    @Test
+    /*@Test
     @BeforeEach
     public void checkMandatoryFieldTest() {
         assertTrue(user.checkMandatoryFields());
@@ -53,5 +51,15 @@ public class UserTest {
         user.setRoles(new HashSet<>());
         assertFalse(user.checkMandatoryFields());
 
+    }*/
+
+    @Test
+    public void isAdminTest() {
+        roleAdmin = new Role();
+        roleAdmin.setId(3L);
+        roleAdmin.setRolename("ROLE_ADMIN");
+
+        user.getRoles().add(roleAdmin);
+        assertTrue(user.isAdmin());
     }
 }

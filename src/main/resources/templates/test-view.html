@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+>
 <head th:replace="fragments/common :: head (~{::title}, ~{}, ~{})">
   <title>Просмотр результатов теста</title>
 </head>
@@ -11,14 +11,14 @@
     <div class="row">
       <fieldset class="mx-auto col col-lg-8" disabled>
         <form class=" bg-light p-4 rounded shadow" name="myForm" id="mineForm" method="post">
-
+          <h1 class="text-center" th:text="${questionnaire.type.description}"></h1>
           <div class="mb-2 p-2 rounded border" th:each="category : ${categories}">
             <h3 class="text-center" th:text="${category}"></h3>
             <div th:each="question, itemStat : ${questions}" th:if="${question.category eq category}">
               <input type="hidden" th:value="${question.id}"
                      th:attr="name='answers[' + ${itemStat.index} + '].question.id'">
 
-              <label th:for="${question.id}" th:text="${itemStat.count} + ' ' + ${question.description} "></label>
+              <label th:for="${question.id}" th:text="${question.description} "></label>
               <div th:replace="fragments/question-form :: questionsInputs(${question}, ${questionnaire})"></div>
             </div>
           </div>

@@ -1,14 +1,13 @@
 package com.survey.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 @Table(name = "questionnaires", schema = "public")
-public class Questionnaire {
+public class Questionnaire implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -27,6 +26,9 @@ public class Questionnaire {
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private User user;
+    @ManyToOne
+    @JoinColumn(name = "type_id", referencedColumnName = "id", nullable = false)
+    private QuestionnaireType type;
 
     {
         this.answers = new ArrayList<>();
@@ -83,6 +85,28 @@ public class Questionnaire {
         this.user = usersByUserId;
     }
 
+    public QuestionnaireType getType() {
+        return type;
+    }
+
+    public void setType(QuestionnaireType type) {
+        this.type = type;
+    }
+
+    /*public List<Question> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(List<Question> questions) {
+        this.questions = questions;
+    }*/
+
+    public Set<String> getAllCategories() {
+        Set<String> categories = new HashSet<>();
+        this.getType().getQuestions().forEach(question -> categories.add(question.getCategory()));
+        return categories;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -98,10 +122,6 @@ public class Questionnaire {
         return Objects.hash(id, date, processed, diagnosis);
     }
 
-    /*@Override
-    public String toString() {
-        return "Questionnaire{" + "id=" + id + ", date=" + date + ", processed=" + processed + ", answers=" + answers + ", diagnosis=" + diagnosis + ", user=" + user + '}';
-    }*/
 
     public static boolean isFullFilled(Questionnaire questionnaire) {
         List<Answer> answers = questionnaire.getAnswers();

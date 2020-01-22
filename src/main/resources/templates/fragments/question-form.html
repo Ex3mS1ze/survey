@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+>
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 </head>
@@ -10,6 +10,7 @@
   <div class="form-check" th:switch="${question.inputType}">
     <input required class="form-control" type="text" minlength="2" th:case="'text'"
            th:field="${questionnaire.answers[__${itemStat.index}__].text}"/>
+
     <input required class="form-control" type="email" th:case="'email'"
            th:field="${questionnaire.answers[__${itemStat.index}__].text}">
 
@@ -22,7 +23,9 @@
 
     <input required class="form-control col-4" type="number" th:case="'number'"
            th:field="${questionnaire.answers[__${itemStat.index}__].text}"
-           th:min="${question.options[0]}" th:max="${question.options[1]}">
+           th:min="${question.options[0]}"
+           th:max="${question.options[1]}"
+           th:step="${question.options.size() > 2? question.options[2] : '1'}">
 
     <ul class="list-unstyled" th:case="'checkbox'">
       <li th:each="option, optionStat : ${question.options}">
