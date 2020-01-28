@@ -6,6 +6,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 
@@ -26,13 +30,14 @@ public class UserWithRolesTests {
     private UserRepo userRepo;
     @Autowired
     private RoleRepo roleRepo;
+
     private User user;
     private Role roleUser;
 
     @Before
     public void setUp() {
         user = new User();
-        user.setId(3L);
+        user.setId(1L);
         user.setActivated(true);
         user.setEmail("dru@gmail.com");
         user.setFirstName("name");
@@ -44,13 +49,14 @@ public class UserWithRolesTests {
         roleUser = new Role();
         roleUser.setId(1L);
         roleUser.setRolename("ROLE_USER");
-        user.setRoles(new HashSet<>(Arrays.asList(roleUser)));
+        user.setRoles(new HashSet<>(Collections.singletonList(roleUser)));
     }
 
     @Test
-    public void saveUser() {
+    public void existedByEmailAndSaveUserTest() {
+        assertFalse(userRepo.existsUserByEmail(user.getEmail()));
         User savedUser = userRepo.save(user);
-        assertEquals(savedUser, user);
+        assertTrue(userRepo.existsUserByEmail(user.getEmail()));
     }
 
     @Test
@@ -58,18 +64,6 @@ public class UserWithRolesTests {
         Role rolePatient = roleRepo.findById(2L).orElseThrow(() -> new EntityNotFoundException("id = 2L"));
         user.getRoles().add(rolePatient);
         User savedUser = userRepo.save(user);
-        assertEquals(2, savedUser.getRoles().size());
-    }
-
-    @Test
-    public void findUser() {
-        UserRepo user = this.userRepo;
-        user.findByEmail("ad");
-        assertNotNull(this.user);
-    }
-
-    @Test
-    public void checkMandatoryFieldTest() {
-        assertTrue(user.checkMandatoryFields());
+        assertEquals(user.getRoles().size(), savedUser.getRoles().size());
     }
 }

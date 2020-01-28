@@ -3,6 +3,7 @@ package com.survey.service;
 import com.survey.entity.*;
 import com.survey.repository.*;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.validator.routines.EmailValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.*;
 
-@Service
+@Service("myUserDetailsService")
 public class UserService implements UserDetailsService, ApplicationListener<AuthenticationSuccessEvent> {
     private static final Logger LOGGER = LogManager.getLogger(UserService.class.getName());
 
@@ -37,22 +38,28 @@ public class UserService implements UserDetailsService, ApplicationListener<Auth
     @Autowired
     private EmailSender emailSender;
     @Autowired
-    BCryptPasswordEncoder bCryptPasswordEncoder;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    private final EmailValidator emailValidator;
+
+    {
+        emailValidator = EmailValidator.getInstance();
+    }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User userFromRepo = userRepo.findByEmail(email);
+        Optional<User> userFromRepo = userRepo.findByEmail(email);
 
-        if (userFromRepo == null) {
-            throw new UsernameNotFoundException("User not found");
+        if (!userFromRepo.isPresent()) {
+            throw new UsernameNotFoundException(email);
         }
-        return userFromRepo;
+        return userFromRepo.get();
     }
 
     @Override
     public void onApplicationEvent(AuthenticationSuccessEvent authenticationSuccessEvent) {
         User user = (User) authenticationSuccessEvent.getAuthentication().getPrincipal();
-        User userFromDb = userRepo.findByEmail(user.getEmail());
+        User userFromDb = findByEmail(user.getEmail());
         userFromDb.setLastVisitDate(LocalDateTime.now());
         userRepo.save(userFromDb);
 
@@ -83,14 +90,13 @@ public class UserService implements UserDetailsService, ApplicationListener<Auth
                 patient.setUser(user);
                 patientRepo.save(patient);
                 LOGGER.info("New patient: {} added.", user.getEmail());
-            } else if(userRole.equals("doctor")){
+            } else if (userRole.equals("doctor")) {
                 user = userRepo.save(user);
                 Doctor doctor = new Doctor();
                 doctor.setUser(user);
                 doctorRepo.save(doctor);
                 LOGGER.info("New doctor: {} added.", user.getEmail());
-            }
-            else {
+            } else {
                 userRepo.save(user);
                 LOGGER.info("New user: {} added.", user.getEmail());
             }
@@ -151,10 +157,13 @@ public class UserService implements UserDetailsService, ApplicationListener<Auth
         user.setActivated(false);
         userRepo.save(user);
 
-        String message = String.format("Здравствуйте, %s! \n + Для активации аккаунта перейдите по ссылке: " + "http://localhost:8080/activate/%s", user.getFirstName(), activationCode.getCode());
-        emailSender.send(user.getEmail(), "Активация аккаунта", message);
+        String message = String.format("Здравствуйте, %s! \n + Для активации аккаунта перейдите по ссылке: " +
+                                       "http://localhost:8080/activate/%s", user.getFirstName(),
+                                       activationCode.getCode());
+//        emailSender.send(user.getEmail(), "Активация аккаунта", message);
 
-        LOGGER.info("Created activation code for User:{}, current activation status: {}", user.getEmail(), user.getActivated());
+        LOGGER.info("Created activation code for User:{}, current activation status: {}", user.getEmail(),
+                    user.getActivated());
         return true;
     }
 
@@ -169,7 +178,8 @@ public class UserService implements UserDetailsService, ApplicationListener<Auth
         user.setActivated(true);
         userRepo.save(user);
         activationCodeRepo.delete(activationCodeFromDb.get());
-        LOGGER.info("User:{} activated. Record: id={} from activation_code table deleted.", user.getEmail(), activationCodeFromDb.get().getId());
+        LOGGER.info("User:{} activated. Record: id={} from activation_code table deleted.", user.getEmail(),
+                    activationCodeFromDb.get().getId());
         return true;
     }
 
@@ -188,8 +198,7 @@ public class UserService implements UserDetailsService, ApplicationListener<Auth
             LOGGER.info("Reset password failed, email:{} not found in DB.", email);
             return false;
         }
-
-        User userFromDb = userRepo.findByEmail(email);
+        User userFromDb = findByEmail(email);
         if (activationCodeRepo.findByUser(userFromDb).isPresent()) {
             activationCodeRepo.deleteByUser(userFromDb);
             userFromDb.setActivated(true);
@@ -199,8 +208,9 @@ public class UserService implements UserDetailsService, ApplicationListener<Auth
         userFromDb.setPassword(bCryptPasswordEncoder.encode(password));
         userRepo.save(userFromDb);
 
-        String message = String.format("Здравствуйте, %s! \n + Ваш новый пароль: " + "%s", userFromDb.getFirstName(), password);
-        emailSender.send(userFromDb.getEmail(), "Восстановление пароля", message);
+        String message = String.format("Здравствуйте, %s! \n + Ваш новый пароль: " + "%s", userFromDb.getFirstName(),
+                                       password);
+//        emailSender.send(userFromDb.getEmail(), "Восстановление пароля", message);
 
         LOGGER.info("Password for User:{} restored.", userFromDb.getEmail());
         return true;
@@ -209,16 +219,17 @@ public class UserService implements UserDetailsService, ApplicationListener<Auth
     public void updatePrincipal() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User oldUser = (User) auth.getPrincipal();
-        User userFromDB = userRepo.findByEmail(oldUser.getEmail());
-        Authentication newAuth = new UsernamePasswordAuthenticationToken(userFromDB, userFromDB.getPassword(), userFromDB.getAuthorities());
+        User userFromDB = findByEmail(oldUser.getEmail());
+        Authentication newAuth = new UsernamePasswordAuthenticationToken(userFromDB, userFromDB.getPassword(),
+                                                                         userFromDB.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(newAuth);
     }
 
     public boolean changePassword(String oldPass, String newPass) {
-//        String encodeOldPass = bCryptPasswordEncoder.encode(oldPass);
+        //        String encodeOldPass = bCryptPasswordEncoder.encode(oldPass);
         String encodeNewPass = bCryptPasswordEncoder.encode(newPass);
         User userFromSecurityContext = getUserFromPrincipal();
-        User userFromDb = userRepo.findByEmail(userFromSecurityContext.getEmail());
+        User userFromDb = findByEmail(userFromSecurityContext.getEmail());
 
         if (!bCryptPasswordEncoder.matches(oldPass, userFromDb.getPassword())) {
             LOGGER.warn("Password from DB not equal password from principal for User:{}", userFromDb.getEmail());
@@ -240,6 +251,16 @@ public class UserService implements UserDetailsService, ApplicationListener<Auth
     }
 
     public boolean isEmailUsed(String email) {
-        return userRepo.existsUserByEmail(email);
+        if (!emailValidator.isValid(email)) {
+            throw new IllegalArgumentException("Email null or invalid format");
+        }
+        return userRepo.existsUserByEmail(email.trim());
+    }
+
+    public User findByEmail(String email) {
+        if (!emailValidator.isValid(email)) {
+            throw new IllegalArgumentException("Email null or invalid format");
+        }
+        return userRepo.findByEmail(email.trim()).orElseThrow(() -> new UsernameNotFoundException(email));
     }
 }

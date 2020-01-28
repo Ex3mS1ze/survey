@@ -12,11 +12,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.transaction.Transactional;
+import java.util.Optional;
+
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
-//@Transactional
+@Transactional
 public class AnswerRepoTest {
     private static final Logger LOGGER = LogManager.getLogger(AnswerRepoTest.class.getName());
     @Autowired
@@ -53,7 +57,7 @@ public class AnswerRepoTest {
 
     @Test
     public void getQuestionByQuestionIdAndQuestionnaireIdTest() {
-        Answer answer = answerRepo.getByQuestionIdAndQuestionnaireId(1L, 172L);
-        assertNotNull(answer);
+        Optional<Answer> answer = answerRepo.getByQuestionIdAndQuestionnaireId(1L, 172L);
+        assertTrue(answer.isPresent());
     }
 }

@@ -48,14 +48,13 @@ public class Role implements GrantedAuthority {
         return Objects.hash(id, rolename);
     }
 
-    public static boolean isRolesContainsByRolename(Set<Role> roles, String rolename) {
-        for (Role role : roles) {
-            if (role.getRolename().contains(rolename)) {
-                return true;
-            }
+    public static boolean isRolesContainsByRolename(Set<Role> roles, String rawRoleName) {
+        if (rawRoleName == null || rawRoleName.isEmpty()) {
+            return false;
         }
 
-        return false;
+        String role = rawRoleName.trim().toUpperCase();
+        return roles.stream().map(Role::getRolename).anyMatch(s -> s.toUpperCase().contains(role));
     }
 
     @Override

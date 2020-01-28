@@ -19,7 +19,6 @@ import static org.junit.Assert.assertNotNull;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
-@TestPropertySource("classpath:application-dev.properties")
 @Transactional
 public class QuestionnaireRepoTest {
     @Autowired

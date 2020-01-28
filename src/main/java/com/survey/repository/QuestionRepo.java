@@ -5,10 +5,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface QuestionRepo extends JpaRepository<Question,Long> {
-    Question getById(Long id);
+    Optional<Question> getById(Long id);
     List<Question> findAllByOrderById();
-    @Query(value = "SELECT DISTINCT category, MIN(id) \n" + "FROM questions \n" + "GROUP BY category \n" + "ORDER BY MIN(id) ASC, category", nativeQuery = true)
+    @Query(value = "SELECT DISTINCT category, MIN(id) \nFROM questions \nGROUP BY category \nORDER BY MIN(id) ASC, category", nativeQuery = true)
     List<String> getAllQuestionCategories();
 }

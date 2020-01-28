@@ -56,7 +56,8 @@ public class Questionnaire implements Serializable {
         if (!(o instanceof Questionnaire))
             return false;
         Questionnaire that = (Questionnaire) o;
-        return Objects.equals(id, that.id) && Objects.equals(date, that.date) && Objects.equals(processed, that.processed) && Objects.equals(diagnosis, that.diagnosis);
+        return Objects.equals(id, that.id) && Objects.equals(date, that.date) &&
+               Objects.equals(processed, that.processed) && Objects.equals(diagnosis, that.diagnosis);
     }
 
     @Override
@@ -65,15 +66,15 @@ public class Questionnaire implements Serializable {
     }
 
 
-    public static boolean isFullFilled(Questionnaire questionnaire) {
-        List<Answer> answers = questionnaire.getAnswers();
-        for (Answer answer : answers) {
-            if ((answer.getText() == null || answer.getText().isEmpty()) && (answer.getTextList() == null || answer.getTextList().size() == 0)) {
-                return false;
+    public boolean isAnyAnswerEmpty() {
+        for (Answer answer : getAnswers()) {
+            if ((answer.getText() == null || answer.getText().isEmpty()) &&
+                (answer.getTextList() == null || answer.getTextList().size() == 0)) {
+                return true;
             }
         }
 
-        return true;
+        return false;
     }
 
     @Override

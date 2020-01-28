@@ -15,6 +15,7 @@ import static com.survey.service.UserService.getUserFromPrincipal;
 @Service
 public class QuestionnaireService {
     private static final Logger LOGGER = LogManager.getLogger(UserService.class.getName());
+    private final String GASTRO_TYPE = "gastroenterological";
 
     @Autowired
     private QuestionRepo questionRepo;
@@ -57,7 +58,8 @@ public class QuestionnaireService {
         questionnaireFromDb.get().setAnswers(questionnaire.getAnswers());
         questionnaireRepo.save(questionnaireFromDb.get());
     }
-    public void saveExistedProcessedQuestionnaire(Questionnaire questionnaire, Long id){
+
+    public void saveExistedProcessedQuestionnaire(Questionnaire questionnaire, Long id) {
         saveExistedQuestionnaire(questionnaire, id);
         Optional<Questionnaire> questionnaireFromDb = questionnaireRepo.findById(id);
         questionnaireFromDb.get().setProcessed(true);
@@ -67,15 +69,15 @@ public class QuestionnaireService {
 
     public List<Questionnaire> getAllUsersQuestionnaires() {
         User user = getUserFromPrincipal();
-        List<Questionnaire> questionnaires = new ArrayList<>();
+        Optional<List<Questionnaire>> questionnaires = Optional.of(new ArrayList<Questionnaire>());
 
         if (user.isAdmin() || user.isDoctor()) {
-            questionnaires = getAllQuestionnaires();
+            questionnaires = Optional.ofNullable(getAllQuestionnaires());
         } else if (user.isPatient()) {
             questionnaires = questionnaireRepo.findAllByUserOrderByDate(user);
         }
 
-        return questionnaires;
+        return questionnaires.orElse(new ArrayList<Questionnaire>());
     }
 
     public List<Questionnaire> getAllQuestionnaires() {
@@ -93,27 +95,28 @@ public class QuestionnaireService {
         }
 
         Questionnaire existedQuestionnaire = questionnaire.get();
-        existedQuestionnaire.getType().setQuestions(getOrderedQuestionsByTypeId(existedQuestionnaire.getType().getId()));
-        existedQuestionnaire.setAnswers(getOrderedAnswersByQuestionsAndQuestionnaireId(existedQuestionnaire.getType().getQuestions(), id));
+        existedQuestionnaire.getType()
+                            .setQuestions(getOrderedQuestionsByTypeId(existedQuestionnaire.getType().getId()));
+        existedQuestionnaire.setAnswers(
+                getOrderedAnswersByQuestionsAndQuestionnaireId(existedQuestionnaire.getType().getQuestions(), id));
 
         //        Collections.sort(existedQuestionnaire.getAnswers(), (a1, a2) -> a1.getQuestion().getId().compareTo(a2.getQuestion().getId()));
         return existedQuestionnaire;
     }
 
     public boolean operateQuestionnaireAnswers(Questionnaire questionnaire, boolean isNew, Long questionnaireId) {
-        if (!Questionnaire.isFullFilled(questionnaire)) {
+        if (questionnaire.isAnyAnswerEmpty()) {
             return false;
         }
-
+        //TODO real calculate
         List<Long> allIds = diagnosisRepo.getAllIds();
         Random random = new Random();
-        Diagnosis diagnosis = diagnosisRepo.findById(allIds.get(random.nextInt(allIds.size()-1))).get();
+        Diagnosis diagnosis = diagnosisRepo.findById(allIds.get(random.nextInt(allIds.size() - 1))).get();
         questionnaire.setDiagnosis(diagnosis);
         questionnaire.setProcessed(true);
         if (isNew) {
             saveNewQuestionnaire(questionnaire);
-        }
-        else {
+        } else {
             saveExistedProcessedQuestionnaire(questionnaire, questionnaireId);
         }
 
@@ -128,12 +131,14 @@ public class QuestionnaireService {
 
     public QuestionnaireType getQuestionnaireTypeByTypeName(String typeName) {
         QuestionnaireType questionnaireType;
-        if (typeName == null || typeName.isEmpty() || !questionnaireTypeRepo.getAllTypesNames().contains(typeName.toLowerCase())) {
+        if (typeName == null || typeName.isEmpty() ||
+            !questionnaireTypeRepo.getAllTypesNames().contains(typeName)) {
             LOGGER.warn("Questionnaire type is empty, load gastroenterological test by default.");
-            questionnaireType = questionnaireTypeRepo.getByName("gastroenterological");
-        }
-        else {
-            questionnaireType = questionnaireTypeRepo.getByName(typeName);
+            questionnaireType = questionnaireTypeRepo.getByName(GASTRO_TYPE).get();
+        } else {
+            questionnaireType = questionnaireTypeRepo.getByName(typeName)
+                                                     .orElseThrow(() -> new IllegalArgumentException(
+                                                             "Wrong typeName argument =" + typeName));
         }
 
         List<Question> orderedQuestions = getOrderedQuestionsByTypeId(questionnaireType.getId());
@@ -146,16 +151,18 @@ public class QuestionnaireService {
         List<Long> orderedQuestionsIds = questionnaireTypeRepo.getOrderedQuestionsIds(type_id);
         List<Question> orderedQuestions = new ArrayList<>();
         for (Long orderedQuestionsId : orderedQuestionsIds) {
-            orderedQuestions.add(questionRepo.getById(orderedQuestionsId));
+            orderedQuestions.add(questionRepo.getById(orderedQuestionsId).get());
         }
 
         return orderedQuestions;
     }
 
-    public List<Answer> getOrderedAnswersByQuestionsAndQuestionnaireId(List<Question> orderedQuestions, Long questionnaire_id) {
+    public List<Answer> getOrderedAnswersByQuestionsAndQuestionnaireId(List<Question> orderedQuestions,
+                                                                       Long questionnaire_id) {
         List<Answer> answers = new ArrayList<>();
         for (Question question : orderedQuestions) {
-            answers.add(answerRepo.getByQuestionIdAndQuestionnaireId(question.getId(), questionnaire_id));
+            Optional<Answer> answer = answerRepo.getByQuestionIdAndQuestionnaireId(question.getId(), questionnaire_id);
+            answers.add(answer.orElseThrow(() -> new NoSuchElementException("Answer with id = " + question.getId())));
         }
 
         return answers;

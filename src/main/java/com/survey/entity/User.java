@@ -66,7 +66,10 @@ public class User implements UserDetails {
     }
 
     public boolean checkMandatoryFields() {
-        if (this.firstName == null || this.firstName.isEmpty() || this.secondName == null || this.secondName.isEmpty() || this.email == null || this.email.isEmpty() || this.password == null || this.password.isEmpty() || this.registrationDate == null || this.gender == null || this.gender.isEmpty() || this.phoneNumber == null || this.phoneNumber.isEmpty() || this.roles == null || this.roles.isEmpty()) {
+        if (this.firstName == null || this.firstName.isEmpty() || this.secondName == null ||
+            this.secondName.isEmpty() || this.email == null || this.email.isEmpty() || this.password == null ||
+            this.password.isEmpty() || this.registrationDate == null || this.gender == null || this.gender.isEmpty() ||
+            this.phoneNumber == null || this.phoneNumber.isEmpty() || this.roles == null || this.roles.isEmpty()) {
             return false;
         }
         return true;
@@ -90,6 +93,7 @@ public class User implements UserDetails {
         long role = roles.stream().map(Role::getRolename).filter(s -> s.equals("ROLE_PATIENT")).count();
         return role > 0;
     }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getRoles();
@@ -122,7 +126,10 @@ public class User implements UserDetails {
         if (!(o instanceof User))
             return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(firstName, user.firstName) && Objects.equals(secondName, user.secondName) && Objects.equals(registrationDate, user.registrationDate) && Objects.equals(gender, user.gender) && Objects.equals(roles, user.roles);
+        return Objects.equals(id, user.id) && Objects.equals(email, user.email) &&
+               Objects.equals(password, user.password) && Objects.equals(firstName, user.firstName) &&
+               Objects.equals(secondName, user.secondName) && Objects.equals(registrationDate, user.registrationDate) &&
+               Objects.equals(gender, user.gender) && Objects.equals(roles, user.roles);
     }
 
     @Override
@@ -132,7 +139,9 @@ public class User implements UserDetails {
 
     @Override
     public String toString() {
-        return "User{" + "id=" + id + ", email='" + email + '\'' + ", firstName='" + firstName + '\'' + ", secondName='" + secondName + '\'' + ", activated=" + activated + ", gender='" + gender + '\'' + ", roles=" + roles + '}';
+        return "User{" + "id=" + id + ", email='" + email + '\'' + ", firstName='" + firstName + '\'' +
+               ", secondName='" + secondName + '\'' + ", activated=" + activated + ", gender='" + gender + '\'' +
+               ", roles=" + roles + '}';
     }
 
 }

@@ -38,10 +38,13 @@ public class RegistrationController {
     }
 
     @PostMapping("/registration")
-    public String handleRegistrationForm(@ModelAttribute("userForm") @Valid User userForm, BindingResult bindingResult, @RequestParam("role") String userRole, @RequestParam("g-recaptcha-response") String captchaResponse, Model model) {
+    public String handleRegistrationForm(@ModelAttribute("userForm") @Valid User userForm, BindingResult bindingResult,
+                                         @RequestParam("role") String userRole,
+                                         @RequestParam("g-recaptcha-response") String captchaResponse, Model model) {
 
         String url = String.format(CAPTCHA_URL, secret, captchaResponse);
-        CaptchaResponseDto response = restTemplate.postForObject(url, Collections.emptyList(), CaptchaResponseDto.class);
+        CaptchaResponseDto response = restTemplate.postForObject(url, Collections.emptyList(),
+                                                                 CaptchaResponseDto.class);
 
         if (!response.isSuccess()) {
             model.addAttribute("captchaError", "Заполните капчу");
@@ -58,7 +61,7 @@ public class RegistrationController {
         }
 
         User newUser = (User) userService.loadUserByUsername(userForm.getEmail());
-//        userService.createAndSendActivationCode(newUser);
+        userService.createAndSendActivationCode(newUser);
         model.addAttribute("emailToActivate", newUser.getEmail());
         return "tip-activate";
     }
@@ -88,7 +91,7 @@ public class RegistrationController {
     }
 
     @GetMapping("/search_used_mail")
-    public ResponseEntity<?> isEmailUsed(@RequestParam(value = "enteredEmail")  String email) {
+    public ResponseEntity<?> isEmailUsed(@RequestParam(value = "enteredEmail") String email) {
         boolean emailUsed = userService.isEmailUsed(email);
         return ResponseEntity.ok(emailUsed);
     }
