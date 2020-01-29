@@ -8,32 +8,34 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
 public class AdminService {
     private static final Logger LOGGER = LogManager.getLogger(UserService.class.getName());
 
+    private final UserRepo userRepo;
+
     @Autowired
-    private UserRepo userRepo;
+    public AdminService(UserRepo userRepo) {
+        this.userRepo = userRepo;
+    }
 
-    public void saveUserChanges(User user){
+    public User saveUserChanges(User user){
         User admin = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Optional<User> userFromDb = userRepo.findById(user.getId());
-        if (!userFromDb.isPresent()) {
-            return;
-        }
+        User userFromDb = userRepo.findById(user.getId()).orElseThrow(NoSuchElementException::new);
 
-        userFromDb.get().setEmail(user.getEmail());
-        userFromDb.get().setRoles(user.getRoles());
-        userFromDb.get().setFirstName(user.getFirstName());
-        userFromDb.get().setSecondName(user.getSecondName());
-        userFromDb.get().setGender(user.getGender());
-        userFromDb.get().setPhoneNumber(user.getPhoneNumber());
-        userFromDb.get().setActivated(user.getActivated());
-        userRepo.save(userFromDb.get());
+        userFromDb.setEmail(user.getEmail());
+        userFromDb.setRoles(user.getRoles());
+        userFromDb.setFirstName(user.getFirstName());
+        userFromDb.setSecondName(user.getSecondName());
+        userFromDb.setGender(user.getGender());
+        userFromDb.setPhoneNumber(user.getPhoneNumber());
+        userFromDb.setActivated(user.getActivated());
+        LOGGER.info("Personal data of User: {} changed by Admin: id={}, email={}.", userFromDb.getEmail(), admin.getId(), admin.getEmail());
+        return userRepo.save(userFromDb);
 
-        LOGGER.info("Personal data of User: {} changed by Admin: id={}, email={}.", userFromDb.get().getEmail(), admin.getId(), admin.getEmail());
     }
 
 }

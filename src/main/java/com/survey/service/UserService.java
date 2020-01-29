@@ -25,25 +25,31 @@ import java.util.*;
 public class UserService implements UserDetailsService, ApplicationListener<AuthenticationSuccessEvent> {
     private static final Logger LOGGER = LogManager.getLogger(UserService.class.getName());
 
-    @Autowired
-    private UserRepo userRepo;
-    @Autowired
-    private RoleRepo roleRepo;
-    @Autowired
-    private PatientRepo patientRepo;
-    @Autowired
-    private DoctorRepo doctorRepo;
-    @Autowired
-    private ActivationCodeRepo activationCodeRepo;
-    @Autowired
-    private EmailSender emailSender;
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final UserRepo userRepo;
+    private final RoleRepo roleRepo;
+    private final PatientRepo patientRepo;
+    private final DoctorRepo doctorRepo;
+    private final ActivationCodeRepo activationCodeRepo;
+    private final EmailSender emailSender;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     private final EmailValidator emailValidator;
 
     {
         emailValidator = EmailValidator.getInstance();
+    }
+
+    @Autowired
+    public UserService(UserRepo userRepo, RoleRepo roleRepo, PatientRepo patientRepo, DoctorRepo doctorRepo,
+                       ActivationCodeRepo activationCodeRepo, EmailSender emailSender,
+                       BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.userRepo = userRepo;
+        this.roleRepo = roleRepo;
+        this.patientRepo = patientRepo;
+        this.doctorRepo = doctorRepo;
+        this.activationCodeRepo = activationCodeRepo;
+        this.emailSender = emailSender;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Override
@@ -160,7 +166,7 @@ public class UserService implements UserDetailsService, ApplicationListener<Auth
         String message = String.format("Здравствуйте, %s! \n + Для активации аккаунта перейдите по ссылке: " +
                                        "http://localhost:8080/activate/%s", user.getFirstName(),
                                        activationCode.getCode());
-//        emailSender.send(user.getEmail(), "Активация аккаунта", message);
+        emailSender.send(user.getEmail(), "Активация аккаунта", message);
 
         LOGGER.info("Created activation code for User:{}, current activation status: {}", user.getEmail(),
                     user.getActivated());
@@ -210,7 +216,7 @@ public class UserService implements UserDetailsService, ApplicationListener<Auth
 
         String message = String.format("Здравствуйте, %s! \n + Ваш новый пароль: " + "%s", userFromDb.getFirstName(),
                                        password);
-//        emailSender.send(userFromDb.getEmail(), "Восстановление пароля", message);
+        emailSender.send(userFromDb.getEmail(), "Восстановление пароля", message);
 
         LOGGER.info("Password for User:{} restored.", userFromDb.getEmail());
         return true;

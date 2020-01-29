@@ -22,7 +22,7 @@ public class Patient {
     @ManyToOne
     @JoinColumn(name = "diagnosis_id", referencedColumnName = "id")
     private Diagnosis diagnosis;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinTable(
             name = "doctors_patients",
             joinColumns = {

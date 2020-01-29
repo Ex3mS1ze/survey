@@ -2,6 +2,7 @@ package com.survey.repository;
 
 import com.survey.entity.Questionnaire;
 import com.survey.entity.User;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -13,6 +14,6 @@ public interface QuestionnaireRepo extends JpaRepository<Questionnaire, Long> {
     Long getNextId();
     Optional<List<Questionnaire>> findAllByUserOrderByDate(User user);
     void deleteById(Long id);
-
+    Optional<List<Questionnaire>> findAllByProcessed(boolean processed, Pageable pageable);
 
 }

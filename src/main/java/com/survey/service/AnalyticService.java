@@ -14,12 +14,16 @@ import java.util.List;
 
 @Service
 public class AnalyticService {
+    private final DoctorRepo doctorRepo;
+    private final PatientRepo patientRepo;
+    private final DoctorService doctorService;
+
     @Autowired
-    DoctorRepo doctorRepo;
-    @Autowired
-    PatientRepo patientRepo;
-    @Autowired
-    DoctorService doctorService;
+    public AnalyticService(DoctorRepo doctorRepo, PatientRepo patientRepo, DoctorService doctorService) {
+        this.doctorRepo = doctorRepo;
+        this.patientRepo = patientRepo;
+        this.doctorService = doctorService;
+    }
 
     public List<DoctorStatDto> getDoctorsStatistic() {
         List<Doctor> doctors = doctorService.getAllDoctors();

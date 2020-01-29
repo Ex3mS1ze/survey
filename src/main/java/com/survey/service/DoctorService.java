@@ -14,20 +14,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
 public class DoctorService {
     private static final Logger LOGGER = LogManager.getLogger(DoctorService.class.getName());
 
+    private final UserRepo userRepo;
+    private final DoctorRepo doctorRepo;
+    private final PatientRepo patientRepo;
+    private final DiagnosisRepo diagnosisRepo;
+
     @Autowired
-    private UserRepo userRepo;
-    @Autowired
-    private DoctorRepo doctorRepo;
-    @Autowired
-    private PatientRepo patientRepo;
-    @Autowired
-    private DiagnosisRepo diagnosisRepo;
+    public DoctorService(UserRepo userRepo, DoctorRepo doctorRepo, PatientRepo patientRepo,
+                         DiagnosisRepo diagnosisRepo) {
+        this.userRepo = userRepo;
+        this.doctorRepo = doctorRepo;
+        this.patientRepo = patientRepo;
+        this.diagnosisRepo = diagnosisRepo;
+    }
 
     public List<Patient> getAllPatients() {
         return patientRepo.findAll();
@@ -39,39 +45,43 @@ public class DoctorService {
 
     public Doctor getDoctorFromCurrentPrincipal() {
         User user = UserService.getUserFromPrincipal();
-        return doctorRepo.findByUser(user).orElse(null);
+        return doctorRepo.findByUser(user).orElseThrow(NoSuchElementException::new);
     }
 
     public void attachPatient(Patient patient) {
+        if (patient.getDoctor() != null) {
+            throw new IllegalArgumentException("Patient already attach to doctor" + patient.getDoctor());
+        }
+
         Doctor doctor = getDoctorFromCurrentPrincipal();
-        if (doctor == null){
-            LOGGER.warn("User try to attach patient, but he isn't a doctor.");
-            return;
+        if (doctor == null) {
+            throw new UnsupportedOperationException("User try to attach patient, but he isn't a doctor");
         }
 
         doctor.getPatients().add(patient);
         doctorRepo.save(doctor);
-        LOGGER.info("Patient: {} attached to doctor: {}.",patient.getUser().getEmail(), doctor.getUser().getEmail());
+        LOGGER.info("Patient: {} attached to doctor: {}.", patient.getUser().getEmail(), doctor.getUser().getEmail());
     }
 
     public void detachPatient(Patient patient) {
         Doctor doctor = getDoctorFromCurrentPrincipal();
-        if (doctor == null){
-            LOGGER.warn("User: try to attach patient, but he isn't a doctor.");
-            return;
+        if (doctor == null) {
+            throw new UnsupportedOperationException("User: try to attach patient, but he isn't a doctor.");
         }
 
         doctor.getPatients().remove(patient);
         doctorRepo.save(doctor);
-        LOGGER.info("Patient: {} detached from doctor: {}.",patient.getUser().getEmail(), doctor.getUser().getEmail());
+        LOGGER.info("Patient: {} detached from doctor: {}.", patient.getUser().getEmail(), doctor.getUser().getEmail());
     }
 
     public Doctor getDoctorById(Long doctorId) {
-        return doctorRepo.findById(doctorId).orElse(null);
+        return doctorRepo.findById(doctorId)
+                         .orElseThrow(() -> new NoSuchElementException("No doctor with doctorId=" + doctorId));
     }
 
     public Patient getPatientByUser(User user) {
-        return patientRepo.findByUser(user).orElse(null);
+        return patientRepo.findByUser(user).orElseThrow(NoSuchElementException::new);
+
     }
 
     public List<Diagnosis> getAllDiagnoses() {
@@ -79,9 +89,9 @@ public class DoctorService {
     }
 
     public void changeDiagnosis(Patient patient) {
-        Optional<Patient> patientFromDb = patientRepo.findById(patient.getId());
-        patientFromDb.get().setDiagnosis(patient.getDiagnosis());
-        patientRepo.save(patientFromDb.get());
+        Patient patientFromDb = patientRepo.findById(patient.getId()).orElseThrow(NoSuchElementException::new);
+        patientFromDb.setDiagnosis(patient.getDiagnosis());
+        patientRepo.save(patientFromDb);
     }
 
     public List<Doctor> getAllDoctors() {

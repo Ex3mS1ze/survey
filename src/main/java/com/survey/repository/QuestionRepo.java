@@ -12,4 +12,6 @@ public interface QuestionRepo extends JpaRepository<Question,Long> {
     List<Question> findAllByOrderById();
     @Query(value = "SELECT DISTINCT category, MIN(id) \nFROM questions \nGROUP BY category \nORDER BY MIN(id) ASC, category", nativeQuery = true)
     List<String> getAllQuestionCategories();
+
+    List<Question> findByIdInOrderByInputType(List<Long> ids);
 }

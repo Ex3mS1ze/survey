@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.jdbc.Sql;
@@ -21,6 +22,7 @@ import java.util.HashSet;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
+import static org.mockito.BDDMockito.*;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -36,7 +38,8 @@ public class UserServiceTest {
     UserRepo userRepo;
     @Autowired
     ActivationCodeRepo activationCodeRepo;
-
+    @MockBean
+    private EmailSender emailSender;
 
     private User userForTest;
     private Role roleUser;
@@ -76,6 +79,7 @@ public class UserServiceTest {
         roleDoctor.setRolename("ROLE_DOCTOR");
 
         userForTest.setRoles(new HashSet<>(Arrays.asList(roleUser)));
+
     }
 
     @Test
@@ -92,7 +96,7 @@ public class UserServiceTest {
     }
 
     @Test
-    @WithUserDetails(value="admin@mail.ru", userDetailsServiceBeanName="myUserDetailsService")
+    @WithUserDetails(value = "admin@mail.ru", userDetailsServiceBeanName = "myUserDetailsService")
     public void editUserData() {
         assertTrue(userRepo.existsById(userForTest.getId()));
         User user = userRepo.findById(userForTest.getId()).get();
@@ -121,6 +125,7 @@ public class UserServiceTest {
         User savedUser = userRepo.findByEmail(userForTest.getEmail()).get();
         assertTrue(userService.createAndSendActivationCode(savedUser));
         assertTrue(activationCodeRepo.findByUser(savedUser).isPresent());
+        verify(emailSender).send(eq(savedUser.getEmail()), contains("Активация аккаунта"), anyString());
     }
 
     @Sql(scripts = "/db/scripts/add_data_test.sql")
@@ -143,11 +148,12 @@ public class UserServiceTest {
         assertTrue(userService.restorePassword(mailFromScript));
         user = userRepo.findByEmail(mailFromScript);
         assertNotEquals(user.get().getPassword(), oldPass);
+        verify(emailSender).send(eq(mailFromScript), contains("Восстановление пароля"), anyString());
     }
 
     @Sql(scripts = "/db/scripts/add_data_test.sql")
     @Sql(scripts = "/db/scripts/rollback_data_test.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-    @WithUserDetails(value="TESTING@mail.ru", userDetailsServiceBeanName="myUserDetailsService")
+    @WithUserDetails(value = "TESTING@mail.ru", userDetailsServiceBeanName = "myUserDetailsService")
     @Test
     public void changePassword() {
         Optional<User> user = userRepo.findByEmail(mailFromScript);

@@ -40,12 +40,12 @@ public class Answer {
         if (!(o instanceof Answer))
             return false;
         Answer answer = (Answer) o;
-        return Objects.equals(id, answer.id) && Objects.equals(text, answer.text);
+        return id.equals(answer.id) && Objects.equals(text, answer.text) && Objects.equals(textList, answer.textList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, text);
+        return Objects.hash(id, text, textList);
     }
 
     @Override

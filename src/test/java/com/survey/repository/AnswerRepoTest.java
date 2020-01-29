@@ -10,10 +10,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.transaction.Transactional;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -29,6 +31,7 @@ public class AnswerRepoTest {
     private QuestionRepo questionRepo;
     @Autowired
     private QuestionnaireRepo questionnaireRepo;
+
     @Before
     public void setUp() throws Exception {
     }
@@ -39,7 +42,10 @@ public class AnswerRepoTest {
         Question question = questionRepo.findById(1L).get();
         answer.setQuestion(question);
         answer.setText("22");
-        Questionnaire questionnaire = questionnaireRepo.findById(2L).get();
+        Questionnaire questionnaire = questionnaireRepo.findAll(PageRequest.of(0, 1))
+                                                       .get()
+                                                       .collect(Collectors.toList())
+                                                       .get(0);
         answer.setQuestionnaire(questionnaire);
         Answer savedAnswer = answerRepo.save(answer);
         assertNotNull(answerRepo.findById(savedAnswer.getId()));
