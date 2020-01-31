@@ -2,11 +2,12 @@ package com.survey.entity;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
@@ -25,25 +26,28 @@ public class User implements UserDetails {
     @Column(name = "id", nullable = false)
     private Long id;
     @Column(name = "email", nullable = false)
-    @NotEmpty(message = "Введите email")
+    @Email(message = "Введите email")
     private String email;
     @Column(name = "password", nullable = false)
-    @Size(min = 2, message = "Минимальная длина пароля 2")
+    @Length(min = 2, message = "Минимальная длина пароля 2")
     private String password;
     @Transient
+    @Length(min = 2, message = "Минимальная длина пароля 2")
     private String passwordConfirm;
     @Transient
+    @Length(min = 2, message = "Минимальная длина пароля 2")
     private String oldPassword;
     @Column(name = "first_name", nullable = false)
     @NotEmpty(message = "Введите имя")
+    @Length(min = 2, message = "Введите имя")
     private String firstName;
     @Column(name = "second_name", nullable = false)
-    @NotEmpty(message = "Введите фамилию")
+    @Length(min = 2, message = "Введите фамилию")
     private String secondName;
     @Column(name = "activated", nullable = false)
     private Boolean activated;
     @Column(name = "phone_number", nullable = true)
-    @Size(min = 8, message = "Минимальная длина номера 8")
+    @Length(min = 8, message = "Минимальная длина номера 8")
     private String phoneNumber;
     @Column(name = "registration_date", nullable = false)
     private LocalDateTime registrationDate;

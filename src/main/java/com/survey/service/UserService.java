@@ -231,6 +231,10 @@ public class UserService implements UserDetailsService, ApplicationListener<Auth
         SecurityContextHolder.getContext().setAuthentication(newAuth);
     }
 
+    public void removeAuthentication() {
+        SecurityContextHolder.getContext().setAuthentication(null);
+    }
+
     public boolean changePassword(String oldPass, String newPass) {
         //        String encodeOldPass = bCryptPasswordEncoder.encode(oldPass);
         String encodeNewPass = bCryptPasswordEncoder.encode(newPass);

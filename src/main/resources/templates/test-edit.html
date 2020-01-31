@@ -14,15 +14,15 @@
             th:object="${questionnaire}"
             th:action="@{/test(isNew=false, patientId=${#request.getParameter('patientId')}, questionnaireId=*{id})}">
         <h1 class="text-center" th:text="*{type.description}"></h1>
-        <input type="hidden" th:field="*{type.id}">
+        <input type="hidden" th:field="*{type.id}" />
         <div class="mb-2 p-2 rounded border" th:each="category : ${categories}">
           <h3 class="text-center" th:text="${category}"></h3>
           <div th:each="question, itemStat : *{type.questions}" th:if="${question.category eq category}">
 
             <input type="hidden" th:value="${question.id}"
-                   th:attr="name='answers[' + ${itemStat.index} + '].question.id'">
+                   th:attr="name='answers[' + ${itemStat.index} + '].question.id'" />
             <input type="hidden" th:value="${questionnaire.answers[__${itemStat.index}__].id}"
-                   th:attr="name='answers[' + ${itemStat.index} + '].id'">
+                   th:attr="name='answers[' + ${itemStat.index} + '].id'" />
 
             <label th:for="${question.id}" th:text="${question.text} "></label>
             <div th:replace="fragments/question-form :: questionsInputs(${question}, ${questionnaire})"></div>

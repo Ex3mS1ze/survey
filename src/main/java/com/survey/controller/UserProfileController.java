@@ -1,31 +1,40 @@
 package com.survey.controller;
 
 import com.survey.entity.Patient;
-import com.survey.entity.Role;
 import com.survey.entity.User;
 import com.survey.service.DoctorService;
 import com.survey.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletResponse;
+
 @Controller
 public class UserProfileController {
+    private final UserService userService;
+    private final DoctorService doctorService;
+
     @Autowired
-    UserService userService;
-    @Autowired
-    DoctorService doctorService;
+    public UserProfileController(UserService userService, DoctorService doctorService) {
+        this.userService = userService;
+        this.doctorService = doctorService;
+    }
 
     @GetMapping("/profile")
-    public String getProfilePage(Authentication authentication, RedirectAttributes redirectAttrs, Model model) {
+    public String getProfilePage(Model model) {
+        if (model.containsAttribute("userForm")) {
+            return "profile";
+        }
+
         User user = UserService.getUserFromPrincipal();
-        if (Role.isRolesContainsByRolename(user.getRoles(), "PATIENT")) {
+        if (user.isPatient()) {
             Patient patient = doctorService.getPatientByUser(user);
             model.addAttribute("doctor", patient.getDoctor());
         }
@@ -34,23 +43,34 @@ public class UserProfileController {
     }
 
     @PostMapping("/editPersonalData")
-    public String editPersonalData(@ModelAttribute("userForm") User userForm, BindingResult bindingResult, Model model) {
-        userService.editUserData(userForm);
-        //TODO valid
-        if (bindingResult.hasErrors()) {
-            return "profile";
+    public String editPersonalData(@Validated @ModelAttribute("userForm") User userForm, BindingResult bindingResult,
+                                   HttpServletResponse response, RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasFieldErrors("firstName") || bindingResult.hasFieldErrors("secondName") ||
+            bindingResult.hasFieldErrors("phoneNumber")) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userForm",
+                                                 bindingResult);
+            redirectAttributes.addFlashAttribute("userForm", userForm);
+            return "redirect:/profile";
         }
+        userService.editUserData(userForm);
         userService.updatePrincipal();
         return "redirect:/profile";
     }
 
     @PostMapping("/changePassword")
-    public String changePassword(@ModelAttribute("userForm") User userForm, BindingResult bindingResult, Model model) {
-        //TODO valid
-        if (!userService.changePassword(userForm.getOldPassword(), userForm.getPassword())) {
+    public String changePassword(@Validated @ModelAttribute("userForm") User userForm, BindingResult bindingResult,
+                                 Model model, HttpServletResponse response) {
+        //TODO deal with binding result
+        if (bindingResult.hasFieldErrors("oldPassword") || bindingResult.hasFieldErrors("password") ||
+            bindingResult.hasFieldErrors("passwordConfirm") ||
+            !userService.changePassword(userForm.getOldPassword(), userForm.getPassword())) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return "redirect:/profile";
         }
+
         userService.updatePrincipal();
-        return "login";
+        userService.removeAuthentication();
+        return "redirect:/login";
     }
 }

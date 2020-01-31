@@ -17,12 +17,12 @@
         <div class="form-group">
           <label for="username">Логин</label>
           <input type="email" class="form-control" id="username"
-                 placeholder="Введите email" name="username" required>
+                 placeholder="Введите email" name="username" th:required="required" />
         </div>
         <div class="form-group">
           <label for="password">Пароль</label>
           <input type="password" class="form-control" id="password" placeholder="Введите пароль"
-                 name="password" required>
+                 name="password" th:required="required" />
           <div class="invalid-feedback d-block" th:text="${loginDataError}"></div>
           <div class="my-1">
             <a href="#" class="text-decoration-none" th:href="@{/restore_password}">Забыли пароль?</a>

@@ -22,14 +22,18 @@ public class RegistrationController {
     private final static String CAPTCHA_URL = "https://www.google.com/recaptcha/api/siteverify?secret=%s&response=%s";
     private final static Logger LOGGER = LogManager.getLogger(RegistrationController.class.getName());
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
     @Value("${recaptcha.secret}")
     private String secret;
+
+    @Autowired
+    public RegistrationController(UserService userService, RestTemplate restTemplate) {
+        this.userService = userService;
+        this.restTemplate = restTemplate;
+    }
 
     @GetMapping("/registration")
     public String getRegistrationPage(Model model) {
@@ -68,7 +72,11 @@ public class RegistrationController {
 
     @GetMapping("/activate/{code}")
     public String activateUser(Model model, @PathVariable String code) {
-        boolean isActivated = userService.activateUser(code);
+        if (code == null || code.trim().isEmpty()) {
+            return "redirect:/login";
+        }
+
+        boolean isActivated = userService.activateUser(code.trim());
         if (!isActivated) {
             model.addAttribute("activationStatus", "Произошла ошибка");
             LOGGER.warn("Activation failed.");

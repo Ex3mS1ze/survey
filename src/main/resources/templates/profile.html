@@ -15,19 +15,19 @@
         <div class="form-group m-0">
           <label for="inputEmail">Email</label>
           <input type="email" class="form-control" id="inputEmail" placeholder="Введите email"
-                 required th:field="*{email}" disabled>
+                 th:field="*{email}" readonly="true" />
           <!--<div class="d-block" id="ajaxGetUserServletResponse">${nameErr}</div>-->
         </div>
         <div class="form-group m-0">
           <label>Ваше имя</label>
-          <input type="text" class="form-control mb-2" placeholder="Введите имя" required th:field="*{firstName}">
+          <input type="text" class="form-control mb-2" placeholder="Введите имя" th:required="required" th:field="*{firstName}" />
           <p class="text-danger" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">firstName Error</p>
           <label>Ваша фамилия</label>
-          <input type="text" class="form-control mb-2" placeholder="Введите фамилию" required th:field="*{secondName}">
+          <input type="text" class="form-control mb-2" placeholder="Введите фамилию" th:required="required" th:field="*{secondName}" />
           <p class="text-danger" th:if="${#fields.hasErrors('secondName')}" th:errors="*{secondName}">secondName
             Error</p>
           <label>Ваш телефон</label>
-          <input type="tel" class="form-control mb-2" placeholder="Введите номер" required th:field="*{phoneNumber}">
+          <input type="tel" class="form-control mb-2" placeholder="Введите номер" th:required="required" th:field="*{phoneNumber}" />
           <p class="text-danger" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}">phoneNumber
             Error</p>
           <th:block th:if="${doctor ne null}">
@@ -42,7 +42,7 @@
             <p class="form-control mb-2" th:if="${role.rolename.contains('ADMIN')}">Администратор</p>
             <p class="text-warning mb-2" th:if="${userForm.roles.size() eq 1}">
               <b>Вероятно Вы зарегистрировались с ролью врача или аналитика, но не обратались к администратору для
-                активации аккаунта.<br>
+                активации аккаунта.<br/>
                 Обратитесь к администратору для Вашего подтверждения статуса.
               </b>
             </p>
@@ -57,17 +57,17 @@
         <h1>Изменение пароля</h1>
         <div class="form-group">
           <label for="oldPassword">Введите старый пароль</label>
-          <input type="password" class="form-control" id="oldPassword" required
-                 placeholder="Старый пароль" th:field="*{oldPassword}">
+          <input type="password" class="form-control" id="oldPassword" th:required="required"
+                 placeholder="Старый пароль" th:field="*{oldPassword}" />
           <p class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Pass Error</p>
           <label for="inputPassword1">Введите новый пароль</label>
-          <input type="password" class="form-control" id="inputPassword1" required
-                 placeholder="Новый пароль" th:field="*{password}">
+          <input type="password" class="form-control" id="inputPassword1" th:required="required"
+                 placeholder="Новый пароль" th:field="*{password}" />
           <p class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Pass Error</p>
           <small>Минимальная длина пароля 7 символов</small>
-          <br>
-          <input type="password" class="form-control" id="inputPassword2" required placeholder="Повторите новый пароль"
-                 th:field="*{passwordConfirm}">
+          <br/>
+          <input type="password" class="form-control" id="inputPassword2" th:required="required" placeholder="Повторите новый пароль"
+                 th:field="*{passwordConfirm}" />
         </div>
         <button type="submit" class="btn btn-danger btn-block">Изменить пароль</button>
       </form>

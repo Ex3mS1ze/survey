@@ -21,10 +21,14 @@ import java.util.List;
 public class DoctorController {
     private static final Logger LOGGER = LogManager.getLogger(DoctorController.class.getName());
 
+    private final UserService userService;
+    private final DoctorService doctorService;
+
     @Autowired
-    UserService userService;
-    @Autowired
-    DoctorService doctorService;
+    public DoctorController(UserService userService, DoctorService doctorService) {
+        this.userService = userService;
+        this.doctorService = doctorService;
+    }
 
     @GetMapping("/patients")
     public String getPatientsPage(Model model){

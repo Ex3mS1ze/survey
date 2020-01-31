@@ -4,7 +4,7 @@
 <head th:replace="fragments/common :: head (~{::title}, ~{::link}, ~{::script})">
   <title>Профиль пациента</title>
   <!--DataTables-->
-  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css" />
   <script type="text/javascript" charset="utf8"
           src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
   <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
@@ -18,19 +18,19 @@
         <div class="col-12 mb-5"><h1 class="text-center">Данные пациента</h1></div>
         <div class="row">
           <div class="col-4">
-            <p>Email: <br><b th:text="*{user.email}"></b></p>
-            <p>Имя: <br><b th:text="*{user.firstName}"></b></p>
-            <p>Фамилия: <br><b th:text="*{user.secondName}"></b></p>
+            <p>Email: <br/><b th:text="*{user.email}"></b></p>
+            <p>Имя: <br/><b th:text="*{user.firstName}"></b></p>
+            <p>Фамилия: <br/><b th:text="*{user.secondName}"></b></p>
           </div>
           <div class="col-4">
-            <p>Диагноз: <br><b th:text="*{diagnosis eq null}? 'Не установлен' : *{diagnosis.text}"></b></p>
+            <p>Диагноз: <br/><b th:text="*{diagnosis eq null}? 'Не установлен' : *{diagnosis.text}"></b></p>
 
-            <p>Телефон: <br><b th:text="*{user.phoneNumber}"></b></p>
-            <p>Последний визит: <br>
+            <p>Телефон: <br/><b th:text="*{user.phoneNumber}"></b></p>
+            <p>Последний визит: <br/>
               <b th:text="${#temporals.format(patient.user.lastVisitDate, 'dd.MM.yy HH:mm')}"></b></p>
           </div>
           <div class="col-4">
-            <p>Прикрепленный врач: <br>
+            <p>Прикрепленный врач: <br/>
               <a href="#" th:if="${patient.doctor != null}"
                  th:href="@{/doctor/profile(doctorId=${patient.doctor.id})}"
                  th:text="*{doctor.user.fullName}">
@@ -43,7 +43,7 @@
                th:href="@{/doctor/detach_patient(patientId=*{id})}">Открепить
               пациента</a>
             <form method="post" th:if="${doctor.patients.contains(patient)}"  th:action="@{/change_patient_diagnosis}">
-              <input type="hidden" th:field="${patient.id}">
+              <input type="hidden" th:field="${patient.id}" />
               <label>Изменить диагноз</label>
               <select class="custom-select" th:field="${patient.diagnosis}">
                 <th:block th:each="diagnosis : ${diagnoses}">
@@ -71,7 +71,7 @@
             <td class="text-center" th:text="${questionnaire.processed} eq false? 'Не обработан': 'Обработан'">Статус
             </td>
             <td class="text-center"
-                th:text="${questionnaire.diagnosis} eq null? 'Не установлен': ${questionnaire.diagnosis.getText()}">
+                th:text="${questionnaire.diagnosis} eq null? 'Не установлен': ${questionnaire.diagnosis.getText()}">Диагноз</td>
             <td class="text-center" th:if="${questionnaire.processed} eq true">
               <a href="#" title="Посмотреть"
                  th:href="@{/test/view(questionnaireId = ${questionnaire.id}, patientId = ${patient.id})}">

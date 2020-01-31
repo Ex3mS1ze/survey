@@ -11,7 +11,7 @@
     <div class="row">
       <form class="col col-lg-6 mx-auto bg-light p-4 rounded shadow" method="post" th:action="@{/save_user_changes}">
 
-        <div class="form-group row" hidden>
+        <div class="form-group row" th:hidden="true">
           <label class="col-sm-5 col-form-label">ID</label>
           <div class="col-sm-7">
             <input class="form-control" type="text" th:field="${user.id}"/>
@@ -55,12 +55,12 @@
           <div class="col-sm-7">
             <div class="form-check form-check-inline">
               <input type="radio" class="form-check-input" value="М"
-                     th:field="${user.gender}">
+                     th:field="${user.gender}"/>
               <label class="form-check-label"> М </label>
             </div>
             <div class="form-check form-check-inline">
               <input type="radio" class="form-check-input" value="Ж"
-                     th:field="${user.gender}">
+                     th:field="${user.gender}"/>
               <label class="form-check-label"> Ж </label>
             </div>
           </div>
@@ -75,11 +75,11 @@
           <label class="col-sm-5 col-form-label">Активирован</label>
           <div class="col-sm-7">
             <div class="form-check form-check-inline">
-              <input type="radio" class="form-check-input" name="gender" value="true" th:field="${user.activated}">
+              <input type="radio" class="form-check-input" name="gender" value="true" th:field="${user.activated}"/>
               <label class="form-check-label"> Да </label>
             </div>
             <div class="form-check form-check-inline">
-              <input type="radio" class="form-check-input" name="gender" value="false" th:field="${user.activated}">
+              <input type="radio" class="form-check-input" name="gender" value="false" th:field="${user.activated}"/>
               <label class="form-check-label"> Нет </label>
             </div>
             <!--<input class="form-control" type="text" th:field="${user.activated}"/>-->
@@ -87,7 +87,6 @@
         </div>
         <div class="form-group m-2 d-flex justify-content-around">
           <button class="btn btn-primary" type="submit">Сохранить</button>
-          </button>
         </div>
       </form>
     </div>

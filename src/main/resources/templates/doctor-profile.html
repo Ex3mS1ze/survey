@@ -13,13 +13,13 @@
         <div class="col-12 mb-5"><h1 class="text-center">Данные доктора</h1></div>
         <div class="row">
           <div class="col-4">
-            <p>Имя: <br><b th:text="*{user.firstName}"></b></p>
-            <p>Фамилия: <br><b th:text="*{user.secondName}"></b></p>
-            <p>Email: <br><b th:text="*{user.email}"></b></p>
-            <p>Телефон: <br><b th:text="*{user.phoneNumber}"></b></p>
+            <p>Имя: <br/><b th:text="*{user.firstName}"></b></p>
+            <p>Фамилия: <br/><b th:text="*{user.secondName}"></b></p>
+            <p>Email: <br/><b th:text="*{user.email}"></b></p>
+            <p>Телефон: <br/><b th:text="*{user.phoneNumber}"></b></p>
           </div>
           <div class="col-8">
-            <b>О докторе:</b> <br>
+            <b>О докторе:</b> <br/>
             <p class="text-justify" th:text="*{description} ne null? *{description} : ''"></p>
           </div>
         </div>

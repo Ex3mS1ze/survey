@@ -4,7 +4,7 @@
 <head th:replace="fragments/common :: head (~{::title}, ~{::link}, ~{::script})">
   <title>История тестов</title>
   <!--DataTables-->
-  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css" />
   <script type="text/javascript" charset="utf8"
           src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
   <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
@@ -16,7 +16,7 @@
     <!--DATATABLES-->
     <table class="table table-striped shadow" id="patientHistoryTable" sec:authorize="hasRole('PATIENT')">
       <thead>
-      <input type="checkbox">
+      <input type="checkbox" />
       <tr>
         <th class="text-center">Дата</th>
         <th class="text-center">Тип</th>

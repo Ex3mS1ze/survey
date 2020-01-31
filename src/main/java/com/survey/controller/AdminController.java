@@ -14,10 +14,14 @@ import java.util.Set;
 
 @Controller
 public class AdminController {
+    private final UserService userService;
+    private final AdminService adminService;
+
     @Autowired
-    UserService userService;
-    @Autowired
-    AdminService adminService;
+    public AdminController(UserService userService, AdminService adminService) {
+        this.userService = userService;
+        this.adminService = adminService;
+    }
 
     @GetMapping("/admin/users")
     public String getAdminPage(Model model) {
@@ -36,7 +40,7 @@ public class AdminController {
     }
 
     @PostMapping("/save_user_changes")
-    public String saveUserProfileChanges(@ModelAttribute(value = "user") User user, Model model) {
+    public String saveUserProfileChanges(@ModelAttribute(value = "user") User user) {
         //TODO validation
         adminService.saveUserChanges(user);
         return "redirect:/admin/users";

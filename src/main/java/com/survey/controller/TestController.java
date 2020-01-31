@@ -18,8 +18,12 @@ import java.util.Set;
 
 @Controller
 public class TestController {
+    private final QuestionnaireService questionnaireService;
+
     @Autowired
-    private QuestionnaireService questionnaireService;
+    public TestController(QuestionnaireService questionnaireService) {
+        this.questionnaireService = questionnaireService;
+    }
 
     @GetMapping("/test")
     public String getTestPage(Model model, @RequestParam(value = "typeName", required = false) String typeName) {
