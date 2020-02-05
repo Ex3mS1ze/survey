@@ -6,11 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 </head>
 <body>
-<th:block >
   <div class="d-flex justify-content-center mb-2" th:fragment="datePicker" th:with="minId=${minId} ?: 'min', maxId=${maxId} ?: 'max'">
     <input th:id="${minId}" class="col-5 col-md-3" type="date" />
     <span class="col-2 col-md-1 text-center"> до </span>
     <input th:id="${maxId}" class="col-5 col-md-3" type="date" />
   </div>
-</th:block>
 </body>

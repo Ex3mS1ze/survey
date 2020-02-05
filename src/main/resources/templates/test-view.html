@@ -6,10 +6,11 @@
 </head>
 <body>
 <div th:replace="fragments/common :: header"></div>
-<main class="jumbotron d-flex align-items-center bg-white m-0">
-  <div class="container p-0">
+<main class="d-flex align-items-center">
+  <th:block th:replace="fragments/progress-bar :: progressBar"></th:block>
+  <div class="container">
     <div class="row">
-      <fieldset class="mx-auto col col-lg-8 p-md-4 " th:disabled="true">
+      <fieldset class="mx-auto col col-lg-8 p-md-4 px-0" th:disabled="true">
         <form class=" bg-light rounded shadow" name="myForm" id="mineForm" method="post">
           <h3 class="text-center" th:text="${questionnaire.type.description}"></h3>
           <div class="mb-2 p-1 rounded border">

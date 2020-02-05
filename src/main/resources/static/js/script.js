@@ -29,10 +29,12 @@ $(document).ready(function () {
       table.draw()
     })
   }
+
   //AdminDataTable
   if (window.location.href.includes("admin/users")) {
     initAdminDataTable()
   }
+
   //PatientsDataTable
   if (window.location.href.includes("patient/profile")) {
     initPatientHistoryDataTable()
@@ -44,6 +46,14 @@ $(document).ready(function () {
       table.draw()
     })
   }
+
+  if ($('#myBar').length) {
+
+// When the user scrolls the page, execute myFunction
+    window.onscroll = function () {
+      progressBar()
+    }
+  }
   if (window.location.href.includes("patients")) {
     initPatientDataTable()
 
@@ -54,6 +64,7 @@ $(document).ready(function () {
       table.draw()
     })
   }
+
   //TestValidation
   if ($('#testForm').length !== 0) {
     checkBoxValidation()
@@ -398,4 +409,12 @@ function loadQuestionnaire(e) {
       console.log(e.toString())
     }
   })
+}
+
+
+function progressBar() {
+  let winScroll = document.body.scrollTop || document.documentElement.scrollTop
+  let height = document.documentElement.scrollHeight - document.documentElement.clientHeight
+  let scrolled = (winScroll / height) * 100
+  document.getElementById("myBar").style.width = scrolled + "%"
 }

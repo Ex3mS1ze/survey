@@ -40,6 +40,14 @@ tfoot input {
     font-size: 60px;
 }
 
+.progress {
+    position: fixed;
+    bottom: 0;
+    z-index: 1;
+    width: 100%;
+}
+
+
 @media (max-width: 575.98px) {
     #testForm {
         padding: 0;

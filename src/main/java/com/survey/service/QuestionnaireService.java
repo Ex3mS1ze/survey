@@ -94,7 +94,7 @@ public class QuestionnaireService {
 
     public void deleteQuestionnaireById(Long id, boolean secure) {
         User principal = getUserFromPrincipal();
-        if (secure && principal.isPatient() && !questionnaireRepo.existsByIdAndUserId(id, principal.getId())) {
+        if (secure && !principal.isAdmin() && principal.isPatient() && !questionnaireRepo.existsByIdAndUserId(id, principal.getId())) {
             LOGGER.warn("Patient {} try to delete questionnaire(id={})", principal.getEmail(), id);
             throw new AccessControlException("Access denied");
         }
@@ -106,7 +106,7 @@ public class QuestionnaireService {
         Questionnaire questionnaire = questionnaireRepo.findById(id)
                                                        .orElseThrow(() -> new NoSuchElementException(
                                                                "No questionnaire with id=" + id));
-        if (secure && principal.isPatient() && !questionnaire.getUser().getId().equals(principal.getId())) {
+        if (secure && !principal.isAdmin() && principal.isPatient() && !questionnaire.getUser().getId().equals(principal.getId())) {
             LOGGER.warn("Patient {} trying to access questionnaire(id={}) which does not own", principal.getEmail(),
                         id);
             throw new AccessControlException("Access denied");
