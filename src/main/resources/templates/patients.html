@@ -5,33 +5,38 @@
   <title>Пациенты</title>
   <!--DataTables-->
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css" />
+  <link rel="stylesheet" type="text/css"
+        href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css" />
   <script type="text/javascript" charset="utf8"
           src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
   <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
+  <script type="text/javascript"
+          src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
 </head>
 <body>
 <div th:replace="fragments/common :: header"></div>
 <main class="jumbotron d-flex align-items-center bg-white m-0">
   <div class="container">
     <!--DATATABLES-->
-    <table class="table table-striped shadow" id="patientsTable">
+    <table class="table table-striped display responsive nowrap shadow" id="patientsTable" style="width:100%">
       <thead>
       <tr>
-        <th class="text-center">Последний визит</th>
-        <th class="text-center">Email</th>
-        <th class="text-center">Имя пациента</th>
-        <th class="text-center">Пол</th>
-        <th class="text-center">Диагноз</th>
-        <th class="text-center">Прик. доктор</th>
-        <th class="text-center">Профиль</th>
+        <th scope="col" class="text-center all">Имя пациента</th>
+        <th scope="col" class="text-center min-desktop">Последний визит</th>
+        <th scope="col" class="text-center min-tablet-l">Email</th>
+        <th scope="col" class="text-center min-tablet-l">Пол</th>
+        <th scope="col" class="text-center min-tablet-p">Диагноз</th>
+        <th scope="col" class="text-center min-desktop">Прик. доктор</th>
+        <th scope="col" class="text-center min-mobile-l">Профиль</th>
       </tr>
       </thead>
       <tbody>
       <tr th:each="patient, itemStat : ${patients}" th:object="${patient}">
-        <td class="text-center" th:data-order="${#temporals.format(patient.user.lastVisitDate)}"
-            th:text="${#temporals.format(patient.user.lastVisitDate, 'dd.MM.yy HH:mm')}">Дата</td>
-        <td class="text-center" th:text="*{user.email}">email</td>
         <td class="text-center" th:text="*{user.fullName}"> Имя</td>
+        <td class="text-center" th:data-order="${#temporals.format(patient.user.lastVisitDate)}"
+            th:text="${#temporals.format(patient.user.lastVisitDate, 'dd.MM.yy HH:mm')}">Дата
+        </td>
+        <td class="text-center" th:text="*{user.email}">email</td>
         <td class="text-center" th:text="*{user.gender}">Пол</td>
         <td class="text-center" th:text="*{diagnosis eq null}? 'Не установлен' : *{diagnosis.text}">Диагноз</td>
         <td class="text-center" th:text="*{doctor} ne null? *{doctor.user.email} : 'Нет'">Прикрепленный доктор</td>
@@ -44,8 +49,8 @@
       </tbody>
       <tfoot>
       <tr>
-        <th class="text-center">Последний визит</th>
         <th class="text-center">Email</th>
+        <th class="text-center">Последний визит</th>
         <th class="text-center">Имя пациента</th>
         <th class="text-center">Пол</th>
         <th class="text-center">Диагноз</th>

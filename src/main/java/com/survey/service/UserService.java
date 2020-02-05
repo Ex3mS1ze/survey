@@ -85,6 +85,7 @@ public class UserService implements UserDetailsService, ApplicationListener<Auth
             add(roleRepo.findByRolename("ROLE_USER"));
         }});
 
+        user.setEmail(user.getEmail().trim().toLowerCase());
         user.setRegistrationDate(LocalDateTime.now());
         user.setActivated(false);
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));

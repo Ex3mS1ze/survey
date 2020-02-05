@@ -1,8 +1,10 @@
 package com.survey.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -17,17 +19,24 @@ public class Questionnaire implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
+    @JsonView(Views.Id.class)
     private Long id;
     @Basic
     @Column(name = "date", nullable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonView(Views.WithoutAnswersQuestionsTypeUser.class)
     private LocalDateTime date;
     @Basic
     @Column(name = "processed", nullable = false)
+    @JsonView(Views.WithoutAnswersQuestionsTypeUser.class)
     private Boolean processed;
     @OneToMany(mappedBy = "questionnaire", cascade = CascadeType.ALL)
+//    @JsonManagedReference
+//    @JsonView(Views.WithoutAnswersQuestionsTypeUser.class)
     private List<Answer> answers;
     @ManyToOne
     @JoinColumn(name = "diagnosis_id", referencedColumnName = "id")
+    @JsonView(Views.WithoutAnswersQuestionsTypeUser.class)
     private Diagnosis diagnosis;
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)

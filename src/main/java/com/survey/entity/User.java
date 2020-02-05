@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Setter
 @Getter
@@ -96,6 +97,10 @@ public class User implements UserDetails {
     public boolean isPatient() {
         long role = roles.stream().map(Role::getRolename).filter(s -> s.equals("ROLE_PATIENT")).count();
         return role > 0;
+    }
+
+    public Set<String> getRolesNames() {
+        return this.roles.stream().map(Role::getRolename).collect(Collectors.toSet());
     }
 
     @Override

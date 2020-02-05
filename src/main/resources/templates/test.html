@@ -10,14 +10,14 @@
 <main class="jumbotron d-flex align-items-center bg-white m-0">
   <div class="container">
     <div class="row">
-      <form class="col col-lg-8 mx-auto bg-light p-4 shadow rounded was-validated" id="testForm"
+      <form class="col col-lg-8 mx-auto bg-light p-md-4 shadow rounded was-validated" id="testForm"
             method="post"
             th:object="${questionnaire}"
             th:action="@{/test(isNew=true, questionnaireId=*{id})}">
-        <h1 class="text-center" th:text="*{type.description}"></h1>
+        <h3 class="text-center mb-4" th:text="*{type.description}"></h3>
         <input type="hidden" th:field="*{type.id}" />
         <div class="mb-2 p-2 rounded border" th:each="category : ${categories}">
-          <h3 class="text-center" th:text="${category}"></h3>
+          <h4 class="text-center" th:text="${category}"></h4>
           <div th:each="question, itemStat : *{type.questions}" th:if="${question.category eq category}">
             <input type="hidden" th:value="${question.id}"
                    th:attr="name='answers[' + ${itemStat.index} + '].question.id'" />

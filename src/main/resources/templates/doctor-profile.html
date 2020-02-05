@@ -6,10 +6,10 @@
 </head>
 <body>
 <div th:replace="fragments/common :: header"></div>
-<main class="jumbotron d-flex align-items-center bg-white vh-100 m-0">
+<main class="jumbotron d-flex align-items-center bg-white m-0">
   <div class="container">
     <div class="row">
-      <div class="col-8 mx-auto bg-light p-4 rounded shadow" th:object="${doctor}">
+      <div class="col-12 col-md-8 mx-auto bg-light p-md-4 rounded shadow" th:object="${doctor}">
         <div class="col-12 mb-5"><h1 class="text-center">Данные доктора</h1></div>
         <div class="row">
           <div class="col-4">

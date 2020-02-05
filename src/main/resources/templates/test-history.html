@@ -5,34 +5,49 @@
   <title>История тестов</title>
   <!--DataTables-->
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css" />
+  <link rel="stylesheet" type="text/css"
+        href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css" />
   <script type="text/javascript" charset="utf8"
           src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
   <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
+  <script type="text/javascript"
+          src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
 </head>
 <body>
 <div th:replace="fragments/common :: header"></div>
-<main class="jumbotron d-flex align-items-center bg-white m-0">
+<main class="jumbotron d-flex align-items-center bg-white m-0 p-0">
   <div class="container">
+
+      <div>
+        <input id="min" th:class="col-5" type="date" class="input-sm form-control" name="start" />
+        <span class="input-group-addon">to</span>
+        <input id="max" th:class="col-5" type="date" class="input-sm form-control" name="end" />
+      </div>
+
     <!--DATATABLES-->
-    <table class="table table-striped shadow" id="patientHistoryTable" sec:authorize="hasRole('PATIENT')">
+    <table class="table table-striped shadow display responsive nowrap" id="patientHistoryTable"
+           sec:authorize="hasRole('PATIENT')">
       <thead>
       <input type="checkbox" />
       <tr>
-        <th class="text-center">Дата</th>
-        <th class="text-center">Тип</th>
-        <th class="text-center">Статус</th>
-        <th class="text-center">Диагноз</th>
-        <th class="text-center">Редактировать</th>
+        <th scope="col" class="text-center">Дата</th>
+        <th scope="col" class="text-center">Тип</th>
+        <th scope="col" class="text-center">Статус</th>
+        <th scope="col" class="text-center">Диагноз</th>
+        <th scope="col" class="text-center">Редактировать</th>
       </tr>
       </thead>
       <tbody>
       <tr th:each="questionnaire, itemStat : ${questionnaires}">
         <td class="text-center" th:data-order="${#temporals.formatISO(questionnaire.date)}"
-            th:text="${#temporals.format(questionnaire.date, 'dd.MM.yy HH:mm')}">Дата
+            th:text="${#temporals.format(questionnaire.date, 'yyyy-dd-mm')}">Дата
+<!--            th:text="${#temporals.format(questionnaire.date, 'dd.MM.yy HH:mm')}">Дата-->
+
         </td>
         <td class="text-center" th:text="${questionnaire.type.description}">Тип</td>
         <td class="text-center" th:text="${questionnaire.processed} eq false? 'Не обработан': 'Обработан'">Статус</td>
-        <td class="text-center" th:text="${questionnaire.diagnosis} eq null? 'Не установлен': ${questionnaire.diagnosis.text}"></td>
+        <td class="text-center"
+            th:text="${questionnaire.diagnosis} eq null? 'Не установлен': ${questionnaire.diagnosis.text}"></td>
         <td class="text-center" th:if="${questionnaire.processed} eq true">
           <a href="#" title="Посмотреть" th:href="@{/test/view(questionnaireId = ${questionnaire.id})}">
             <i class="far fa-eye mr-2"></i></a>
@@ -61,26 +76,25 @@
       </tfoot>
     </table>
 
-    <table class="table table-striped shadow" id="doctorHistoryTable" sec:authorize="hasRole('DOCTOR')">
+    <table class="table table-striped shadow display responsive nowrap" id="doctorHistoryTable"
+           sec:authorize="hasRole('DOCTOR')">
       <thead>
       <tr>
-        <th class="text-center">Дата</th>
-        <th class="text-center">ID</th>
-        <th class="text-center">Имя пациента</th>
-        <th class="text-center">Пол</th>
-        <th class="text-center">Статус</th>
-        <th class="text-center">Диагноз</th>
-        <th class="text-center">Действия</th>
+        <th class="text-center all">Имя пациента</th>
+        <th class="text-center min-tablet-p">Дата</th>
+        <th class="text-center min-tablet-p">Пол</th>
+        <th class="text-center min-tablet-p">Статус</th>
+        <th class="text-center min-tablet-p">Диагноз</th>
+        <th class="text-center min-tablet-p">Действия</th>
       </tr>
       </thead>
       <tbody>
       <tr th:each="questionnaire, itemStat : ${questionnaires}">
-        <td class="text-center" th:data-order="${#temporals.format(questionnaire.date)}"
-            th:text="${#temporals.format(questionnaire.date, 'dd.MM.yy HH:mm')}">Дата</td>
-        <td class="text-center" th:text="${questionnaire.getUser().getId()}">ID</td>
         <td class="text-center"
-            th:text="${questionnaire.getUser().getFirstName()} + ' ' +${questionnaire.getUser().getSecondName()}">
-          Имя
+            th:text="${questionnaire.user.getFullName()}"> Имя
+        </td>
+        <td class="text-center" th:data-order="${#temporals.format(questionnaire.date)}"
+            th:text="${#temporals.format(questionnaire.date, 'dd.MM.yy HH:mm')}">Дата
         </td>
         <td class="text-center" th:text="${questionnaire.getUser().getGender()}">Пол</td>
         <td class="text-center" th:text="${questionnaire.processed} eq false? 'Не обработан': 'Обработан'">Статус</td>
@@ -107,9 +121,8 @@
       </tbody>
       <tfoot>
       <tr>
-        <th class="text-center">Дата</th>
-        <th class="text-center">ID</th>
         <th class="text-center">Имя пациента</th>
+        <th class="text-center">Дата</th>
         <th class="text-center">Пол</th>
         <th class="text-center">Статус</th>
         <th class="text-center">Диагноз</th>

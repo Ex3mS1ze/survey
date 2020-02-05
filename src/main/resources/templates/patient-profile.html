@@ -7,14 +7,16 @@
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css" />
   <script type="text/javascript" charset="utf8"
           src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css" />
   <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
 </head>
 <body>
 <div th:replace="fragments/common :: header"></div>
-<main class="jumbotron d-flex align-items-center bg-white vh-100 m-0">
+<main class="jumbotron d-flex align-items-center bg-white m-0">
   <div class="container">
     <div class="row">
-      <div class="col-8 mx-auto bg-light p-4 rounded shadow" th:object="${patient}">
+      <div class="col-12 col-md-8 mx-auto bg-light p-1 p-md-4 rounded shadow" th:object="${patient}">
         <div class="col-12 mb-5"><h1 class="text-center">Данные пациента</h1></div>
         <div class="row">
           <div class="col-4">
@@ -56,7 +58,7 @@
         </div>
       </div>
       <div class="col-12 mt-5">
-        <table class="table table-striped shadow" id="patientHistoryTable">
+        <table class="table table-striped display responsive nowrap shadow" id="patientHistoryTable">
           <thead>
           <tr>
             <th class="text-center">Дата</th>

@@ -10,7 +10,7 @@ header {
     margin-bottom: 80px;
 }
 
-table.dataTable th:nth-child(1) {
+/*table.dataTable th:nth-child(1) {
     width: auto;
     max-width: 150px;
 }
@@ -24,6 +24,10 @@ tfoot input {
     width: 100%;
     max-width: 100px;
     box-sizing: border-box;
+}*/
+
+#adminTable > tbody > tr:nth-child(1) > td:nth-child(5) {
+    white-space: normal;
 }
 
 .numbers {
@@ -34,4 +38,10 @@ tfoot input {
 
 .numbers li span {
     font-size: 60px;
+}
+
+@media (max-width: 575.98px) {
+    #testForm {
+        padding: 0;
+    }
 }

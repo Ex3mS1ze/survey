@@ -1,5 +1,7 @@
 package com.survey.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.survey.utilities.StringDbToListConverter;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,12 +21,14 @@ public class Answer {
     @Column(name = "id", nullable = false)
     private Long id;
     @Column(name = "text", nullable = true)
+//    @JsonView(Views.WithoutAnswersQuestionsTypeUser.class)
     private String text;
     @Column(name = "text_list", nullable = true)
     @Convert(converter = StringDbToListConverter.class)
     private List<String> textList;
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "question_id", referencedColumnName = "id", nullable = false)
+//    @JsonBackReference
     private Question question;
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "questionnaire_id", referencedColumnName = "id", nullable = false)

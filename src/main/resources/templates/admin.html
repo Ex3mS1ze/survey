@@ -5,54 +5,55 @@
   <title>Страница администратора</title>
   <!--DataTables-->
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css" />
+  <link rel="stylesheet" type="text/css"
+        href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css" />
   <script type="text/javascript" charset="utf8"
           src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
   <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-  <link rel="stylesheet" href="" />
+  <script type="text/javascript"
+          src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
 </head>
 <body>
 <div th:replace="fragments/common :: header"></div>
 <main class="jumbotron d-flex align-items-center bg-white m-0">
   <div class="container">
-    <div class="row">
-
-      <table class="table table-striped shadow" id="adminTable">
-        <thead>
-        <tr>
-          <th class="text-center">ID</th>
-          <th class="text-center">Дата</th>
-          <th class="text-center">Имя</th>
-          <th class="text-center">Email</th>
-          <th class="text-center">Роли</th>
-          <th class="text-center">Редактировать</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="user, itemStat : ${users}">
-          <td class="text-center" th:text="${user.id}">ID</td>
-          <td class="text-center" th:data-order="${#temporals.formatISO(user.registrationDate)}"
-              th:text="${#temporals.format(user.registrationDate, 'dd.MM.yyyy')}">Регистрация</td>
-          <td class="text-center" th:text="${user.fullName}">Статус</td>
-          <td class="text-center" th:text="${user.email}">Почта</td>
-          <td class="text-center" th:text="${user.roles}">Роли</td>
-          <td class="text-center">
-            <a href="#" title="Редактировать" th:href="@{/admin/edit_user(userId=${user.id})}" ><i
-                class="edit far fa-edit mr-2"></i></a>
-          </td>
-        </tr>
-        </tbody>
-        <tfoot>
-        <tr>
-          <th class="text-center">ID</th>
-          <th class="text-center">Дата</th>
-          <th class="text-center">Имя</th>
-          <th class="text-center">Email</th>
-          <th class="text-center">Роли</th>
-          <th class="text-center">Редактировать</th>
-        </tr>
-        </tfoot>
-      </table>
-    </div>
+    <table class="table table-striped shadow display responsive nowrap" id="adminTable">
+      <thead>
+      <tr>
+        <th class="text-center all">ID</th>
+        <th class="text-center all">Email</th>
+        <th class="text-center min-desktop">Дата</th>
+        <th class="text-center min-tablet-p">Имя</th>
+        <th class="text-center min-desktop">Роли</th>
+        <th class="text-center all">Редакт.</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="user, itemStat : ${users}">
+        <td class="text-center" th:text="${user.id}">ID</td>
+        <td class="text-center" th:text="${user.email}">Почта</td>
+        <td class="text-center" th:data-order="${#temporals.formatISO(user.registrationDate)}"
+            th:text="${#temporals.format(user.registrationDate, 'dd.MM.yyyy')}">Регистрация
+        </td>
+        <td class="text-center" th:text="${user.fullName}">Статус</td>
+        <td class="text-center" th:text="${user.getRolesNames()}">Роли</td>
+        <td class="text-center">
+          <a href="#" title="Редактировать" th:href="@{/admin/edit_user(userId=${user.id})}"><i
+            class="edit far fa-edit mr-2"></i></a>
+        </td>
+      </tr>
+      </tbody>
+      <tfoot>
+      <tr>
+        <th class="text-center">ID</th>
+        <th class="text-center">Email</th>
+        <th class="text-center">Дата</th>
+        <th class="text-center">Имя</th>
+        <th class="text-center">Роли</th>
+        <th class="text-center">Редакт.</th>
+      </tr>
+      </tfoot>
+    </table>
 
   </div>
 </main>
