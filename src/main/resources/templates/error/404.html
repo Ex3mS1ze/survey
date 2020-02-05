@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/common :: head (~{::title}, ~{}, ~{})">
+  <title>О нас</title>
+</head>
+<body>
+<div th:replace="fragments/common :: header"></div>
+<main class="container mx-auto">
+  <h1>Такой страницы не существует! 404</h1>
+  <h1>Not Found! 404</h1>
+</main>
+<footer th:replace="fragments/common :: footer"></footer>
+<th:block th:replace="fragments/common :: bottomScripts"></th:block>
+</body>
+</html>

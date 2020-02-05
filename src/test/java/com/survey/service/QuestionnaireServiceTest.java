@@ -131,21 +131,21 @@ public class QuestionnaireServiceTest {
                                                        .get()
                                                        .collect(Collectors.toList())
                                                        .get(0);
-        questionnaireService.deleteQuestionnaireById(questionnaire.getId());
+        questionnaireService.deleteQuestionnaireById(questionnaire.getId(), true);
         assertNull(questionnaireRepo.getOne(questionnaire.getId()));
     }
 
     @Test(expected = NoSuchElementException.class)
     public void findQuestionnaireById_exception() {
-        questionnaireService.findQuestionnaireById(0L);
+        questionnaireService.findQuestionnaireById(0L, false);
     }
 
     @Test
     // useless test
     public void findQuestionnaireById() {
         QuestionnaireService mock = Mockito.mock(QuestionnaireService.class);
-        Mockito.when(mock.findQuestionnaireById(Mockito.anyLong())).thenReturn(new Questionnaire());
-        Questionnaire questionnaire = mock.findQuestionnaireById(1L);
+        Mockito.when(mock.findQuestionnaireById(Mockito.anyLong(), false)).thenReturn(new Questionnaire());
+        Questionnaire questionnaire = mock.findQuestionnaireById(1L,false);
         assertNotNull(questionnaire);
     }
 

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.survey.entity.Question;
 import com.survey.entity.Questionnaire;
+import com.survey.entity.User;
 import com.survey.entity.Views;
 import com.survey.repository.QuestionnaireRepo;
 import com.survey.service.QuestionnaireService;
@@ -16,12 +17,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.nio.file.AccessDeniedException;
+import java.security.AccessControlException;
+import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -116,28 +122,41 @@ public class TestController {
     public String editQuestionnaire(@RequestParam("questionnaireId") Long questionnaireId,
                                     @RequestParam(value = "patientId", required = false) Long patientId,
                                     @RequestParam("action") String action, Model model) {
-        switch (action) {
-            case "delete":
-                questionnaireService.deleteQuestionnaireById(questionnaireId);
-                return patientId != null ?
-                        "redirect:/patient/profile?patientId=" + patientId : "redirect:/test/history";
-            case "edit": {
-                Questionnaire questionnaire = questionnaireService.findQuestionnaireById(questionnaireId);
-                Set<String> categories = questionnaire.getAllCategories();
+        try {
+            switch (action) {
+                case "delete":
+                    questionnaireService.deleteQuestionnaireById(questionnaireId, true);
+                    return patientId != null ?
+                            "redirect:/patient/profile?patientId=" + patientId : "redirect:/test/history";
+                case "edit": {
+                    Questionnaire questionnaire = questionnaireService.findQuestionnaireById(questionnaireId, true);
+                    if (questionnaire.getProcessed()) {
+                        return "redirect:/test/history";
+                    }
 
-                model.addAttribute("categories", categories);
-                model.addAttribute("questionnaire", questionnaire);
+                    Set<String> categories = questionnaire.getAllCategories();
 
-                return "test-edit";
+                    model.addAttribute("categories", categories);
+                    model.addAttribute("questionnaire", questionnaire);
+
+                    return "test-edit";
+                }
+                default:
+                    return "redirect:/test/history";
             }
-            default:
-                return "redirect:/test/history";
+        } catch (AccessControlException e) {
+            return "redirect:/test/history";
         }
     }
 
     @GetMapping("/test/view")
     public String viewQuestionnaire(@RequestParam("questionnaireId") Long questionnaireId, Model model) {
-        Questionnaire questionnaire = questionnaireService.findQuestionnaireById(questionnaireId);
+        Questionnaire questionnaire;
+        try {
+            questionnaire = questionnaireService.findQuestionnaireById(questionnaireId, true);
+        } catch (AccessControlException e) {
+            return "redirect:/test/history";
+        }
 
         model.addAttribute("questionnaire", questionnaire);
         model.addAttribute("questions", questionnaire.getType().getQuestions());

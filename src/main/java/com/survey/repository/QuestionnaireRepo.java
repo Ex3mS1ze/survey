@@ -15,5 +15,5 @@ public interface QuestionnaireRepo extends JpaRepository<Questionnaire, Long> {
     Optional<List<Questionnaire>> findAllByUserOrderByDate(User user);
     void deleteById(Long id);
     Optional<List<Questionnaire>> findAllByProcessed(boolean processed, Pageable pageable);
-
+    boolean existsByIdAndUserId(long qId, long userId);
 }

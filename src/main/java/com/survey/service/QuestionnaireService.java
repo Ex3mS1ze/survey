@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.security.AccessControlException;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -18,16 +19,21 @@ public class QuestionnaireService {
     public static final String GASTRO_TYPE = "gastroenterological";
     public static final String CARDIO_TYPE = "cardiovascular";
 
+    private final QuestionRepo questionRepo;
+    private final AnswerRepo answerRepo;
+    private final QuestionnaireRepo questionnaireRepo;
+    private final DiagnosisRepo diagnosisRepo;
+    private final QuestionnaireTypeRepo questionnaireTypeRepo;
+
     @Autowired
-    private QuestionRepo questionRepo;
-    @Autowired
-    private AnswerRepo answerRepo;
-    @Autowired
-    private QuestionnaireRepo questionnaireRepo;
-    @Autowired
-    private DiagnosisRepo diagnosisRepo;
-    @Autowired
-    private QuestionnaireTypeRepo questionnaireTypeRepo;
+    public QuestionnaireService(QuestionRepo questionRepo, AnswerRepo answerRepo, QuestionnaireRepo questionnaireRepo,
+                                DiagnosisRepo diagnosisRepo, QuestionnaireTypeRepo questionnaireTypeRepo) {
+        this.questionRepo = questionRepo;
+        this.answerRepo = answerRepo;
+        this.questionnaireRepo = questionnaireRepo;
+        this.diagnosisRepo = diagnosisRepo;
+        this.questionnaireTypeRepo = questionnaireTypeRepo;
+    }
 
     public List<Question> getAllQuestions() {
         return questionRepo.findAllByOrderById();
@@ -86,18 +92,27 @@ public class QuestionnaireService {
         return questionnaireRepo.findAll();
     }
 
-    public void deleteQuestionnaireById(Long id) {
+    public void deleteQuestionnaireById(Long id, boolean secure) {
+        User principal = getUserFromPrincipal();
+        if (secure && principal.isPatient() && !questionnaireRepo.existsByIdAndUserId(id, principal.getId())) {
+            LOGGER.warn("Patient {} try to delete questionnaire(id={})", principal.getEmail(), id);
+            throw new AccessControlException("Access denied");
+        }
         questionnaireRepo.deleteById(id);
     }
 
-    public Questionnaire findQuestionnaireById(Long id) {
+    public Questionnaire findQuestionnaireById(Long id, boolean secure) {
+        User principal = getUserFromPrincipal();
         Questionnaire questionnaire = questionnaireRepo.findById(id)
                                                        .orElseThrow(() -> new NoSuchElementException(
                                                                "No questionnaire with id=" + id));
-
+        if (secure && principal.isPatient() && !questionnaire.getUser().getId().equals(principal.getId())) {
+            LOGGER.warn("Patient {} trying to access questionnaire(id={}) which does not own", principal.getEmail(),
+                        id);
+            throw new AccessControlException("Access denied");
+        }
         questionnaire.getType().setQuestions(getOrderedQuestionsByTypeId(questionnaire.getType().getId()));
-        questionnaire.setAnswers(
-                getOrderedAnswers(questionnaire.getType().getQuestions(), id));
+        questionnaire.setAnswers(getOrderedAnswers(questionnaire.getType().getQuestions(), id));
 
         return questionnaire;
     }
@@ -155,8 +170,7 @@ public class QuestionnaireService {
         return orderedQuestions;
     }
 
-    public List<Answer> getOrderedAnswers(List<Question> orderedQuestions,
-                                          Long questionnaire_id) {
+    public List<Answer> getOrderedAnswers(List<Question> orderedQuestions, Long questionnaire_id) {
         List<Answer> answers = new ArrayList<>();
         for (Question question : orderedQuestions) {
             Optional<Answer> answer = answerRepo.getByQuestionIdAndQuestionnaireId(question.getId(), questionnaire_id);
@@ -177,4 +191,10 @@ public class QuestionnaireService {
 
         return questionnaire;
     }
+
+    /*public boolean isProcessed(long id) {
+        return questionnaireRepo.isProcessed(id);
+    }*//*public boolean isProcessed(long id) {
+        return questionnaireRepo.isProcessed(id);
+    }*/
 }
