@@ -12,23 +12,20 @@
   <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
   <script type="text/javascript"
           src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"
+          integrity="sha256-4iQZ6BVL4qNKlQ27TExEhBN1HFPvAvAMbFavKKosSWQ=" crossorigin="anonymous"></script>
 </head>
 <body>
 <div th:replace="fragments/common :: header"></div>
-<main class="jumbotron d-flex align-items-center bg-white m-0 p-0">
+<main class="jumbotron d-flex align-items-center bg-white">
   <div class="container">
 
-      <div>
-        <input id="min" th:class="col-5" type="date" class="input-sm form-control" name="start" />
-        <span class="input-group-addon">to</span>
-        <input id="max" th:class="col-5" type="date" class="input-sm form-control" name="end" />
-      </div>
+    <div th:replace="fragments/date-picker :: datePicker"></div>
 
     <!--DATATABLES-->
     <table class="table table-striped shadow display responsive nowrap" id="patientHistoryTable"
            sec:authorize="hasRole('PATIENT')">
       <thead>
-      <input type="checkbox" />
       <tr>
         <th scope="col" class="text-center">Дата</th>
         <th scope="col" class="text-center">Тип</th>
@@ -40,9 +37,7 @@
       <tbody>
       <tr th:each="questionnaire, itemStat : ${questionnaires}">
         <td class="text-center" th:data-order="${#temporals.formatISO(questionnaire.date)}"
-            th:text="${#temporals.format(questionnaire.date, 'yyyy-dd-mm')}">Дата
-<!--            th:text="${#temporals.format(questionnaire.date, 'dd.MM.yy HH:mm')}">Дата-->
-
+            th:text="${#temporals.format(questionnaire.date, 'dd.MM.yy HH:mm')}">Дата
         </td>
         <td class="text-center" th:text="${questionnaire.type.description}">Тип</td>
         <td class="text-center" th:text="${questionnaire.processed} eq false? 'Не обработан': 'Обработан'">Статус</td>
@@ -75,6 +70,45 @@
       </tr>
       </tfoot>
     </table>
+
+    <!--DATATABLES AJAX TRY-->
+    <!--<table class="table table-striped shadow display responsive nowrap" id="patientHistoryTable"
+           sec:authorize="hasRole('PATIENT')">
+      <thead>
+        <tr>
+          <th scope="col" class="text-center">Дата</th>
+          <th scope="col" class="text-center">Тип</th>
+          <th scope="col" class="text-center">Статус</th>
+          <th scope="col" class="text-center">Диагноз</th>
+          <th scope="col" class="text-center">Редактировать</th>
+        </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td class="text-center">Дата</td>
+        <td class="text-center">Тип</td>
+        <td class="text-center">Статус</td>
+        <td class="text-center">Диагноз</td>
+        <td class="text-center">Редактировать
+          &lt;!&ndash;<a href="#" title="Редактировать"
+             th:href="@{/test/edit(questionnaireId = ${0},action='edit')}">
+            <i class="edit far fa-edit mr-2"></i></a>
+          <a href="#" title="Удалить"
+             th:href="@{/test/edit(questionnaireId = ${0},action='delete')}">
+            <i class="delete far fa-trash-alt"></i></a>&ndash;&gt;
+        </td>
+      </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <th class="text-center">Дата</th>
+          <th class="text-center">Тип</th>
+          <th class="text-center">Статус</th>
+          <th class="text-center">Диагноз</th>
+          <th class="text-center">Редактировать</th>
+        </tr>
+      </tfoot>
+    </table>-->
 
     <table class="table table-striped shadow display responsive nowrap" id="doctorHistoryTable"
            sec:authorize="hasRole('DOCTOR')">

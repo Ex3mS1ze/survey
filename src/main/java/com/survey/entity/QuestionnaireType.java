@@ -1,5 +1,6 @@
 package com.survey.entity;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -17,6 +18,7 @@ public class QuestionnaireType {
     @Column(name = "id", nullable = false)
     private Long id;
     @Column(name = "type")
+    @JsonView(Views.WithoutAnswersQuestionsTypeUser.class)
     private String name;
     @Column(name = "description")
     private String description;

@@ -58,6 +58,8 @@
         </div>
       </div>
       <div class="col-12 mt-5">
+        <div th:replace="fragments/date-picker :: datePicker"></div>
+
         <table class="table table-striped display responsive nowrap shadow" id="patientHistoryTable">
           <thead>
           <tr>
@@ -69,7 +71,7 @@
           </thead>
           <tbody>
           <tr th:each="questionnaire, itemStat : ${patient.user.questionnaires}">
-            <td class="text-center" th:text="${#temporals.format(questionnaire.date, 'dd MMMM yyyy HH:mm')}">Дата</td>
+            <td class="text-center" th:text="${#temporals.format(questionnaire.date, 'dd.MM.yy HH:mm')}">Дата</td>
             <td class="text-center" th:text="${questionnaire.processed} eq false? 'Не обработан': 'Обработан'">Статус
             </td>
             <td class="text-center"

@@ -17,6 +17,9 @@
 <div th:replace="fragments/common :: header"></div>
 <main class="jumbotron d-flex align-items-center bg-white m-0">
   <div class="container">
+
+    <div th:replace="fragments/date-picker :: datePicker"></div>
+
     <!--DATATABLES-->
     <table class="table table-striped display responsive nowrap shadow" id="patientsTable" style="width:100%">
       <thead>

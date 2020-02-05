@@ -11,6 +11,7 @@ import com.survey.repository.QuestionnaireRepo;
 import com.survey.service.QuestionnaireService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -35,7 +37,7 @@ public class TestController {
     public TestController(QuestionnaireService questionnaireService, QuestionnaireRepo questionnaireRepo) {
         this.questionnaireService = questionnaireService;
         this.questionnaireRepo = questionnaireRepo;
-        
+
         mapper = new ObjectMapper();
         mapper.disable(MapperFeature.DEFAULT_VIEW_INCLUSION);
         mapper.registerModule(new JavaTimeModule());
@@ -143,11 +145,13 @@ public class TestController {
 
         return "test-view";
     }
-
+    //TODO remove or PreAuthorize
     @GetMapping("/load_test_history")
-    public ResponseEntity<?> loadTestHistory(@RequestParam(value = "id") String id,
-                                             @PageableDefault(sort = {"id"}, direction = Sort.Direction.ASC) Pageable pageable) throws JsonProcessingException {
-        Page<Questionnaire> questionnaires = questionnaireRepo.findAll(pageable);
+    public ResponseEntity<?> loadTestHistory(@RequestParam Map<String, String> allRequestParams,
+                                             Model model) throws JsonProcessingException {
+        PageRequest page = PageRequest.of(Integer.parseInt(allRequestParams.get("draw")),
+                                          Integer.parseInt(allRequestParams.get("length")));
+        Page<Questionnaire> questionnaires = questionnaireRepo.findAll(page);
 
         String jsonString = mapper.setConfig(mapper.getSerializationConfig())
                                   .writerWithView(Views.WithoutAnswersQuestionsTypeUser.class)

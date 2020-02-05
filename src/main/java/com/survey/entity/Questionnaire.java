@@ -43,6 +43,7 @@ public class Questionnaire implements Serializable {
     private User user;
     @ManyToOne
     @JoinColumn(name = "type_id", referencedColumnName = "id", nullable = false)
+    @JsonView(Views.WithoutAnswersQuestionsTypeUser.class)
     private QuestionnaireType type;
 
     {

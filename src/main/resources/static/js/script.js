@@ -21,6 +21,13 @@ $(document).ready(function () {
   if (window.location.href.includes("test/history")) {
     initPatientHistoryDataTable()
     initDoctorHistoryDataTable()
+
+    let table = $('#patientHistoryTable').DataTable()
+
+    // Event listener to the two range filtering inputs to redraw on input
+    $('#min, #max').change(function () {
+      table.draw()
+    })
   }
   //AdminDataTable
   if (window.location.href.includes("admin/users")) {
@@ -29,9 +36,23 @@ $(document).ready(function () {
   //PatientsDataTable
   if (window.location.href.includes("patient/profile")) {
     initPatientHistoryDataTable()
+
+    let table = $('#patientHistoryTable').DataTable()
+
+    // Event listener to the two range filtering inputs to redraw on input
+    $('#min, #max').change(function () {
+      table.draw()
+    })
   }
   if (window.location.href.includes("patients")) {
     initPatientDataTable()
+
+    let table = $('#patientsTable').DataTable()
+
+    // Event listener to the two range filtering inputs to redraw on input
+    $('#min, #max').change(function () {
+      table.draw()
+    })
   }
   //TestValidation
   if ($('#testForm').length !== 0) {
@@ -78,17 +99,17 @@ function initPatientHistoryDataTable() {
 
   })*/
 // Apply the search
-    /*table.columns().every(function () {
-      let that = this
+  /*table.columns().every(function () {
+    let that = this
 
-      $('input', this.footer()).on('keyup change clear', function () {
-        if (that.search() !== this.value) {
-          that
-            .search(this.value)
-            .draw()
-        }
-      })
-    })*/
+    $('input', this.footer()).on('keyup change clear', function () {
+      if (that.search() !== this.value) {
+        that
+          .search(this.value)
+          .draw()
+      }
+    })
+  })*/
 
   // DataTable
   let table = $('#patientHistoryTable').DataTable({
@@ -106,63 +127,63 @@ function initPatientHistoryDataTable() {
         "previous": "Предыдущая"
       },
     },
-      initComplete: function () {
-          this.api().columns([1, 2, 3]).every( function () {
-              var column = this;
-              var select = $('<select><option value=""></option></select>')
-                .appendTo( $(column.footer()).empty() )
-                .on( 'change', function () {
-                    var val = $.fn.dataTable.util.escapeRegex(
-                      $(this).val()
-                    );
+    initComplete: function () {
+      this.api().columns([1, 2, 3]).every(function () {
+        var column = this
+        var select = $('<select><option value=""></option></select>')
+          .appendTo($(column.footer()).empty())
+          .on('change', function () {
+            var val = $.fn.dataTable.util.escapeRegex(
+              $(this).val()
+            )
 
-                    column
-                      .search( val ? '^'+val+'$' : '', true, false )
-                      .draw();
-                } );
+            column
+              .search(val ? '^' + val + '$' : '', true, false)
+              .draw()
+          })
 
-              column.data().unique().sort().each( function ( d, j ) {
-                  select.append( '<option value="'+d+'">'+d+'</option>' )
-              } );
-          } );
-      },
-    /*"processing": true,
-    "serverSide": true,
-    ajax: {url:"http://localhost:8080/load_test_history?id=1&page=0&size=5", dataSrc:""},
+        column.data().unique().sort().each(function (d, j) {
+          select.append('<option value="' + d + '">' + d + '</option>')
+        })
+      })
+    },
+    /*ajax: {url:"http://localhost:8080/load_test_history", dataSrc:""},
     "columns": [
       {"data": "date"},
+      {"data": "type.name"},
       {"data": "processed"},
       {"data": "diagnosis.text"},
-    ],*/
+      {"data": "id"},
+    ],columnDefs: [ {
+      targets: [4],
+      data: "id",
+      "render": function (data, type, row, meta) {
+        return '<a href="/test/view?questionnaireId=' + row.id + '">' + 'view' + '</a>';
+      }
+    }],*/
     "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Все"]],
     "autoWidth": false
   })
 
   $.fn.dataTable.ext.search.push(
-    function( settings, data, dataIndex ) {
-      var min = Date.parse( $('#min').val() );
-      var max = Date.parse( $('#max').val() );
-      var age = Date.parse( data[0] ); // use data for the age column
+    function (settings, data, dataIndex) {
 
-      if ( ( isNaN( min ) && isNaN( max ) ) ||
-        ( isNaN( min ) && age <= max ) ||
-        ( min <= age   && isNaN( max ) ) ||
-        ( min <= age   && age <= max ) )
-      {
-        return true;
+      var min = Date.parse($('#min').val())
+      var max = Date.parse($('#max').val())
+      var date = moment(data[0], 'DD.MM.YY HH:mm', false).valueOf() // CHANGE to date column for each table
+
+      if ((isNaN(min) && isNaN(max)) ||
+        (isNaN(min) && date <= max) ||
+        (min <= date && isNaN(max)) ||
+        (min <= date && date <= max)) {
+        return true
       }
-      return false;
+      return false
     }
-  );
+  )
 }
-$(document).ready(function() {
-  var table = $('#patientHistoryTable').DataTable();
 
-  // Event listener to the two range filtering inputs to redraw on input
-  $('#min').change( function() {
-    table.draw();
-  } );
-} );
+
 function initDoctorHistoryDataTable() {
   // Setup - add a text input to each footer cell
   $('#doctorHistoryTable tfoot th:lt(7)').each(function () {
@@ -229,7 +250,7 @@ function initAdminDataTable() {
       },
     },
     "columnDefs": [
-      { "width": "20%", "targets": 4 }
+      {"width": "20%", "targets": 4}
     ],
     "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Все"]],
     "autoWidth": false,
@@ -253,8 +274,8 @@ function initAdminDataTable() {
 function initPatientDataTable() {
   // Setup - add a text input to each footer cell
   $('#patientsTable tfoot th').filter(function (index) {
-      let neededIndexes = [1, 2, 5]
-      return neededIndexes.includes(index)
+    let neededIndexes = [1, 2, 5]
+    return neededIndexes.includes(index)
   }).each(function () {
     let title = $(this).text()
     $(this).html('<input type="text" placeholder=" Поиск' + '" />')
@@ -276,26 +297,26 @@ function initPatientDataTable() {
         "previous": "Предыдущая"
       },
     },
-      initComplete: function () {
-          this.api().columns([3, 4]).every( function () {
-              var column = this;
-              var select = $('<select><option value=""></option></select>')
-                .appendTo( $(column.footer()).empty() )
-                .on( 'change', function () {
-                    var val = $.fn.dataTable.util.escapeRegex(
-                      $(this).val()
-                    );
+    initComplete: function () {
+      this.api().columns([3, 4]).every(function () {
+        var column = this
+        var select = $('<select><option value=""></option></select>')
+          .appendTo($(column.footer()).empty())
+          .on('change', function () {
+            var val = $.fn.dataTable.util.escapeRegex(
+              $(this).val()
+            )
 
-                    column
-                      .search( val ? '^'+val+'$' : '', true, false )
-                      .draw();
-                } );
+            column
+              .search(val ? '^' + val + '$' : '', true, false)
+              .draw()
+          })
 
-              column.data().unique().sort().each( function ( d, j ) {
-                  select.append( '<option value="'+d+'">'+d+'</option>' )
-              } );
-          } );
-      },
+        column.data().unique().sort().each(function (d, j) {
+          select.append('<option value="' + d + '">' + d + '</option>')
+        })
+      })
+    },
     "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Все"]],
     "autoWidth": true,
   })
@@ -313,9 +334,24 @@ function initPatientDataTable() {
     })
   })
 
+  //Date range apply
+  $.fn.dataTable.ext.search.push(
+    function (settings, data, dataIndex) {
+
+      var min = Date.parse($('#min').val())
+      var max = Date.parse($('#max').val())
+      var date = moment(data[1], 'DD.MM.YY HH:mm', false).valueOf() // CHANGE to date column for each table
+
+      if ((isNaN(min) && isNaN(max)) ||
+        (isNaN(min) && date <= max) ||
+        (min <= date && isNaN(max)) ||
+        (min <= date && date <= max)) {
+        return true
+      }
+      return false
+    }
+  )
 }
-
-
 
 
 function checkBoxValidation() {
@@ -363,4 +399,3 @@ function loadQuestionnaire(e) {
     }
   })
 }
-
