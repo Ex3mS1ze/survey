@@ -24,8 +24,14 @@
           <input type="password" class="form-control" id="password" placeholder="Введите пароль"
                  name="password" th:required="required" />
           <div class="invalid-feedback d-block" th:text="${loginDataError}"></div>
-          <div class="my-1">
-            <a href="#" class="text-decoration-none" th:href="@{/restore_password}">Забыли пароль?</a>
+          <div class="my-1 d-flex justify-content-around">
+            <div class="">
+              <label th:for="rememberMe"> Запомнить? </label>
+              <input type="checkbox" id="rememberMe" name="remember-me" />
+            </div>
+            <div class="">
+              <a href="#" class="text-decoration-none" th:href="@{/restore_password}">Забыли пароль?</a>
+            </div>
           </div>
         </div>
         <div class="d-flex flex-column">
