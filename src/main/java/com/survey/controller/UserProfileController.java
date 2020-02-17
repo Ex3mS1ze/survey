@@ -61,7 +61,6 @@ public class UserProfileController {
     @PostMapping("/changePassword")
     public String changePassword(@Validated @ModelAttribute("userForm") User userForm, BindingResult bindingResult,
                                  Model model, HttpServletResponse response) {
-        //TODO deal with binding result
         if (bindingResult.hasFieldErrors("oldPassword") || bindingResult.hasFieldErrors("password") ||
             bindingResult.hasFieldErrors("passwordConfirm") ||
             !userService.changePassword(userForm.getOldPassword(), userForm.getPassword())) {

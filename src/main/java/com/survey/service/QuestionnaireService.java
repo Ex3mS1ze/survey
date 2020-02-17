@@ -24,22 +24,28 @@ public class QuestionnaireService {
     private final QuestionnaireRepo questionnaireRepo;
     private final DiagnosisRepo diagnosisRepo;
     private final QuestionnaireTypeRepo questionnaireTypeRepo;
+    private final QuestionWeightService questionWeightService;
+    private final ScoreQuestionnaireRepo scoreQuestionnaireRepo;
 
     @Autowired
     public QuestionnaireService(QuestionRepo questionRepo, AnswerRepo answerRepo, QuestionnaireRepo questionnaireRepo,
-                                DiagnosisRepo diagnosisRepo, QuestionnaireTypeRepo questionnaireTypeRepo) {
+                                DiagnosisRepo diagnosisRepo, QuestionnaireTypeRepo questionnaireTypeRepo,
+                                QuestionWeightRepo questionWeightRepo, QuestionWeightService questionWeightService,
+                                ScoreQuestionnaireRepo scoreQuestionnaireRepo) {
         this.questionRepo = questionRepo;
         this.answerRepo = answerRepo;
         this.questionnaireRepo = questionnaireRepo;
         this.diagnosisRepo = diagnosisRepo;
         this.questionnaireTypeRepo = questionnaireTypeRepo;
+        this.questionWeightService = questionWeightService;
+        this.scoreQuestionnaireRepo = scoreQuestionnaireRepo;
     }
 
     public List<Question> getAllQuestions() {
         return questionRepo.findAllByOrderById();
     }
 
-    public long saveNewQuestionnaire(Questionnaire questionnaire) {
+    public Questionnaire saveNewQuestionnaire(Questionnaire questionnaire) {
         User user = getUserFromPrincipal();
         questionnaire.setUser(user);
         questionnaire.setDate(LocalDateTime.now());
@@ -52,11 +58,13 @@ public class QuestionnaireService {
         questionnaire.setAnswers(null);
         //Save empty questionnaire to get id and set questionnaire to each answer.
         Questionnaire savedQuestionnaire = questionnaireRepo.save(questionnaire);
-        answers.forEach(answer -> answer.setQuestionnaire(savedQuestionnaire));
+        for (Answer answer : answers) {
+            answer.setQuestionnaire(savedQuestionnaire);
+        }
         savedQuestionnaire.setAnswers(answers);
-        questionnaireRepo.save(savedQuestionnaire);
+        savedQuestionnaire = questionnaireRepo.save(savedQuestionnaire);
         LOGGER.info("New questionnaire created{}", savedQuestionnaire.getId());
-        return savedQuestionnaire.getId();
+        return savedQuestionnaire;
     }
 
     public void saveExistedQuestionnaire(Questionnaire questionnaire, Long id) {
@@ -67,12 +75,12 @@ public class QuestionnaireService {
         questionnaireRepo.save(questionnaireFromDb);
     }
 
-    public void saveExistedProcessedQuestionnaire(Questionnaire questionnaire, Long id) {
+    public Questionnaire saveExistedProcessedQuestionnaire(Questionnaire questionnaire, Long id) {
         saveExistedQuestionnaire(questionnaire, id);
         Questionnaire questionnaireFromDb = questionnaireRepo.findById(id).orElseThrow(NoSuchElementException::new);
         questionnaireFromDb.setProcessed(true);
         questionnaireFromDb.setDiagnosis(questionnaire.getDiagnosis());
-        questionnaireRepo.save(questionnaireFromDb);
+        return questionnaireRepo.save(questionnaireFromDb);
     }
 
     public List<Questionnaire> getAllUsersQuestionnaires() {
@@ -94,7 +102,8 @@ public class QuestionnaireService {
 
     public void deleteQuestionnaireById(Long id, boolean secure) {
         User principal = getUserFromPrincipal();
-        if (secure && !principal.isAdmin() && principal.isPatient() && !questionnaireRepo.existsByIdAndUserId(id, principal.getId())) {
+        if (secure && !principal.isAdmin() && principal.isPatient() &&
+            !questionnaireRepo.existsByIdAndUserId(id, principal.getId())) {
             LOGGER.warn("Patient {} try to delete questionnaire(id={})", principal.getEmail(), id);
             throw new AccessControlException("Access denied");
         }
@@ -106,7 +115,8 @@ public class QuestionnaireService {
         Questionnaire questionnaire = questionnaireRepo.findById(id)
                                                        .orElseThrow(() -> new NoSuchElementException(
                                                                "No questionnaire with id=" + id));
-        if (secure && !principal.isAdmin() && principal.isPatient() && !questionnaire.getUser().getId().equals(principal.getId())) {
+        if (secure && !principal.isAdmin() && principal.isPatient() &&
+            !questionnaire.getUser().getId().equals(principal.getId())) {
             LOGGER.warn("Patient {} trying to access questionnaire(id={}) which does not own", principal.getEmail(),
                         id);
             throw new AccessControlException("Access denied");
@@ -122,20 +132,31 @@ public class QuestionnaireService {
             LOGGER.warn("Can't operate questionnaire, because empty answer/answers exist");
             return false;
         }
-        //TODO real calculate
-        List<Long> allIds = diagnosisRepo.getAllIds();
-        Random random = new Random();
-        Diagnosis diagnosis = diagnosisRepo.findById(allIds.get(random.nextInt(allIds.size() - 1))).get();
-        questionnaire.setDiagnosis(diagnosis);
-        questionnaire.setProcessed(true);
+
+        //Save to fetch questions
         if (isNew) {
-            saveNewQuestionnaire(questionnaire);
+            questionnaire = saveNewQuestionnaire(questionnaire);
         } else {
-            saveExistedProcessedQuestionnaire(questionnaire, questionnaireId);
+            questionnaire = saveExistedProcessedQuestionnaire(questionnaire, questionnaireId);
         }
+
+        if (questionnaire.getType().getName().equals(GASTRO_TYPE)) {
+            List<ScoreQuestionnaireResult> operatingResults = questionWeightService.operateQuestionnaire(questionnaire);
+            questionnaire.setScoreResults(operatingResults);
+        } else if (questionnaire.getType().getName().equals(CARDIO_TYPE)) {
+            //TODO calculate cardio test
+            List<Long> allIds = diagnosisRepo.getAllIds();
+            Random random = new Random();
+            Diagnosis diagnosis = diagnosisRepo.findById(allIds.get(random.nextInt(allIds.size() - 1))).get();
+            questionnaire.setDiagnosis(diagnosis);
+        }
+
+        questionnaire.setProcessed(true);
+        questionnaireRepo.save(questionnaire);
 
         return true;
     }
+
 
     public List<String> getAllQuestionCategories() {
         List<String> questionCategories = questionRepo.getAllQuestionCategories();

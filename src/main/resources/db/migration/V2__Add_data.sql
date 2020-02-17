@@ -5,8 +5,6 @@
 -- Dumped from database version 11.2
 -- Dumped by pg_dump version 12.0
 
--- Started on 2020-01-22 21:18:23
-
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
@@ -19,47 +17,39 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- TOC entry 2970 (class 0 OID 29405)
--- Dependencies: 219
--- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO public.users (id, email, password, first_name, activated, phone_number, registration_date, gender, second_name, last_visit_date) VALUES (3, 'patient@mail.ru', '$2a$10$nBqVCXJA2YPMIL2XBPgriu/SvvCiMJAzzJ/DjjGRB7iCc1SSz4yli', 'Владимир', true, '8999999999', '2019-11-08 23:11:37.65+07', 'М', 'Круглов', '2020-01-22 18:03:04.182+07');
-INSERT INTO public.users (id, email, password, first_name, activated, phone_number, registration_date, gender, second_name, last_visit_date) VALUES (56, 'ad@mail.ru', '$2a$10$/UH.sDum9x4cnnnqwNnNBemvNi.r67uPZS0e3GN6NrEZufu4Q0lDW', 'ad', false, '222222222222', '2019-12-05 11:47:32.84+07', 'Ж', 'ad', NULL);
-INSERT INTO public.users (id, email, password, first_name, activated, phone_number, registration_date, gender, second_name, last_visit_date) VALUES (28, 'doctor@mail.ru', '$2a$10$nBqVCXJA2YPMIL2XBPgriu/SvvCiMJAzzJ/DjjGRB7iCc1SSz4yli', 'Дмитрий', true, '899946666', '2019-11-22 20:14:47.696+07', 'М', 'Лукашев', '2020-01-22 18:31:18.734+07');
-INSERT INTO public.users (id, email, password, first_name, activated, phone_number, registration_date, gender, second_name, last_visit_date) VALUES (2, 'admin@mail.ru', '$2a$10$nBqVCXJA2YPMIL2XBPgriu/SvvCiMJAzzJ/DjjGRB7iCc1SSz4yli', 'Алексей', true, '89994501020', '2019-11-07 14:43:21.939356+07', 'М', 'Вареников', '2020-01-22 19:02:57.483+07');
-INSERT INTO public.users (id, email, password, first_name, activated, phone_number, registration_date, gender, second_name, last_visit_date) VALUES (57, 'newone@mail.ruail', '$2a$10$QH3kpJvXMoTbwf30w.zx8O5hGmq.xL3ulUSoYtqozUQGqNmJuxEnq', 'aa', false, '2222222222222222', '2019-12-06 13:30:36.926+07', 'М', 'aa', NULL);
 INSERT INTO public.users (id, email, password, first_name, activated, phone_number, registration_date, gender, second_name, last_visit_date) VALUES (53, 'patient1@mail.ru', '$2a$10$nBqVCXJA2YPMIL2XBPgriu/SvvCiMJAzzJ/DjjGRB7iCc1SSz4yli', 'Сергей', true, '89994432424', '2019-11-08 23:11:37.65+07', 'М', 'Круглов', '2019-12-03 23:56:48.768+07');
 INSERT INTO public.users (id, email, password, first_name, activated, phone_number, registration_date, gender, second_name, last_visit_date) VALUES (54, 'patient2@mail.ru', '$2a$10$nBqVCXJA2YPMIL2XBPgriu/SvvCiMJAzzJ/DjjGRB7iCc1SSz4yli', 'Анна', true, '89994432424', '2019-11-08 23:11:37.65+07', 'Ж', 'Совина', '2019-12-03 23:56:48.768+07');
 INSERT INTO public.users (id, email, password, first_name, activated, phone_number, registration_date, gender, second_name, last_visit_date) VALUES (55, 'doctor2@mail.ru', '$2a$10$nBqVCXJA2YPMIL2XBPgriu/SvvCiMJAzzJ/DjjGRB7iCc1SSz4yli', 'Анастасия', true, '89994428239', '2019-11-22 20:14:47.696+07', 'Ж', 'Житник', '2019-12-04 00:07:30.881+07');
+INSERT INTO public.users (id, email, password, first_name, activated, phone_number, registration_date, gender, second_name, last_visit_date) VALUES (28, 'doctor@mail.ru', '$2a$10$nBqVCXJA2YPMIL2XBPgriu/SvvCiMJAzzJ/DjjGRB7iCc1SSz4yli', 'Дмитрий', true, '899946666', '2019-11-22 20:14:47.696+07', 'М', 'Лукашев', '2020-02-05 16:37:02.304+07');
+INSERT INTO public.users (id, email, password, first_name, activated, phone_number, registration_date, gender, second_name, last_visit_date) VALUES (56, 'ad@mail.ru', '$2a$10$/UH.sDum9x4cnnnqwNnNBemvNi.r67uPZS0e3GN6NrEZufu4Q0lDW', 'ad', false, '222222222222', '2019-12-05 11:47:32.84+07', 'Ж', 'ad', '2018-01-04 00:56:48.768+07');
+INSERT INTO public.users (id, email, password, first_name, activated, phone_number, registration_date, gender, second_name, last_visit_date) VALUES (57, 'newone@mail.ruail', '$2a$10$QH3kpJvXMoTbwf30w.zx8O5hGmq.xL3ulUSoYtqozUQGqNmJuxEnq', 'aa', false, '2222222222222222', '2019-12-06 13:30:36.926+07', 'М', 'aa', '2019-07-04 02:55:48.768+07');
+INSERT INTO public.users (id, email, password, first_name, activated, phone_number, registration_date, gender, second_name, last_visit_date) VALUES (3, 'patient@mail.ru', '$2a$10$PY6CfwUvvC6c9.dDm75XB.OKHaijs6r/ZRnXZogr3GEe9f3uQJMOG', 'Василий', true, '8999999999', '2019-11-08 23:11:37.65+07', 'М', 'Круглов', '2020-02-05 22:15:28.647+07');
+INSERT INTO public.users (id, email, password, first_name, activated, phone_number, registration_date, gender, second_name, last_visit_date) VALUES (2, 'admin@mail.ru', '$2a$10$IYSECg3W61COY3ofsazV..OGZNYQHlobW2GaxFOxTAJEZVXsSL35S', 'Семен', true, '89994501020', '2019-11-07 14:43:21.939356+07', 'М', 'ВасильевЪ', '2020-02-17 23:37:38.498+07');
 
 
 --
--- TOC entry 2947 (class 0 OID 29329)
--- Dependencies: 196
--- Data for Name: activation_code; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: activation_code; Type: TABLE DATA; Schema: public; Owner: -
 --
 
 
 
 --
--- TOC entry 2951 (class 0 OID 29342)
--- Dependencies: 200
--- Data for Name: diagnoses; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: diagnoses; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO public.diagnoses (id, text) VALUES (1, 'Рак желудка');
-INSERT INTO public.diagnoses (id, text) VALUES (2, 'Рак печени');
-INSERT INTO public.diagnoses (id, text) VALUES (3, 'Рак кишечника');
-INSERT INTO public.diagnoses (id, text) VALUES (4, 'Рак печени');
-INSERT INTO public.diagnoses (id, text) VALUES (5, 'Рак пищевода');
-INSERT INTO public.diagnoses (id, text) VALUES (6, 'Здоров');
+INSERT INTO public.diagnoses (id, text, score_for_low_chance, score_for_mid_chance, score_for_high_chance) VALUES (3, 'Рак кишечника', NULL, NULL, NULL);
+INSERT INTO public.diagnoses (id, text, score_for_low_chance, score_for_mid_chance, score_for_high_chance) VALUES (4, 'Рак печени', NULL, NULL, NULL);
+INSERT INTO public.diagnoses (id, text, score_for_low_chance, score_for_mid_chance, score_for_high_chance) VALUES (5, 'Рак пищевода', NULL, NULL, NULL);
+INSERT INTO public.diagnoses (id, text, score_for_low_chance, score_for_mid_chance, score_for_high_chance) VALUES (6, 'Здоров', NULL, NULL, NULL);
+INSERT INTO public.diagnoses (id, text, score_for_low_chance, score_for_mid_chance, score_for_high_chance) VALUES (1, 'Рак желудка', 5.000, 10.000, 25.000);
+INSERT INTO public.diagnoses (id, text, score_for_low_chance, score_for_mid_chance, score_for_high_chance) VALUES (2, 'Рак печени', NULL, 5.000, 10.000);
 
 
 --
--- TOC entry 2959 (class 0 OID 29368)
--- Dependencies: 208
--- Data for Name: questionnaire_types; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: questionnaire_types; Type: TABLE DATA; Schema: public; Owner: -
 --
 
 INSERT INTO public.questionnaire_types (id, type, description) VALUES (1, 'gastroenterological', 'Гастроэнтерологический опрос');
@@ -67,9 +57,7 @@ INSERT INTO public.questionnaire_types (id, type, description) VALUES (2, 'cardi
 
 
 --
--- TOC entry 2961 (class 0 OID 29376)
--- Dependencies: 210
--- Data for Name: questionnaires; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: questionnaires; Type: TABLE DATA; Schema: public; Owner: -
 --
 
 INSERT INTO public.questionnaires (id, user_id, date, processed, diagnosis_id, type_id) VALUES (222, 2, '2019-12-14 01:54:53.445+07', false, NULL, 2);
@@ -78,7 +66,6 @@ INSERT INTO public.questionnaires (id, user_id, date, processed, diagnosis_id, t
 INSERT INTO public.questionnaires (id, user_id, date, processed, diagnosis_id, type_id) VALUES (251, 3, '2020-01-22 16:50:37.794+07', false, NULL, 2);
 INSERT INTO public.questionnaires (id, user_id, date, processed, diagnosis_id, type_id) VALUES (160, 2, '2019-12-04 16:25:31.054+07', true, 2, 1);
 INSERT INTO public.questionnaires (id, user_id, date, processed, diagnosis_id, type_id) VALUES (162, 2, '2019-12-04 16:28:15.652+07', true, 5, 1);
-INSERT INTO public.questionnaires (id, user_id, date, processed, diagnosis_id, type_id) VALUES (164, 2, '2018-12-04 16:33:31.312+07', false, NULL, 1);
 INSERT INTO public.questionnaires (id, user_id, date, processed, diagnosis_id, type_id) VALUES (172, 2, '2019-12-06 00:46:48.437+07', false, NULL, 1);
 INSERT INTO public.questionnaires (id, user_id, date, processed, diagnosis_id, type_id) VALUES (174, 3, '2019-12-06 12:50:51.943+07', false, NULL, 1);
 INSERT INTO public.questionnaires (id, user_id, date, processed, diagnosis_id, type_id) VALUES (176, 3, '2019-12-06 13:40:49.507+07', false, NULL, 1);
@@ -87,12 +74,12 @@ INSERT INTO public.questionnaires (id, user_id, date, processed, diagnosis_id, t
 INSERT INTO public.questionnaires (id, user_id, date, processed, diagnosis_id, type_id) VALUES (254, 2, '2020-01-22 17:31:26.164+07', false, NULL, 1);
 INSERT INTO public.questionnaires (id, user_id, date, processed, diagnosis_id, type_id) VALUES (255, 2, '2020-01-22 19:03:19.891+07', false, NULL, 1);
 INSERT INTO public.questionnaires (id, user_id, date, processed, diagnosis_id, type_id) VALUES (258, 2, '2020-01-22 19:10:29.374+07', true, 4, 2);
+INSERT INTO public.questionnaires (id, user_id, date, processed, diagnosis_id, type_id) VALUES (164, 2, '2018-12-04 16:33:31.312+07', false, NULL, 1);
+INSERT INTO public.questionnaires (id, user_id, date, processed, diagnosis_id, type_id) VALUES (266, 2, '2020-02-17 20:34:26.442+07', true, NULL, 1);
 
 
 --
--- TOC entry 2966 (class 0 OID 29389)
--- Dependencies: 215
--- Data for Name: questions; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: questions; Type: TABLE DATA; Schema: public; Owner: -
 --
 
 INSERT INTO public.questions (id, text, options, description, input_type, answer_type, category, depends_on_the_question_id) VALUES (23, 'Беспокоят ли вас запоры', 'нет (стул раз в день);стул каждый третий день;стул каждый пятый день;стул каждый седьмой день или реже;', 'Запоры', 'radio', 'String', 'Беспокойства', NULL);
@@ -148,9 +135,7 @@ INSERT INTO public.questions (id, text, options, description, input_type, answer
 
 
 --
--- TOC entry 2949 (class 0 OID 29334)
--- Dependencies: 198
--- Data for Name: answers; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: answers; Type: TABLE DATA; Schema: public; Owner: -
 --
 
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1247, '14', 172, 1, NULL);
@@ -288,8 +273,6 @@ INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) 
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1294, '', 174, 13, NULL);
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1295, '', 174, 14, NULL);
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1296, '', 174, 15, NULL);
-INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1297, NULL, 174, 16, NULL);
-INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1298, NULL, 174, 17, NULL);
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1299, '', 174, 18, NULL);
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1300, '', 174, 19, NULL);
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1301, NULL, 174, 20, NULL);
@@ -524,6 +507,7 @@ INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) 
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2687, 'бросил (более 3-х мес. назад)', 253, 17, NULL);
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2688, '5', 253, 18, NULL);
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2689, '2', 253, 19, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2716, NULL, 254, 9, NULL);
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2690, 'длительная боль, требующая вмешательства и влияющая на повседневную жизнь', 253, 20, NULL);
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2691, 'не беспокоит или очень редко', 253, 21, NULL);
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2692, 'частые и длительные эпизоды, которые можно регулировать подбором одежды', 253, 22, NULL);
@@ -544,9 +528,6 @@ INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) 
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2707, '80', 253, 37, NULL);
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2708, '35', 253, 38, NULL);
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2709, '>37,8', 253, 39, NULL);
-INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1106, '2', 164, 10, NULL);
-INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1107, 'несколько раз в год', 164, 11, NULL);
-INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1108, 'несколько раз в год', 164, 12, NULL);
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2858, '0', 258, 40, NULL);
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2859, '0', 258, 41, NULL);
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2865, 'есть определенная', 258, 44, NULL);
@@ -589,47 +570,28 @@ INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) 
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1096, '30', 162, 37, NULL);
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1097, '30', 162, 38, NULL);
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1098, '>37,8', 162, 39, NULL);
-INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1100, '100', 164, 2, NULL);
-INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1101, '40', 164, 3, NULL);
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1102, 'сидячая работа', 164, 6, NULL);
-INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1103, 'разведен(а)', 164, 7, NULL);
-INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1104, 'домохозяйка', 164, 8, NULL);
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1105, 'не выезжаем за пределы РФ', 164, 9, NULL);
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1109, '0', 164, 13, NULL);
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1110, '0', 164, 14, NULL);
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1111, '0', 164, 15, NULL);
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1112, 'нет', 164, 16, NULL);
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1113, 'бросил (более 3-х мес. назад)', 164, 17, NULL);
-INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1114, '4', 164, 18, NULL);
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1115, '0', 164, 19, NULL);
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1116, 'не испытываю или очень редко', 164, 20, NULL);
-INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1117, 'постоянное урчание с серьезным влиянием на повседневную активность', 164, 21, NULL);
-INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1118, 'редко и недлительно', 164, 22, NULL);
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1119, 'нет (стул раз в день)', 164, 23, NULL);
-INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1120, 'более 6 раз в день', 164, 24, NULL);
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1121, 'нормальной консистенции', 164, 25, NULL);
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1122, 'нормальной консистенции', 164, 26, NULL);
-INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1123, 'редкие эпизоды потребности срочной дефекации', 164, 27, NULL);
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1124, 'ощущение полного опорожнения', 164, 28, NULL);
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1125, 'нет', 164, 29, NULL);
-INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1126, '700-1000мл', 164, 30, NULL);
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1127, 'нет', 164, 31, NULL);
-INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1130, '1', 164, 34, NULL);
-INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1131, '1', 164, 35, NULL);
-INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1132, '30', 164, 36, NULL);
-INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1133, '30', 164, 37, NULL);
-INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1134, '30', 164, 38, NULL);
-INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1135, '>37,8', 164, 39, NULL);
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1099, '18', 164, 1, NULL);
-INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1128, NULL, 164, 32, 'острая токсическая дилатация толстой кишки (мегаколон);кишечное кровотечение, постгеморрагическая анемия;кишечная непроходимость;null;null;null;малигнизация;null;null;тромбофлебит вен таза и нижних конечностей;ни один из вышеперечисленных');
-INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1129, NULL, 164, 33, 'афтозный / язвенный стоматит, глоссит, гингивит, эзофагит;узловатая эритема, гангренозная пиодермия, язвы нижних конечностей, анальный зуд, дерматит, абсцессы, флегмона;ирит, эписклерит, кератит, конъюнктивит, блефарит, увеит;полиартрит, анкилозирующий спондилит, артралгии;null;пиелонефрит, нефролитиаз;null; ни один из вышеперечисленных');
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2710, '', 254, 1, NULL);
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2711, '', 254, 2, NULL);
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2712, '', 254, 3, NULL);
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2713, NULL, 254, 6, NULL);
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2714, NULL, 254, 7, NULL);
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2715, NULL, 254, 8, NULL);
-INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2716, NULL, 254, 9, NULL);
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2717, '', 254, 10, NULL);
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2718, 'не употребляю', 254, 11, NULL);
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2719, 'не употреблял', 254, 12, NULL);
@@ -652,12 +614,79 @@ INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) 
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2736, NULL, 254, 29, NULL);
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2737, NULL, 254, 30, NULL);
 INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2738, NULL, 254, 31, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1297, 'нет', 174, 16, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1298, 'никогда не курил', 174, 17, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1100, '180', 164, 2, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1101, '80', 164, 3, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1103, 'холост/не замужем', 164, 7, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1104, 'учащийся', 164, 8, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1107, 'не употребляю', 164, 11, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1108, 'не употреблял', 164, 12, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1114, '19', 164, 18, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1117, 'не беспокоит или очень редко', 164, 21, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1118, 'не беспокоит или очень редко', 164, 22, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1126, '400-600мл', 164, 30, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1106, '2', 164, 10, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1120, 'нет (стул раз в день)', 164, 24, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1123, 'нормальный контроль', 164, 27, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1128, NULL, 164, 32, 'null;null;null;null;null;null;null;null;null;null;ни один из вышеперечисленных');
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1129, NULL, 164, 33, 'null;null;null;null;null;null;null; ни один из вышеперечисленных');
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1130, '8', 164, 34, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1131, '10', 164, 35, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1132, '60', 164, 36, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1133, '120', 164, 37, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1134, '80', 164, 38, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (1135, '<37,5', 164, 39, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2940, '0', 266, 10, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2941, 'не употребляю', 266, 11, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2942, 'не употреблял', 266, 12, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2943, '0', 266, 13, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2944, '0', 266, 14, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2945, '0', 266, 15, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2946, 'да', 266, 16, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2947, 'никогда не курил', 266, 17, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2948, '4', 266, 18, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2949, '1', 266, 19, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2964, '1', 266, 34, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2965, '1', 266, 35, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2966, '30', 266, 36, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2967, '31', 266, 37, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2968, '30', 266, 38, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2933, '14', 266, 1, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2934, '100', 266, 2, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2935, '40', 266, 3, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2936, 'сидячая работа', 266, 6, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2937, 'холост/не замужем', 266, 7, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2938, 'работающий', 266, 8, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2939, 'не выезжаем за пределы РФ', 266, 9, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2950, 'не испытываю или очень редко', 266, 20, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2951, 'не беспокоит или очень редко', 266, 21, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2952, 'не беспокоит или очень редко', 266, 22, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2953, 'нет (стул раз в день)', 266, 23, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2954, 'нет (стул раз в день)', 266, 24, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2955, 'нормальной консистенции', 266, 25, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2956, 'нормальной консистенции', 266, 26, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2957, 'нормальный контроль', 266, 27, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2958, 'ощущение полного опорожнения', 266, 28, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2959, 'нет', 266, 29, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2960, '250-300мл', 266, 30, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2961, 'нет', 266, 31, NULL);
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2962, NULL, 266, 32, 'null;null;null;null;null;null;null;null;null;null;ни один из вышеперечисленных');
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2963, NULL, 266, 33, 'null;null;null;null;null;null;null; ни один из вышеперечисленных');
+INSERT INTO public.answers (id, text, questionnaire_id, question_id, text_list) VALUES (2969, '≤37,8', 266, 39, NULL);
 
 
 --
--- TOC entry 2953 (class 0 OID 29350)
--- Dependencies: 202
--- Data for Name: doctors; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: diagnosis_score_questionnaire; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+INSERT INTO public.diagnosis_score_questionnaire (id, diagnosis_id, score, questionnaire_id) VALUES (1, 1, 70.000, 255);
+INSERT INTO public.diagnosis_score_questionnaire (id, diagnosis_id, score, questionnaire_id) VALUES (40, 1, 20.500, 266);
+INSERT INTO public.diagnosis_score_questionnaire (id, diagnosis_id, score, questionnaire_id) VALUES (41, 2, 15.000, 266);
+
+
+--
+-- Data for Name: doctors; Type: TABLE DATA; Schema: public; Owner: -
 --
 
 INSERT INTO public.doctors (id, user_id, description) VALUES (1, 28, 'Лучший доктор в России. 50 лет практики, 10000 установленных диагнозов, тысячи довольных пациентов. Более 100 наград за вклад в диагностирование рака мирового уровня. Ученая степень доктора.');
@@ -666,9 +695,7 @@ INSERT INTO public.doctors (id, user_id, description) VALUES (5, 55, 'Лучши
 
 
 --
--- TOC entry 2957 (class 0 OID 29363)
--- Dependencies: 206
--- Data for Name: patients; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: patients; Type: TABLE DATA; Schema: public; Owner: -
 --
 
 INSERT INTO public.patients (id, diagnosis_id, user_id) VALUES (1, 5, 2);
@@ -680,20 +707,64 @@ INSERT INTO public.patients (id, diagnosis_id, user_id) VALUES (25, 1, 56);
 
 
 --
--- TOC entry 2955 (class 0 OID 29358)
--- Dependencies: 204
--- Data for Name: doctors_patients; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: doctors_patients; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO public.doctors_patients (doctor_id, patient_id) VALUES (2, 22);
 INSERT INTO public.doctors_patients (doctor_id, patient_id) VALUES (1, 1);
 INSERT INTO public.doctors_patients (doctor_id, patient_id) VALUES (1, 25);
+INSERT INTO public.doctors_patients (doctor_id, patient_id) VALUES (2, 22);
+
+
 
 
 --
--- TOC entry 2963 (class 0 OID 29382)
--- Dependencies: 212
--- Data for Name: questionnaires_questions; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: question_weights; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+INSERT INTO public.question_weights (id, question_id, questionnaire_type_id, lower_bound, upper_bound, weight_for_low, weight_for_up, array_of_weights, bound_type, diagnosis_id) VALUES (22, 38, 1, 60.000, 90.000, 1.000, 2.000, NULL, 'out', 2);
+INSERT INTO public.question_weights (id, question_id, questionnaire_type_id, lower_bound, upper_bound, weight_for_low, weight_for_up, array_of_weights, bound_type, diagnosis_id) VALUES (9, 34, 1, 4.000, 8.000, 2.000, 1.000, NULL, 'out', 2);
+INSERT INTO public.question_weights (id, question_id, questionnaire_type_id, lower_bound, upper_bound, weight_for_low, weight_for_up, array_of_weights, bound_type, diagnosis_id) VALUES (8, 15, 1, 100.000, 1000.000, 0.000, 1.000, NULL, 'out', 2);
+INSERT INTO public.question_weights (id, question_id, questionnaire_type_id, lower_bound, upper_bound, weight_for_low, weight_for_up, array_of_weights, bound_type, diagnosis_id) VALUES (39, 33, 1, NULL, NULL, NULL, NULL, '2;2;3;3;2;4;0;2', NULL, 1);
+INSERT INTO public.question_weights (id, question_id, questionnaire_type_id, lower_bound, upper_bound, weight_for_low, weight_for_up, array_of_weights, bound_type, diagnosis_id) VALUES (36, 20, 1, NULL, NULL, NULL, NULL, '0;1;2;4', NULL, 1);
+INSERT INTO public.question_weights (id, question_id, questionnaire_type_id, lower_bound, upper_bound, weight_for_low, weight_for_up, array_of_weights, bound_type, diagnosis_id) VALUES (37, 27, 1, NULL, NULL, NULL, NULL, '0;1;2;4', NULL, 1);
+INSERT INTO public.question_weights (id, question_id, questionnaire_type_id, lower_bound, upper_bound, weight_for_low, weight_for_up, array_of_weights, bound_type, diagnosis_id) VALUES (34, 6, 1, NULL, NULL, NULL, NULL, '2;1;1;2', NULL, 1);
+INSERT INTO public.question_weights (id, question_id, questionnaire_type_id, lower_bound, upper_bound, weight_for_low, weight_for_up, array_of_weights, bound_type, diagnosis_id) VALUES (35, 12, 1, NULL, NULL, NULL, NULL, '0;0.5;1;2;4', NULL, 1);
+INSERT INTO public.question_weights (id, question_id, questionnaire_type_id, lower_bound, upper_bound, weight_for_low, weight_for_up, array_of_weights, bound_type, diagnosis_id) VALUES (33, 21, 1, NULL, NULL, NULL, NULL, '0;1;2;4', NULL, 1);
+INSERT INTO public.question_weights (id, question_id, questionnaire_type_id, lower_bound, upper_bound, weight_for_low, weight_for_up, array_of_weights, bound_type, diagnosis_id) VALUES (32, 36, 1, 45.000, 70.000, 2.000, 3.000, NULL, 'out', 2);
+INSERT INTO public.question_weights (id, question_id, questionnaire_type_id, lower_bound, upper_bound, weight_for_low, weight_for_up, array_of_weights, bound_type, diagnosis_id) VALUES (41, 15, 1, 100.000, 1000.000, 0.000, 1.000, NULL, 'out', 1);
+INSERT INTO public.question_weights (id, question_id, questionnaire_type_id, lower_bound, upper_bound, weight_for_low, weight_for_up, array_of_weights, bound_type, diagnosis_id) VALUES (15, 10, 1, 2.000, 6.000, 0.500, NULL, NULL, 'in', 1);
+INSERT INTO public.question_weights (id, question_id, questionnaire_type_id, lower_bound, upper_bound, weight_for_low, weight_for_up, array_of_weights, bound_type, diagnosis_id) VALUES (40, 10, 1, 6.000, 21.000, 2.000, NULL, NULL, 'in', 2);
+INSERT INTO public.question_weights (id, question_id, questionnaire_type_id, lower_bound, upper_bound, weight_for_low, weight_for_up, array_of_weights, bound_type, diagnosis_id) VALUES (38, 35, 1, 7.000, 12.000, 1.000, 0.500, NULL, 'out', 2);
+INSERT INTO public.question_weights (id, question_id, questionnaire_type_id, lower_bound, upper_bound, weight_for_low, weight_for_up, array_of_weights, bound_type, diagnosis_id) VALUES (6, 26, 1, NULL, NULL, NULL, NULL, '0;0;0.5;1', NULL, 1);
+INSERT INTO public.question_weights (id, question_id, questionnaire_type_id, lower_bound, upper_bound, weight_for_low, weight_for_up, array_of_weights, bound_type, diagnosis_id) VALUES (7, 11, 1, NULL, NULL, NULL, NULL, '0;0.5;1;2;4
+', NULL, 1);
+INSERT INTO public.question_weights (id, question_id, questionnaire_type_id, lower_bound, upper_bound, weight_for_low, weight_for_up, array_of_weights, bound_type, diagnosis_id) VALUES (5, 1, 1, 50.000, 50.000, 0.500, 0.500, NULL, 'out', 1);
+INSERT INTO public.question_weights (id, question_id, questionnaire_type_id, lower_bound, upper_bound, weight_for_low, weight_for_up, array_of_weights, bound_type, diagnosis_id) VALUES (29, 7, 1, NULL, NULL, NULL, NULL, '0;1;1;0', NULL, 1);
+INSERT INTO public.question_weights (id, question_id, questionnaire_type_id, lower_bound, upper_bound, weight_for_low, weight_for_up, array_of_weights, bound_type, diagnosis_id) VALUES (14, 25, 1, NULL, NULL, NULL, NULL, '0;1;2;3', NULL, 1);
+INSERT INTO public.question_weights (id, question_id, questionnaire_type_id, lower_bound, upper_bound, weight_for_low, weight_for_up, array_of_weights, bound_type, diagnosis_id) VALUES (3, 3, 1, 50.000, 90.000, 0.500, 0.500, NULL, 'out', 2);
+INSERT INTO public.question_weights (id, question_id, questionnaire_type_id, lower_bound, upper_bound, weight_for_low, weight_for_up, array_of_weights, bound_type, diagnosis_id) VALUES (12, 17, 1, NULL, NULL, NULL, NULL, '0;1;1;4;6', NULL, 1);
+INSERT INTO public.question_weights (id, question_id, questionnaire_type_id, lower_bound, upper_bound, weight_for_low, weight_for_up, array_of_weights, bound_type, diagnosis_id) VALUES (13, 31, 1, NULL, NULL, NULL, NULL, '0;1;2;4', NULL, 1);
+INSERT INTO public.question_weights (id, question_id, questionnaire_type_id, lower_bound, upper_bound, weight_for_low, weight_for_up, array_of_weights, bound_type, diagnosis_id) VALUES (11, 32, 1, NULL, NULL, NULL, NULL, '2;2;2;2;2;2;2;2;2;2;0', NULL, 1);
+INSERT INTO public.question_weights (id, question_id, questionnaire_type_id, lower_bound, upper_bound, weight_for_low, weight_for_up, array_of_weights, bound_type, diagnosis_id) VALUES (10, 19, 1, 5.000, 5.000, 2.000, 4.000, NULL, 'out', 2);
+INSERT INTO public.question_weights (id, question_id, questionnaire_type_id, lower_bound, upper_bound, weight_for_low, weight_for_up, array_of_weights, bound_type, diagnosis_id) VALUES (23, 23, 1, NULL, NULL, NULL, NULL, '0;1;2;4;', NULL, 1);
+INSERT INTO public.question_weights (id, question_id, questionnaire_type_id, lower_bound, upper_bound, weight_for_low, weight_for_up, array_of_weights, bound_type, diagnosis_id) VALUES (20, 24, 1, NULL, NULL, NULL, NULL, '0;1;2;4', NULL, 1);
+INSERT INTO public.question_weights (id, question_id, questionnaire_type_id, lower_bound, upper_bound, weight_for_low, weight_for_up, array_of_weights, bound_type, diagnosis_id) VALUES (21, 9, 1, NULL, NULL, NULL, NULL, '10;1;0', NULL, 1);
+INSERT INTO public.question_weights (id, question_id, questionnaire_type_id, lower_bound, upper_bound, weight_for_low, weight_for_up, array_of_weights, bound_type, diagnosis_id) VALUES (18, 16, 1, NULL, NULL, NULL, NULL, '1;0', NULL, 1);
+INSERT INTO public.question_weights (id, question_id, questionnaire_type_id, lower_bound, upper_bound, weight_for_low, weight_for_up, array_of_weights, bound_type, diagnosis_id) VALUES (19, 30, 1, NULL, NULL, NULL, NULL, '2;4;6', NULL, 1);
+INSERT INTO public.question_weights (id, question_id, questionnaire_type_id, lower_bound, upper_bound, weight_for_low, weight_for_up, array_of_weights, bound_type, diagnosis_id) VALUES (16, 39, 1, NULL, NULL, NULL, NULL, '0;1;2', NULL, 1);
+INSERT INTO public.question_weights (id, question_id, questionnaire_type_id, lower_bound, upper_bound, weight_for_low, weight_for_up, array_of_weights, bound_type, diagnosis_id) VALUES (30, 28, 1, NULL, NULL, NULL, NULL, '0;1;2;4', NULL, 1);
+INSERT INTO public.question_weights (id, question_id, questionnaire_type_id, lower_bound, upper_bound, weight_for_low, weight_for_up, array_of_weights, bound_type, diagnosis_id) VALUES (28, 22, 1, NULL, NULL, NULL, NULL, '0;1;2;4', NULL, 1);
+INSERT INTO public.question_weights (id, question_id, questionnaire_type_id, lower_bound, upper_bound, weight_for_low, weight_for_up, array_of_weights, bound_type, diagnosis_id) VALUES (17, 18, 1, 18.000, 18.000, 4.000, 2.000, NULL, 'out', 2);
+INSERT INTO public.question_weights (id, question_id, questionnaire_type_id, lower_bound, upper_bound, weight_for_low, weight_for_up, array_of_weights, bound_type, diagnosis_id) VALUES (26, 8, 1, NULL, NULL, NULL, NULL, '2;3;1;1;4', NULL, 1);
+INSERT INTO public.question_weights (id, question_id, questionnaire_type_id, lower_bound, upper_bound, weight_for_low, weight_for_up, array_of_weights, bound_type, diagnosis_id) VALUES (31, 13, 1, 300.000, 300.000, 0.500, 2.000, NULL, 'out', 2);
+INSERT INTO public.question_weights (id, question_id, questionnaire_type_id, lower_bound, upper_bound, weight_for_low, weight_for_up, array_of_weights, bound_type, diagnosis_id) VALUES (24, 29, 1, NULL, NULL, NULL, NULL, '0;1;2;4', NULL, 1);
+INSERT INTO public.question_weights (id, question_id, questionnaire_type_id, lower_bound, upper_bound, weight_for_low, weight_for_up, array_of_weights, bound_type, diagnosis_id) VALUES (2, 2, 1, 140.000, 200.000, 1.000, 1.500, NULL, 'out', 2);
+INSERT INTO public.question_weights (id, question_id, questionnaire_type_id, lower_bound, upper_bound, weight_for_low, weight_for_up, array_of_weights, bound_type, diagnosis_id) VALUES (27, 37, 1, 100.000, 130.000, 1.000, 2.000, NULL, 'out', 2);
+INSERT INTO public.question_weights (id, question_id, questionnaire_type_id, lower_bound, upper_bound, weight_for_low, weight_for_up, array_of_weights, bound_type, diagnosis_id) VALUES (25, 14, 1, 200.000, 200.000, 0.000, 1.000, NULL, 'out', 2);
+
+
+--
+-- Data for Name: questionnaires_questions; Type: TABLE DATA; Schema: public; Owner: -
 --
 
 INSERT INTO public.questionnaires_questions (type_id, question_id, question_order) VALUES (1, 1, 1);
@@ -759,9 +830,7 @@ INSERT INTO public.questionnaires_questions (type_id, question_id, question_orde
 
 
 --
--- TOC entry 2968 (class 0 OID 29397)
--- Dependencies: 217
--- Data for Name: roles; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: roles; Type: TABLE DATA; Schema: public; Owner: -
 --
 
 INSERT INTO public.roles (id, rolename) VALUES (1, 'ROLE_USER');
@@ -772,9 +841,19 @@ INSERT INTO public.roles (id, rolename) VALUES (5, 'ROLE_ANALYTIC');
 
 
 --
--- TOC entry 2972 (class 0 OID 29414)
--- Dependencies: 221
--- Data for Name: users_roles; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: spring_session; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+
+
+--
+-- Data for Name: spring_session_attributes; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+
+
+--
+-- Data for Name: users_roles; Type: TABLE DATA; Schema: public; Owner: -
 --
 
 INSERT INTO public.users_roles (user_id, role_id) VALUES (3, 1);
@@ -799,124 +878,111 @@ INSERT INTO public.users_roles (user_id, role_id) VALUES (28, 4);
 
 
 --
--- TOC entry 2978 (class 0 OID 0)
--- Dependencies: 197
--- Name: activation_code_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+-- Name: activation_code_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.activation_code_id_seq', 12, true);
+SELECT pg_catalog.setval('public.activation_code_id_seq', 66, true);
 
 
 --
--- TOC entry 2979 (class 0 OID 0)
--- Dependencies: 199
--- Name: answers_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+-- Name: answers_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.answers_id_seq', 2880, true);
+SELECT pg_catalog.setval('public.answers_id_seq', 2969, true);
 
 
 --
--- TOC entry 2980 (class 0 OID 0)
--- Dependencies: 201
--- Name: diagnoses_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+-- Name: diagnoses_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
 SELECT pg_catalog.setval('public.diagnoses_id_seq', 6, true);
 
 
 --
--- TOC entry 2981 (class 0 OID 0)
--- Dependencies: 203
--- Name: doctors_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+-- Name: diagnosis_score_questionnaire_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.diagnosis_score_questionnaire_id_seq', 1, true);
+
+
+--
+-- Name: doctors_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
 SELECT pg_catalog.setval('public.doctors_id_seq', 5, true);
 
 
 --
--- TOC entry 2982 (class 0 OID 0)
--- Dependencies: 205
--- Name: hibernate_sequence; Type: SEQUENCE SET; Schema: public; Owner: postgres
+-- Name: hibernate_sequence; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.hibernate_sequence', 11, true);
+SELECT pg_catalog.setval('public.hibernate_sequence', 41, true);
 
 
 --
--- TOC entry 2983 (class 0 OID 0)
--- Dependencies: 207
--- Name: patients_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+-- Name: patients_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
 SELECT pg_catalog.setval('public.patients_id_seq', 26, true);
 
 
 --
--- TOC entry 2984 (class 0 OID 0)
--- Dependencies: 209
--- Name: questionnaire_types_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+-- Name: question_weight_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.question_weight_id_seq', 41, true);
+
+
+--
+-- Name: questionnaire_types_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
 SELECT pg_catalog.setval('public.questionnaire_types_id_seq', 2, true);
 
 
 --
--- TOC entry 2985 (class 0 OID 0)
--- Dependencies: 211
--- Name: questionnaires_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+-- Name: questionnaires_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.questionnaires_id_seq', 258, true);
+SELECT pg_catalog.setval('public.questionnaires_id_seq', 266, true);
 
 
 --
--- TOC entry 2986 (class 0 OID 0)
--- Dependencies: 213
--- Name: questionnaires_questions_question_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+-- Name: questionnaires_questions_question_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
 SELECT pg_catalog.setval('public.questionnaires_questions_question_id_seq', 1, false);
 
 
 --
--- TOC entry 2987 (class 0 OID 0)
--- Dependencies: 214
--- Name: questionnaires_questions_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+-- Name: questionnaires_questions_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
 SELECT pg_catalog.setval('public.questionnaires_questions_type_id_seq', 1, true);
 
 
 --
--- TOC entry 2988 (class 0 OID 0)
--- Dependencies: 216
--- Name: questions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+-- Name: questions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
 SELECT pg_catalog.setval('public.questions_id_seq', 16, true);
 
 
 --
--- TOC entry 2989 (class 0 OID 0)
--- Dependencies: 218
--- Name: roles_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+-- Name: roles_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
 SELECT pg_catalog.setval('public.roles_id_seq', 2, true);
 
 
 --
--- TOC entry 2990 (class 0 OID 0)
--- Dependencies: 220
--- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+-- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.users_id_seq', 57, true);
+SELECT pg_catalog.setval('public.users_id_seq', 63, true);
 
-
--- Completed on 2020-01-22 21:18:23
 
 --
 -- PostgreSQL database dump complete
 --
+

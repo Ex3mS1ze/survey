@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 
@@ -26,6 +27,12 @@ public class Diagnosis {
     private List<Patient> patients;
     @OneToMany(mappedBy = "diagnosis")
     private List<Questionnaire> questionnaires;
+    @Column(name = "score_for_low_chance")
+    private BigDecimal scoreForLow;
+    @Column(name = "score_for_mid_chance")
+    private BigDecimal scoreForMid;
+    @Column(name = "score_for_high_chance")
+    private BigDecimal scoreForHigh;
 
     public Diagnosis() {
     }

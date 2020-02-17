@@ -31,8 +31,8 @@ public class Questionnaire implements Serializable {
     @JsonView(Views.WithoutAnswersQuestionsTypeUser.class)
     private Boolean processed;
     @OneToMany(mappedBy = "questionnaire", cascade = CascadeType.ALL)
-//    @JsonManagedReference
-//    @JsonView(Views.WithoutAnswersQuestionsTypeUser.class)
+    //    @JsonManagedReference
+    //    @JsonView(Views.WithoutAnswersQuestionsTypeUser.class)
     private List<Answer> answers;
     @ManyToOne
     @JoinColumn(name = "diagnosis_id", referencedColumnName = "id")
@@ -45,6 +45,8 @@ public class Questionnaire implements Serializable {
     @JoinColumn(name = "type_id", referencedColumnName = "id", nullable = false)
     @JsonView(Views.WithoutAnswersQuestionsTypeUser.class)
     private QuestionnaireType type;
+    @OneToMany(mappedBy = "questionnaire", cascade = CascadeType.ALL)
+    private List<ScoreQuestionnaireResult> scoreResults;
 
     {
         this.answers = new ArrayList<>();

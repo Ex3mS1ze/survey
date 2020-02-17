@@ -84,8 +84,8 @@ public class QuestionnaireServiceTest {
     @WithUserDetails(value = "admin@mail.ru", userDetailsServiceBeanName = "myUserDetailsService")
     @Test
     public void saveNewQuestionnaire() {
-        long newId = questionnaireService.saveNewQuestionnaire(questionnaire);
-        Optional<Questionnaire> savedQuestionnaire = questionnaireRepo.findById(newId);
+        Questionnaire newQuestionnaire = questionnaireService.saveNewQuestionnaire(questionnaire);
+        Optional<Questionnaire> savedQuestionnaire = questionnaireRepo.findById(newQuestionnaire.getId());
         assertTrue(savedQuestionnaire.isPresent());
         assertEquals(savedQuestionnaire.get().getAnswers(), questionnaire.getAnswers());
     }
@@ -135,6 +135,7 @@ public class QuestionnaireServiceTest {
         assertNull(questionnaireRepo.getOne(questionnaire.getId()));
     }
 
+    @WithUserDetails(value = "admin@mail.ru", userDetailsServiceBeanName = "myUserDetailsService")
     @Test(expected = NoSuchElementException.class)
     public void findQuestionnaireById_exception() {
         questionnaireService.findQuestionnaireById(0L, false);
@@ -144,17 +145,24 @@ public class QuestionnaireServiceTest {
     // useless test
     public void findQuestionnaireById() {
         QuestionnaireService mock = Mockito.mock(QuestionnaireService.class);
-        Mockito.when(mock.findQuestionnaireById(Mockito.anyLong(), false)).thenReturn(new Questionnaire());
+        Mockito.when(mock.findQuestionnaireById(Mockito.anyLong(), Mockito.eq(false))).thenReturn(new Questionnaire());
         Questionnaire questionnaire = mock.findQuestionnaireById(1L,false);
         assertNotNull(questionnaire);
     }
 
     @Test
-    //TODO test if calculate
-    public void operateQuestionnaireAnswers() {
+    public void operateQuestionnaireAnswers_denied() {
         Questionnaire questionnaire = new Questionnaire();
         questionnaire.setAnswers(new ArrayList<>());
         assertFalse(questionnaireService.operateQuestionnaireAnswers(questionnaire, true, 1L));
+
+    }
+
+    @Test
+    public void operateQuestionnaireAnswers_test() {
+        Questionnaire questionnaire = questionnaireRepo.findById(164L).get();
+        boolean condition = questionnaireService.operateQuestionnaireAnswers(questionnaire, false, 164L);
+        assertTrue(condition);
 
     }
 
