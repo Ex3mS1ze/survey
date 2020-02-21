@@ -1,7 +1,9 @@
 package com.survey.service;
 
+import com.google.gson.JsonObject;
 import com.survey.entity.*;
 import com.survey.repository.*;
+import com.survey.utilities.QuestionnaireToAnamnesisConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -145,6 +147,7 @@ public class QuestionnaireService {
             questionnaire.setScoreResults(operatingResults);
         } else if (questionnaire.getType().getName().equals(CARDIO_TYPE)) {
             //TODO calculate cardio test
+            JsonObject jsonQuestionnaire = QuestionnaireToAnamnesisConverter.convert(questionnaire);
             List<Long> allIds = diagnosisRepo.getAllIds();
             Random random = new Random();
             Diagnosis diagnosis = diagnosisRepo.findById(allIds.get(random.nextInt(allIds.size() - 1))).get();

@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -55,5 +56,18 @@ public class Answer {
     @Override
     public String toString() {
         return "Answer{" + "id=" + id + ", text='" + text + '\'' + '}';
+    }
+
+    public boolean isAnswerInList() {
+        return textList != null && textList.size() > 0;
+    }
+
+    //TODO delete probably
+    public boolean removeNullsFromTextList() {
+        if (isAnswerInList()) {
+            return textList.removeAll(Collections.singletonList("null"));
+        } else {
+            throw new UnsupportedOperationException("textList empty or null, probably answer saved in text field.");
+        }
     }
 }

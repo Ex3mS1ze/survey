@@ -56,7 +56,7 @@ public class UserProfileControllerTest {
                .andExpect(unauthenticated());
 
     }
-    
+
     @Ignore //TODO deal with bindingResult
     @WithUserDetails(value = "admin@mail.ru", userDetailsServiceBeanName = "myUserDetailsService")
     @Test

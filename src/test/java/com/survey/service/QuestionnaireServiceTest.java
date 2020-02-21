@@ -159,9 +159,17 @@ public class QuestionnaireServiceTest {
     }
 
     @Test
-    public void operateQuestionnaireAnswers_test() {
+    public void operateGastroAnswers_test() {
         Questionnaire questionnaire = questionnaireRepo.findById(164L).get();
         boolean condition = questionnaireService.operateQuestionnaireAnswers(questionnaire, false, 164L);
+        assertTrue(condition);
+
+    }
+
+    @Test
+    public void operateCardioAnswers_test() {
+        Questionnaire questionnaire = questionnaireRepo.findById(222L).get();
+        boolean condition = questionnaireService.operateQuestionnaireAnswers(questionnaire, false, 222L);
         assertTrue(condition);
 
     }
