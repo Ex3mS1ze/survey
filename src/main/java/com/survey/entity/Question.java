@@ -29,9 +29,6 @@ public class Question {
     private String inputType;
     @Column(name = "answer_type")
     private String answerType;
-    @OneToOne
-    @JoinColumn(name = "depends_on_the_question_id", referencedColumnName = "id")
-    private Question dependentQuestion;
     @OneToMany(mappedBy = "question")
     private List<Answer> answersById;
     @Column(name = "category")
@@ -59,6 +56,6 @@ public class Question {
 
     @Override
     public String toString() {
-        return "Question{" + "id=" + id + ", text='" + text + '\'' + ", options=" + options + ", description='" + description + '\'' + ", inputType='" + inputType + '\'' + ", answerType='" + answerType + '\'' + ", dependentQuestion=" + dependentQuestion + ", category='" + category + '\'' + ", order=" + order + '}';
+        return "Question{" + "id=" + id + ", text='" + text + '\'' + ", options=" + options + ", description='" + description + '\'' + ", inputType='" + inputType + '\'' + ", answerType='" + answerType + '\'' + ", category='" + category + '\'' + ", order=" + order + '}';
     }
 }
