@@ -1,9 +1,7 @@
 package com.survey.service;
 
-import com.google.gson.JsonObject;
 import com.survey.entity.*;
 import com.survey.repository.*;
-import com.survey.utilities.QuestionnaireToAnamnesisConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,11 +27,16 @@ public class QuestionnaireService {
     private final QuestionWeightService questionWeightService;
     private final ScoreQuestionnaireRepo scoreQuestionnaireRepo;
 
+    private final DirectAssessmentService directAssessmentService;
+
     @Autowired
-    public QuestionnaireService(QuestionRepo questionRepo, AnswerRepo answerRepo, QuestionnaireRepo questionnaireRepo,
+    public QuestionnaireService(QuestionRepo questionRepo, AnswerRepo answerRepo,
+                                QuestionnaireRepo questionnaireRepo,
                                 DiagnosisRepo diagnosisRepo, QuestionnaireTypeRepo questionnaireTypeRepo,
-                                QuestionWeightRepo questionWeightRepo, QuestionWeightService questionWeightService,
-                                ScoreQuestionnaireRepo scoreQuestionnaireRepo) {
+                                QuestionWeightRepo questionWeightRepo,
+                                QuestionWeightService questionWeightService,
+                                ScoreQuestionnaireRepo scoreQuestionnaireRepo,
+                                DirectAssessmentService directAssessmentService) {
         this.questionRepo = questionRepo;
         this.answerRepo = answerRepo;
         this.questionnaireRepo = questionnaireRepo;
@@ -41,6 +44,7 @@ public class QuestionnaireService {
         this.questionnaireTypeRepo = questionnaireTypeRepo;
         this.questionWeightService = questionWeightService;
         this.scoreQuestionnaireRepo = scoreQuestionnaireRepo;
+        this.directAssessmentService = directAssessmentService;
     }
 
     public List<Question> getAllQuestions() {
@@ -138,6 +142,7 @@ public class QuestionnaireService {
         //Save to fetch questions
         if (isNew) {
             questionnaire = saveNewQuestionnaire(questionnaire);
+            questionnaire.setType(questionnaireTypeRepo.getOne(questionnaire.getType().getId()));
         } else {
             questionnaire = saveExistedProcessedQuestionnaire(questionnaire, questionnaireId);
         }
@@ -146,12 +151,15 @@ public class QuestionnaireService {
             List<ScoreQuestionnaireResult> operatingResults = questionWeightService.operateQuestionnaire(questionnaire);
             questionnaire.setScoreResults(operatingResults);
         } else if (questionnaire.getType().getName().equals(CARDIO_TYPE)) {
-            //TODO calculate cardio test
-            JsonObject jsonQuestionnaire = QuestionnaireToAnamnesisConverter.convert(questionnaire);
+            /*JsonObject jsonQuestionnaire = QuestionnaireToAnamnesisConverter.convert(questionnaire);
             List<Long> allIds = diagnosisRepo.getAllIds();
             Random random = new Random();
             Diagnosis diagnosis = diagnosisRepo.findById(allIds.get(random.nextInt(allIds.size() - 1))).get();
+            questionnaire.setDiagnosis(diagnosis);*/
+            Diagnosis diagnosis = directAssessmentService.operateQuestionnaire(questionnaire);
             questionnaire.setDiagnosis(diagnosis);
+            questionnaire.setProcessed(true);
+            questionnaireRepo.save(questionnaire);
         }
 
         questionnaire.setProcessed(true);

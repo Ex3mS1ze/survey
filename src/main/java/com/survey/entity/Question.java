@@ -56,6 +56,7 @@ public class Question {
 
     @Override
     public String toString() {
-        return "Question{" + "id=" + id + ", text='" + text + '\'' + ", options=" + options + ", description='" + description + '\'' + ", inputType='" + inputType + '\'' + ", answerType='" + answerType + '\'' + ", category='" + category + '\'' + ", order=" + order + '}';
+        return "Question{" + "id=" + id + ", text='" + text + '\'' + ", options=" + options + ", description='" + description + '\'' + ", inputType='" + inputType + '\'' + ", answerType='" + answerType + '\'' +
+               ", category='" + category + '\'' + ", order=" + order + '}';
     }
 }
