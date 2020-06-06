@@ -27,7 +27,7 @@ public class QuestionnaireService {
     private final QuestionWeightService questionWeightService;
     private final ScoreQuestionnaireRepo scoreQuestionnaireRepo;
 
-    private final DirectAssessmentService directAssessmentService;
+    private final AssessmentService assessmentService;
 
     @Autowired
     public QuestionnaireService(QuestionRepo questionRepo, AnswerRepo answerRepo,
@@ -36,7 +36,7 @@ public class QuestionnaireService {
                                 QuestionWeightRepo questionWeightRepo,
                                 QuestionWeightService questionWeightService,
                                 ScoreQuestionnaireRepo scoreQuestionnaireRepo,
-                                DirectAssessmentService directAssessmentService) {
+                                AssessmentService assessmentService) {
         this.questionRepo = questionRepo;
         this.answerRepo = answerRepo;
         this.questionnaireRepo = questionnaireRepo;
@@ -44,7 +44,7 @@ public class QuestionnaireService {
         this.questionnaireTypeRepo = questionnaireTypeRepo;
         this.questionWeightService = questionWeightService;
         this.scoreQuestionnaireRepo = scoreQuestionnaireRepo;
-        this.directAssessmentService = directAssessmentService;
+        this.assessmentService = assessmentService;
     }
 
     public List<Question> getAllQuestions() {
@@ -156,8 +156,8 @@ public class QuestionnaireService {
             Random random = new Random();
             Diagnosis diagnosis = diagnosisRepo.findById(allIds.get(random.nextInt(allIds.size() - 1))).get();
             questionnaire.setDiagnosis(diagnosis);*/
-            directAssessmentService.operateQuestionnaireRanging(questionnaire);
-            Diagnosis diagnosis = directAssessmentService.operateQuestionnaire(questionnaire);
+            assessmentService.operateQuestionnaireRank(questionnaire);
+            Diagnosis diagnosis = assessmentService.operateQuestionnaireDirect(questionnaire);
             questionnaire.setDiagnosis(diagnosis);
             questionnaire.setProcessed(true);
             questionnaireRepo.save(questionnaire);

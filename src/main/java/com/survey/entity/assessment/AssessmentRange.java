@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @Setter
 @Entity
 @Table(name = "assessment_range", schema = "public")
-public class DirectAssessmentRange {
+public class AssessmentRange {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;

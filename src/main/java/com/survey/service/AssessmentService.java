@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 @Slf4j
 @Service
-public class DirectAssessmentService {
+public class AssessmentService {
     private final DiagnosisRepo diagnosisRepo;
     private final CalculationModelRepo calculationModelRepo;
     private final DirectAssessmentRangeRepo directAssessmentRangeRepo;
@@ -26,9 +26,9 @@ public class DirectAssessmentService {
 
     private final Diagnosis defaultDiagnosis;
 
-    public DirectAssessmentService(DiagnosisRepo diagnosisRepo, CalculationModelRepo calculationModelRepo,
-                                   DirectAssessmentRangeRepo directAssessmentRangeRepo,
-                                   DirectAssessmentResultRepo directAssessmentResultRepo) {
+    public AssessmentService(DiagnosisRepo diagnosisRepo, CalculationModelRepo calculationModelRepo,
+                             DirectAssessmentRangeRepo directAssessmentRangeRepo,
+                             DirectAssessmentResultRepo directAssessmentResultRepo) {
         this.diagnosisRepo = diagnosisRepo;
         this.calculationModelRepo = calculationModelRepo;
         this.directAssessmentRangeRepo = directAssessmentRangeRepo;
@@ -37,7 +37,7 @@ public class DirectAssessmentService {
         this.directAssessmentResultRepo = directAssessmentResultRepo;
     }
 
-    public Diagnosis operateQuestionnaire(Questionnaire questionnaire) {
+    public Diagnosis operateQuestionnaireDirect(Questionnaire questionnaire) {
         QuestionnaireType type = questionnaire.getType();
         CalculationModel calculationModel = calculationModelRepo.findByQuestionnaireType(type)
                                                                 .stream()
@@ -74,7 +74,7 @@ public class DirectAssessmentService {
         return resultDiagnosis;
     }
 
-    public AssessmentResult getDirectAssessmentResult(Questionnaire questionnaire, CalculationModel calculationModel,
+    private AssessmentResult getDirectAssessmentResult(Questionnaire questionnaire, CalculationModel calculationModel,
                                                       AtomicReference<BigDecimal> summary, Diagnosis resultDiagnosis) {
         AssessmentResult assessmentResult = new AssessmentResult();
         assessmentResult.setCalculationModel(calculationModel);
@@ -86,8 +86,8 @@ public class DirectAssessmentService {
         return assessmentResult;
     }
 
-    public Diagnosis getDiagnosis(CalculationModel calculationModel, AtomicReference<BigDecimal> summary) {
-        DirectAssessmentRange assessmentRange = directAssessmentRangeRepo.findByCalculationModel(calculationModel);
+    private Diagnosis getDiagnosis(CalculationModel calculationModel, AtomicReference<BigDecimal> summary) {
+        AssessmentRange assessmentRange = directAssessmentRangeRepo.findByCalculationModel(calculationModel);
 
         Diagnosis resultDiagnosis;
         if (summary.get().compareTo(assessmentRange.getMax()) > 0) {
@@ -101,7 +101,7 @@ public class DirectAssessmentService {
         return resultDiagnosis;
     }
 
-    public Diagnosis operateQuestionnaireRanging(Questionnaire questionnaire) {
+    public Diagnosis operateQuestionnaireRank(Questionnaire questionnaire) {
         QuestionnaireType type = questionnaire.getType();
         CalculationModel calculationModel = calculationModelRepo.findByQuestionnaireType(type)
                                                                 .stream()
