@@ -30,6 +30,11 @@
               ></h4>
             </th:block>
 
+            <th:block th:each="result : ${questionnaire.assessmentResults}">
+              <h4 class="text-center" th:text="${result.calculationModel.name}"></h4>
+              <h5 class="text-center" th:text="${result.diagnosis.text}"></h5>
+            </th:block>
+
           </div>
           <div class="mb-2 p-4 rounded border" th:each="category : ${categories}">
             <h4 class="text-center" th:text="${category}"></h4>

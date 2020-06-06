@@ -1,8 +1,8 @@
 package com.survey.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.survey.entity.assessment.AssessmentResult;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -47,7 +47,8 @@ public class Questionnaire implements Serializable {
     private QuestionnaireType type;
     @OneToMany(mappedBy = "questionnaire", cascade = CascadeType.ALL)
     private List<ScoreQuestionnaireResult> scoreResults;
-
+    @OneToMany(mappedBy = "questionnaire")
+    private List<AssessmentResult> assessmentResults;
     {
         this.answers = new ArrayList<>();
     }

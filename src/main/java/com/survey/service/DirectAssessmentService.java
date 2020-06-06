@@ -67,16 +67,16 @@ public class DirectAssessmentService {
         }
         Diagnosis resultDiagnosis = getDiagnosis(calculationModel, summary);
 
-        DirectAssessmentResult assessmentResult = getDirectAssessmentResult(questionnaire, calculationModel, summary,
-                                                                            resultDiagnosis);
+        AssessmentResult assessmentResult = getDirectAssessmentResult(questionnaire, calculationModel, summary,
+                                                                      resultDiagnosis);
 
         log.info("Результат обработки {}", assessmentResult);
         return resultDiagnosis;
     }
 
-    public DirectAssessmentResult getDirectAssessmentResult(Questionnaire questionnaire, CalculationModel calculationModel,
-                                                            AtomicReference<BigDecimal> summary, Diagnosis resultDiagnosis) {
-        DirectAssessmentResult assessmentResult = new DirectAssessmentResult();
+    public AssessmentResult getDirectAssessmentResult(Questionnaire questionnaire, CalculationModel calculationModel,
+                                                      AtomicReference<BigDecimal> summary, Diagnosis resultDiagnosis) {
+        AssessmentResult assessmentResult = new AssessmentResult();
         assessmentResult.setCalculationModel(calculationModel);
         assessmentResult.setConfirmed(false);
         assessmentResult.setDiagnosis(resultDiagnosis);
@@ -146,8 +146,8 @@ public class DirectAssessmentService {
 
         Diagnosis resultDiagnosis = getDiagnosis(calculationModel, summary);
 
-        DirectAssessmentResult assessmentResult = getDirectAssessmentResult(questionnaire, calculationModel, summary,
-                                                                            resultDiagnosis);
+        AssessmentResult assessmentResult = getDirectAssessmentResult(questionnaire, calculationModel, summary,
+                                                                      resultDiagnosis);
 
         log.info("Результат обработки {}", assessmentResult);
         return resultDiagnosis;

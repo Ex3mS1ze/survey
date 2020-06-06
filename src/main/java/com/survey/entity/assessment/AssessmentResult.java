@@ -14,12 +14,12 @@ import java.math.BigDecimal;
 @Entity
 @ToString(of = {"calculationModel", "sum", "diagnosis"})
 @Table(name = "assessment_result", schema = "public")
-public class DirectAssessmentResult {
+public class AssessmentResult {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @OneToOne
+  @ManyToOne
   @JoinColumn(name = "questionnaire_id", referencedColumnName = "id")
   private Questionnaire questionnaire;
 
