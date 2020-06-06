@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @Entity
-@Table(name = "direct_assessment_range", schema = "public")
+@Table(name = "assessment_range", schema = "public")
 public class DirectAssessmentRange {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

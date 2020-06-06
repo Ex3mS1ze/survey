@@ -3,6 +3,7 @@ package com.survey.entity.assessment;
 import com.survey.entity.QuestionnaireType;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -11,6 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@ToString(exclude = {"questionnaireType", "weights", "ranks"})
 @Table(name = "calculation_model", schema = "public")
 public class CalculationModel {
   @Id
@@ -27,4 +29,7 @@ public class CalculationModel {
 
   @OneToMany(mappedBy = "calculationModel")
   private List<DirectAssessmentQuestionWeight> weights;
+
+  @OneToMany(mappedBy = "calculationModel")
+  private List<AssessmentQuestionRank> ranks;
 }

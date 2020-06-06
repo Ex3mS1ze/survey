@@ -3,10 +3,7 @@ package com.survey.service;
 import com.survey.entity.Diagnosis;
 import com.survey.entity.Questionnaire;
 import com.survey.entity.QuestionnaireType;
-import com.survey.entity.assessment.CalculationModel;
-import com.survey.entity.assessment.DirectAssessmentQuestionWeight;
-import com.survey.entity.assessment.DirectAssessmentRange;
-import com.survey.entity.assessment.DirectAssessmentResult;
+import com.survey.entity.assessment.*;
 import com.survey.repository.DiagnosisRepo;
 import com.survey.repository.assessment.CalculationModelRepo;
 import com.survey.repository.assessment.DirectAssessmentRangeRepo;
@@ -42,7 +39,12 @@ public class DirectAssessmentService {
 
     public Diagnosis operateQuestionnaire(Questionnaire questionnaire) {
         QuestionnaireType type = questionnaire.getType();
-        CalculationModel calculationModel = calculationModelRepo.findByQuestionnaireType(type);
+        CalculationModel calculationModel = calculationModelRepo.findByQuestionnaireType(type)
+                                                                .stream()
+                                                                .filter(model -> model.getName()
+                                                                                      .equals("Непосредственная экспертная оценка"))
+                                                                .findFirst()
+                                                                .get();
         List<DirectAssessmentQuestionWeight> weights = calculationModel.getWeights();
 
         AtomicReference<BigDecimal> summary = new AtomicReference<>(BigDecimal.ZERO);
@@ -59,10 +61,32 @@ public class DirectAssessmentService {
                              BigDecimal currentNorm = (current.subtract(min)).divide(max.subtract(min), 2, RoundingMode.CEILING);
                              BigDecimal toAdd = currentNorm.multiply(weight.getWeight());
                              summary.set(summary.get().add(toAdd));
-                             log.debug("{} {} \nmin={}, max={}, current={}, currentNorm={}, weight={}, toAdd={}", answer, answer.getQuestion(), min, max,
-                                       current, currentNorm, weight.getWeight(), toAdd);
+                             log.debug("{} {} \nmin={}, max={}, current={}, currentNorm={}, weight={}, toAdd={}", answer,
+                                       answer.getQuestion(), min, max, current, currentNorm, weight.getWeight(), toAdd);
                          });
         }
+        Diagnosis resultDiagnosis = getDiagnosis(calculationModel, summary);
+
+        DirectAssessmentResult assessmentResult = getDirectAssessmentResult(questionnaire, calculationModel, summary,
+                                                                            resultDiagnosis);
+
+        log.info("Результат обработки {}", assessmentResult);
+        return resultDiagnosis;
+    }
+
+    public DirectAssessmentResult getDirectAssessmentResult(Questionnaire questionnaire, CalculationModel calculationModel,
+                                                            AtomicReference<BigDecimal> summary, Diagnosis resultDiagnosis) {
+        DirectAssessmentResult assessmentResult = new DirectAssessmentResult();
+        assessmentResult.setCalculationModel(calculationModel);
+        assessmentResult.setConfirmed(false);
+        assessmentResult.setDiagnosis(resultDiagnosis);
+        assessmentResult.setSum(summary.get());
+        assessmentResult.setQuestionnaire(questionnaire);
+        directAssessmentResultRepo.save(assessmentResult);
+        return assessmentResult;
+    }
+
+    public Diagnosis getDiagnosis(CalculationModel calculationModel, AtomicReference<BigDecimal> summary) {
         DirectAssessmentRange assessmentRange = directAssessmentRangeRepo.findByCalculationModel(calculationModel);
 
         Diagnosis resultDiagnosis;
@@ -74,14 +98,58 @@ public class DirectAssessmentService {
             resultDiagnosis = defaultDiagnosis;
         }
 
-        DirectAssessmentResult assessmentResult = new DirectAssessmentResult();
-        assessmentResult.setCalculationModel(calculationModel);
-        assessmentResult.setConfirmed(false);
-        assessmentResult.setDiagnosis(resultDiagnosis);
-        assessmentResult.setSum(summary.get());
-        assessmentResult.setQuestionnaire(questionnaire);
-        directAssessmentResultRepo.save(assessmentResult);
+        return resultDiagnosis;
+    }
 
+    public Diagnosis operateQuestionnaireRanging(Questionnaire questionnaire) {
+        QuestionnaireType type = questionnaire.getType();
+        CalculationModel calculationModel = calculationModelRepo.findByQuestionnaireType(type)
+                                                                .stream()
+                                                                .filter(model -> model.getName()
+                                                                                      .equals("Ранжированная экспертная оценка"))
+                                                                .findFirst()
+                                                                .get();;
+        List<AssessmentQuestionRank> ranks = calculationModel.getRanks();
+
+        int maxRankFrom = ranks.stream().map(AssessmentQuestionRank::getRangeFrom).max(Integer::compareTo).get();
+        int maxRankTo = ranks.stream().map(AssessmentQuestionRank::getRangeTo).max(Integer::compareTo).get();
+        int maxRank = Math.max(maxRankFrom, maxRankTo) + 1;
+
+        AtomicReference<BigDecimal> summary = new AtomicReference<>(BigDecimal.ZERO);
+        for (AssessmentQuestionRank rank : ranks) {
+            questionnaire.getAnswers()
+                         .stream()
+                         .filter(answer -> answer.getQuestion().equals(rank.getQuestion()))
+                         .findFirst()
+                         .ifPresent(answer -> {
+                             int from = maxRank - rank.getRangeFrom();
+                             int to = maxRank - rank.getRangeTo();
+                             final int diff = from - to + 1;
+
+                             double score = 0;
+                             do {
+                                 score += to;
+                                 to++;
+                             } while (from >= to);
+                             score /= diff;
+
+                             BigDecimal current = new BigDecimal(answer.getText());
+                             BigDecimal min = new BigDecimal(answer.getQuestion().getOptions().get(0));
+                             BigDecimal max = new BigDecimal(answer.getQuestion().getOptions().get(1));
+                             BigDecimal currentNorm = (current.subtract(min)).divide(max.subtract(min), 2, RoundingMode.CEILING);
+
+                             BigDecimal toAdd = currentNorm.multiply(BigDecimal.valueOf(score));
+                             summary.set(summary.get().add(toAdd));
+                             log.debug("from={}, to={}, score={}, current={}, currentNorm={}, toAdd={}", from, to, score, current, currentNorm, toAdd);
+                         });
+        }
+
+        Diagnosis resultDiagnosis = getDiagnosis(calculationModel, summary);
+
+        DirectAssessmentResult assessmentResult = getDirectAssessmentResult(questionnaire, calculationModel, summary,
+                                                                            resultDiagnosis);
+
+        log.info("Результат обработки {}", assessmentResult);
         return resultDiagnosis;
     }
 }

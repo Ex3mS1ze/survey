@@ -156,6 +156,7 @@ public class QuestionnaireService {
             Random random = new Random();
             Diagnosis diagnosis = diagnosisRepo.findById(allIds.get(random.nextInt(allIds.size() - 1))).get();
             questionnaire.setDiagnosis(diagnosis);*/
+            directAssessmentService.operateQuestionnaireRanging(questionnaire);
             Diagnosis diagnosis = directAssessmentService.operateQuestionnaire(questionnaire);
             questionnaire.setDiagnosis(diagnosis);
             questionnaire.setProcessed(true);

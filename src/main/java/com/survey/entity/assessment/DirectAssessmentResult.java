@@ -4,6 +4,7 @@ import com.survey.entity.Diagnosis;
 import com.survey.entity.Questionnaire;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -11,7 +12,8 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @Entity
-@Table(name = "direct_assessment_result", schema = "public")
+@ToString(of = {"calculationModel", "sum", "diagnosis"})
+@Table(name = "assessment_result", schema = "public")
 public class DirectAssessmentResult {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

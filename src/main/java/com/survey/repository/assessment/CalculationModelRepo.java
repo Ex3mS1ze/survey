@@ -4,6 +4,8 @@ import com.survey.entity.QuestionnaireType;
 import com.survey.entity.assessment.CalculationModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 public interface CalculationModelRepo extends JpaRepository<CalculationModel, Long> {
-    CalculationModel findByQuestionnaireType(QuestionnaireType type);
+    List<CalculationModel> findByQuestionnaireType(QuestionnaireType type);
 }
