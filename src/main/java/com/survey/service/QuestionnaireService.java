@@ -9,7 +9,10 @@ import org.springframework.stereotype.Service;
 
 import java.security.AccessControlException;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import static com.survey.service.UserService.getUserFromPrincipal;
 
@@ -147,18 +150,11 @@ public class QuestionnaireService {
             questionnaire = saveExistedProcessedQuestionnaire(questionnaire, questionnaireId);
         }
 
-        if (questionnaire.getType().getName().equals(GASTRO_TYPE)) {
-            List<ScoreQuestionnaireResult> operatingResults = questionWeightService.operateQuestionnaire(questionnaire);
-            questionnaire.setScoreResults(operatingResults);
-        } else if (questionnaire.getType().getName().equals(CARDIO_TYPE)) {
-            /*JsonObject jsonQuestionnaire = QuestionnaireToAnamnesisConverter.convert(questionnaire);
-            List<Long> allIds = diagnosisRepo.getAllIds();
-            Random random = new Random();
-            Diagnosis diagnosis = diagnosisRepo.findById(allIds.get(random.nextInt(allIds.size() - 1))).get();
-            questionnaire.setDiagnosis(diagnosis);*/
-            assessmentService.operateQuestionnaireRank(questionnaire);
-            Diagnosis diagnosis = assessmentService.operateQuestionnaireDirect(questionnaire);
-            questionnaire.setDiagnosis(diagnosis);
+        assessmentService.operateQuestionnaireRank(questionnaire);
+        Optional<Diagnosis> diagnosis = assessmentService.operateQuestionnaireDirect(questionnaire);
+
+        if (diagnosis.isPresent()) {
+            questionnaire.setDiagnosis(diagnosis.get());
             questionnaire.setProcessed(true);
             questionnaireRepo.save(questionnaire);
         }

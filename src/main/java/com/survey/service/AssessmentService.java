@@ -14,12 +14,12 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Slf4j
 @Service
 public class AssessmentService {
-    private final DiagnosisRepo diagnosisRepo;
     private final CalculationModelRepo calculationModelRepo;
     private final DirectAssessmentRangeRepo directAssessmentRangeRepo;
     private final DirectAssessmentResultRepo directAssessmentResultRepo;
@@ -29,7 +29,6 @@ public class AssessmentService {
     public AssessmentService(DiagnosisRepo diagnosisRepo, CalculationModelRepo calculationModelRepo,
                              DirectAssessmentRangeRepo directAssessmentRangeRepo,
                              DirectAssessmentResultRepo directAssessmentResultRepo) {
-        this.diagnosisRepo = diagnosisRepo;
         this.calculationModelRepo = calculationModelRepo;
         this.directAssessmentRangeRepo = directAssessmentRangeRepo;
 
@@ -37,14 +36,20 @@ public class AssessmentService {
         this.directAssessmentResultRepo = directAssessmentResultRepo;
     }
 
-    public Diagnosis operateQuestionnaireDirect(Questionnaire questionnaire) {
+    public Optional<Diagnosis> operateQuestionnaireDirect(Questionnaire questionnaire) {
         QuestionnaireType type = questionnaire.getType();
-        CalculationModel calculationModel = calculationModelRepo.findByQuestionnaireType(type)
+        Optional<CalculationModel> calculationModelOptional = calculationModelRepo.findByQuestionnaireType(type)
                                                                 .stream()
                                                                 .filter(model -> model.getName()
                                                                                       .equals("Непосредственная экспертная оценка"))
-                                                                .findFirst()
-                                                                .get();
+                                                                .findFirst();
+
+        if (!calculationModelOptional.isPresent()) {
+            log.warn("Нет модели непосредственного оценивания для опроса с типом {}", type.getName());
+            return Optional.empty();
+        }
+
+        CalculationModel calculationModel = calculationModelOptional.get();
         List<DirectAssessmentQuestionWeight> weights = calculationModel.getWeights();
 
         AtomicReference<BigDecimal> summary = new AtomicReference<>(BigDecimal.ZERO);
@@ -71,7 +76,7 @@ public class AssessmentService {
                                                                       resultDiagnosis);
 
         log.info("Результат обработки {}", assessmentResult);
-        return resultDiagnosis;
+        return Optional.ofNullable(resultDiagnosis);
     }
 
     private AssessmentResult getDirectAssessmentResult(Questionnaire questionnaire, CalculationModel calculationModel,
@@ -101,14 +106,20 @@ public class AssessmentService {
         return resultDiagnosis;
     }
 
-    public Diagnosis operateQuestionnaireRank(Questionnaire questionnaire) {
+    public Optional<Diagnosis> operateQuestionnaireRank(Questionnaire questionnaire) {
         QuestionnaireType type = questionnaire.getType();
-        CalculationModel calculationModel = calculationModelRepo.findByQuestionnaireType(type)
-                                                                .stream()
-                                                                .filter(model -> model.getName()
+        Optional<CalculationModel> calculationModelOptional = calculationModelRepo.findByQuestionnaireType(type)
+                                                                          .stream()
+                                                                          .filter(model -> model.getName()
                                                                                       .equals("Ранжированная экспертная оценка"))
-                                                                .findFirst()
-                                                                .get();;
+                                                                          .findFirst();
+
+        if (!calculationModelOptional.isPresent()) {
+            log.warn("Нет модели ранжированного оценивания для опроса с типом {}", type.getName());
+            return Optional.empty();
+        }
+
+        CalculationModel calculationModel = calculationModelOptional.get();
         List<AssessmentQuestionRank> ranks = calculationModel.getRanks();
 
         int maxRankFrom = ranks.stream().map(AssessmentQuestionRank::getRangeFrom).max(Integer::compareTo).get();
@@ -150,6 +161,6 @@ public class AssessmentService {
                                                                       resultDiagnosis);
 
         log.info("Результат обработки {}", assessmentResult);
-        return resultDiagnosis;
+        return Optional.ofNullable(resultDiagnosis);
     }
 }
