@@ -31,8 +31,16 @@
             </th:block>
 
             <th:block th:each="result : ${questionnaire.assessmentResults}">
-              <h4 class="text-center" th:text="${result.calculationModel.name}"></h4>
-              <h5 class="text-center" th:text="${result.diagnosis.text}"></h5>
+              <h4 class="text-center">Результаты</h4>
+              <div class="mx-2">
+                <h5 th:text="${result.calculationModel.name}"></h5>
+                <div th:text="'Пороговое значение для низкой вероятности: ' + ${assessmentRange.min}"></div>
+                <div th:text="'Пороговое значение для высокой вероятности: ' + ${assessmentRange.max}"></div>
+                <div th:text="'Результат: ' + ${result.sum}"></div>
+                <div class="diagnosis" th:text="'Заключение: ' + ${result.diagnosis.text}"></div>
+
+<!--                <div th:text="${result.calculationModel.}"></div>-->
+              </div>
             </th:block>
 
           </div>

@@ -24,4 +24,7 @@ public class DirectAssessmentQuestionWeight {
   private Question question;
 
   private BigDecimal weight;
+
+  @Column(name = "normalization_coefficient")
+  private BigDecimal normCoefficient;
 }

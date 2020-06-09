@@ -1,7 +1,10 @@
 package com.survey.service;
 
 import com.survey.entity.*;
+import com.survey.entity.assessment.AssessmentRange;
+import com.survey.entity.assessment.CalculationModel;
 import com.survey.repository.*;
+import com.survey.repository.assessment.DirectAssessmentRangeRepo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,17 +32,16 @@ public class QuestionnaireService {
     private final QuestionnaireTypeRepo questionnaireTypeRepo;
     private final QuestionWeightService questionWeightService;
     private final ScoreQuestionnaireRepo scoreQuestionnaireRepo;
+    private final DirectAssessmentRangeRepo directAssessmentRangeRepo;
 
     private final AssessmentService assessmentService;
 
     @Autowired
-    public QuestionnaireService(QuestionRepo questionRepo, AnswerRepo answerRepo,
-                                QuestionnaireRepo questionnaireRepo,
+    public QuestionnaireService(QuestionRepo questionRepo, AnswerRepo answerRepo, QuestionnaireRepo questionnaireRepo,
                                 DiagnosisRepo diagnosisRepo, QuestionnaireTypeRepo questionnaireTypeRepo,
-                                QuestionWeightRepo questionWeightRepo,
-                                QuestionWeightService questionWeightService,
+                                QuestionWeightRepo questionWeightRepo, QuestionWeightService questionWeightService,
                                 ScoreQuestionnaireRepo scoreQuestionnaireRepo,
-                                AssessmentService assessmentService) {
+                                DirectAssessmentRangeRepo directAssessmentRangeRepo, AssessmentService assessmentService) {
         this.questionRepo = questionRepo;
         this.answerRepo = answerRepo;
         this.questionnaireRepo = questionnaireRepo;
@@ -47,6 +49,7 @@ public class QuestionnaireService {
         this.questionnaireTypeRepo = questionnaireTypeRepo;
         this.questionWeightService = questionWeightService;
         this.scoreQuestionnaireRepo = scoreQuestionnaireRepo;
+        this.directAssessmentRangeRepo = directAssessmentRangeRepo;
         this.assessmentService = assessmentService;
     }
 
@@ -220,9 +223,7 @@ public class QuestionnaireService {
         return questionnaire;
     }
 
-    /*public boolean isProcessed(long id) {
-        return questionnaireRepo.isProcessed(id);
-    }*//*public boolean isProcessed(long id) {
-        return questionnaireRepo.isProcessed(id);
-    }*/
+    public AssessmentRange getAssessmentRange(CalculationModel calculationModel) {
+        return directAssessmentRangeRepo.findByCalculationModel(calculationModel);
+    }
 }

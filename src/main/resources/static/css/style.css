@@ -53,3 +53,8 @@ tfoot input {
         padding: 0;
     }
 }
+
+.diagnosis {
+    font-weight: bold;
+    color: #007bff;
+}

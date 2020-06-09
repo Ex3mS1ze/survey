@@ -3,7 +3,10 @@ package com.survey.service;
 import com.survey.entity.Diagnosis;
 import com.survey.entity.Questionnaire;
 import com.survey.entity.QuestionnaireType;
-import com.survey.entity.assessment.*;
+import com.survey.entity.assessment.AssessmentRange;
+import com.survey.entity.assessment.AssessmentResult;
+import com.survey.entity.assessment.CalculationModel;
+import com.survey.entity.assessment.DirectAssessmentQuestionWeight;
 import com.survey.repository.DiagnosisRepo;
 import com.survey.repository.assessment.CalculationModelRepo;
 import com.survey.repository.assessment.DirectAssessmentRangeRepo;
@@ -52,22 +55,27 @@ public class AssessmentService {
         CalculationModel calculationModel = calculationModelOptional.get();
         List<DirectAssessmentQuestionWeight> weights = calculationModel.getWeights();
 
+        BigDecimal sumOfAllWeights = BigDecimal.ZERO;
+        for (DirectAssessmentQuestionWeight weight : weights) {
+            sumOfAllWeights = sumOfAllWeights.add(weight.getWeight());
+        }
+
         AtomicReference<BigDecimal> summary = new AtomicReference<>(BigDecimal.ZERO);
         for (DirectAssessmentQuestionWeight weight : weights) {
+            BigDecimal finalSumOfAllWeights = sumOfAllWeights;
             questionnaire.getAnswers()
                          .stream()
                          .filter(answer -> answer.getQuestion().equals(weight.getQuestion()))
                          .findFirst()
                          .ifPresent(answer -> {
-                             BigDecimal min = new BigDecimal(answer.getQuestion().getOptions().get(0));
-                             BigDecimal max = new BigDecimal(answer.getQuestion().getOptions().get(1));
                              BigDecimal current = new BigDecimal(answer.getText());
 
-                             BigDecimal currentNorm = (current.subtract(min)).divide(max.subtract(min), 2, RoundingMode.CEILING);
-                             BigDecimal toAdd = currentNorm.multiply(weight.getWeight());
+                             BigDecimal currentNorm = current.multiply(weight.getNormCoefficient());
+                             BigDecimal weightNorm = weight.getWeight().divide(finalSumOfAllWeights, 5, RoundingMode.HALF_DOWN);
+                             BigDecimal toAdd = currentNorm.multiply(weightNorm);
                              summary.set(summary.get().add(toAdd));
-                             log.debug("{} {} \nmin={}, max={}, current={}, currentNorm={}, weight={}, toAdd={}", answer,
-                                       answer.getQuestion(), min, max, current, currentNorm, weight.getWeight(), toAdd);
+                             log.debug("{} {} \n current={}, currentNorm={}, weight={}, weightNorm={}, toAdd={}", answer,
+                                       answer.getQuestion(), current, currentNorm, weight.getWeight(), weightNorm, toAdd);
                          });
         }
         Diagnosis resultDiagnosis = getDiagnosis(calculationModel, summary);

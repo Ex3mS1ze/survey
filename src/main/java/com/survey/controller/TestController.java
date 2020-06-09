@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.survey.entity.Question;
 import com.survey.entity.Questionnaire;
 import com.survey.entity.Views;
+import com.survey.entity.assessment.AssessmentRange;
 import com.survey.repository.QuestionnaireRepo;
 import com.survey.service.QuestionnaireService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 import java.security.AccessControlException;
@@ -149,10 +153,19 @@ public class TestController {
         } catch (AccessControlException e) {
             return "redirect:/test/history";
         }
+        AssessmentRange assessmentRange;
+
+        if (questionnaire.getAssessmentResults().size() > 0) {
+            assessmentRange = questionnaireService.getAssessmentRange(
+                    questionnaire.getAssessmentResults().get(0).getCalculationModel());
+        } else {
+            assessmentRange = new AssessmentRange();
+        }
 
         model.addAttribute("questionnaire", questionnaire);
         model.addAttribute("questions", questionnaire.getType().getQuestions());
         model.addAttribute("categories", questionnaire.getAllCategories());
+        model.addAttribute("assessmentRange", assessmentRange);
 
         return "test-view";
     }
