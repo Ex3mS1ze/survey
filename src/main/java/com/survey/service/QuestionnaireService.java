@@ -150,7 +150,6 @@ public class QuestionnaireService {
             questionnaire = saveExistedProcessedQuestionnaire(questionnaire, questionnaireId);
         }
 
-        assessmentService.operateQuestionnaireRank(questionnaire);
         Optional<Diagnosis> diagnosis = assessmentService.operateQuestionnaireDirect(questionnaire);
 
         if (diagnosis.isPresent()) {

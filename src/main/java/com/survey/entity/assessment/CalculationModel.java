@@ -12,7 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@ToString(exclude = {"questionnaireType", "weights", "ranks"})
+@ToString(exclude = {"questionnaireType", "weights"})
 @Table(name = "calculation_model", schema = "public")
 public class CalculationModel {
   @Id
@@ -29,7 +29,4 @@ public class CalculationModel {
 
   @OneToMany(mappedBy = "calculationModel")
   private List<DirectAssessmentQuestionWeight> weights;
-
-  @OneToMany(mappedBy = "calculationModel")
-  private List<AssessmentQuestionRank> ranks;
 }
