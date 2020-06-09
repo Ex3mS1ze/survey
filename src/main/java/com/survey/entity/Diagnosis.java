@@ -27,12 +27,6 @@ public class Diagnosis {
     private List<Patient> patients;
     @OneToMany(mappedBy = "diagnosis")
     private List<Questionnaire> questionnaires;
-    @Column(name = "score_for_low_chance")
-    private BigDecimal scoreForLow;
-    @Column(name = "score_for_mid_chance")
-    private BigDecimal scoreForMid;
-    @Column(name = "score_for_high_chance")
-    private BigDecimal scoreForHigh;
 
     public Diagnosis() {
     }

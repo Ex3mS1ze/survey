@@ -15,20 +15,6 @@
           <h3 class="text-center" th:text="${questionnaire.type.description}"></h3>
           <div class="mb-2 p-1 rounded border">
             <!--            <h4 class="text-center text-warning" th:text="'Диагноз: ' + ${questionnaire.diagnosis.text}"></h4>-->
-            <th:block th:each="result : ${questionnaire.scoreResults}">
-              <h4 th:if="${result.score gt result.diagnosis.scoreForHigh}"
-                  class="text-center text-danger"
-                  th:text="'Высокая вероятность: ' + ${result.diagnosis.text}"
-              ></h4>
-              <h4 th:if="${result.score gt result.diagnosis.scoreForMid && result.score lt result.diagnosis.scoreForHigh}"
-                  class="text-center text-warning"
-                  th:text="'Средняя вероятность: ' + ${result.diagnosis.text}"
-              ></h4>
-              <h4 th:if="${result.score gt result.diagnosis.scoreForLow && result.score lt result.diagnosis.scoreForMid}"
-                  class="text-center text-primary"
-                  th:text="'Низкая вероятность: ' + ${result.diagnosis.text}"
-              ></h4>
-            </th:block>
 
             <th:block th:each="result : ${questionnaire.assessmentResults}">
               <h4 class="text-center">Результаты</h4>

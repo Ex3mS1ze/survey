@@ -45,8 +45,6 @@ public class Questionnaire implements Serializable {
     @JoinColumn(name = "type_id", referencedColumnName = "id", nullable = false)
     @JsonView(Views.WithoutAnswersQuestionsTypeUser.class)
     private QuestionnaireType type;
-    @OneToMany(mappedBy = "questionnaire", cascade = CascadeType.ALL)
-    private List<ScoreQuestionnaireResult> scoreResults;
     @OneToMany(mappedBy = "questionnaire")
     private List<AssessmentResult> assessmentResults;
     {

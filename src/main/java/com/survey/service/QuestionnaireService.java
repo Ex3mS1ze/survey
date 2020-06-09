@@ -30,8 +30,6 @@ public class QuestionnaireService {
     private final QuestionnaireRepo questionnaireRepo;
     private final DiagnosisRepo diagnosisRepo;
     private final QuestionnaireTypeRepo questionnaireTypeRepo;
-    private final QuestionWeightService questionWeightService;
-    private final ScoreQuestionnaireRepo scoreQuestionnaireRepo;
     private final DirectAssessmentRangeRepo directAssessmentRangeRepo;
 
     private final AssessmentService assessmentService;
@@ -39,16 +37,12 @@ public class QuestionnaireService {
     @Autowired
     public QuestionnaireService(QuestionRepo questionRepo, AnswerRepo answerRepo, QuestionnaireRepo questionnaireRepo,
                                 DiagnosisRepo diagnosisRepo, QuestionnaireTypeRepo questionnaireTypeRepo,
-                                QuestionWeightRepo questionWeightRepo, QuestionWeightService questionWeightService,
-                                ScoreQuestionnaireRepo scoreQuestionnaireRepo,
                                 DirectAssessmentRangeRepo directAssessmentRangeRepo, AssessmentService assessmentService) {
         this.questionRepo = questionRepo;
         this.answerRepo = answerRepo;
         this.questionnaireRepo = questionnaireRepo;
         this.diagnosisRepo = diagnosisRepo;
         this.questionnaireTypeRepo = questionnaireTypeRepo;
-        this.questionWeightService = questionWeightService;
-        this.scoreQuestionnaireRepo = scoreQuestionnaireRepo;
         this.directAssessmentRangeRepo = directAssessmentRangeRepo;
         this.assessmentService = assessmentService;
     }
